@@ -14,6 +14,10 @@ e.g. `![Card screenshot](docs/screenshot.png)`. HACS requires an image in
 the README for plugin/dashboard repositories.
 -->
 
+## Disclaimer!
+
+AI was used to develop this card.
+
 ## Why
 
 Home Assistant template sensors built from long `and`/`or`/`not` chains are
@@ -25,7 +29,7 @@ indicator and its current rendered value.
 
 ## How it works
 
-1. **Parsing** — a small hand-written recursive-descent parser (see
+1. **Parsing** — a small recursive-descent parser (see
    `src/parser/`) extracts the boolean tree (`AND` / `OR` / `NOT` / leaf
    comparisons) from the `{{ ... }}` template text. It intentionally
    supports a *subset* of Jinja (boolean logic, comparisons, function calls
@@ -106,7 +110,7 @@ npm test           # parser unit tests (node:test via tsx)
 
 1. In Home Assistant, go to **HACS > Dashboards** (top-right menu > Custom
    repositories) and add this repository's URL as a **Dashboard/Plugin**
-   custom repository (until it's accepted into the HACS default store).
+   custom repository.
 2. Install "Template Logic Visualizer" from HACS, then add the Lovelace
    resource if HACS doesn't do it automatically.
 
@@ -126,8 +130,6 @@ npm test           # parser unit tests (node:test via tsx)
    title: Alarm arm-ready logic
    entity: binary_sensor.alarm_ready   # must be a UI-created Template Helper
    ```
-   That's it - no template text to paste. The card fetches the helper's
-   actual template definition itself and stays in sync automatically.
 
 ## Supported template subset
 
@@ -135,15 +137,13 @@ npm test           # parser unit tests (node:test via tsx)
 - Comparisons (`==`, `!=`, `<`, `>`, `<=`, `>=`) treated as opaque leaves
 - Function calls as leaves: `states(...)`, `is_state(...)`, `state_attr(...)`,
   `is_state_attr(...)`, `float(...)`, `int(...)`, attribute chains, etc.
-- String literals containing the words "and"/"or"/"not" are handled
-  correctly (not mistaken for keywords)
 
 Not supported (falls back to a single opaque leaf so the card still works,
 just without the sub-tree breakdown): Jinja control flow (`{% if %}` /
 `{% for %}`), filters/pipes as top-level operators, macros, multi-line
 templates with statements outside a single boolean expression.
 
-## Roadmap ideas
+## Roadmap
 
 - Support `{% if %}/{% elif %}/{% else %}` branching sensors as a separate
   visualization mode (decision tree instead of boolean tree).
