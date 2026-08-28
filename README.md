@@ -59,8 +59,8 @@ template field, then immediately discarding the flow. This is not a
 documented API, so it can break across Home Assistant versions - if that
 happens, the card will show a clear error rather than silently failing.
 YAML-defined template sensors have no config entry at all, so there's no
-equivalent for them; a future backend integration is the real fix for that
-(see Roadmap).
+equivalent for them and they are out of scope for this project - this card
+only ever supports UI-created Template Helpers.
 
 ## Project structure
 
@@ -126,9 +126,5 @@ templates with statements outside a single boolean expression.
 
 ## Roadmap ideas
 
-- A companion backend integration to support YAML-defined `template:`
-  sensors too (they have no config entry, so the options-flow trick used
-  for UI helpers can't reach them) - and to replace the semi-internal
-  options-flow mechanism with a stable, purpose-built API.
 - Support `{% if %}/{% elif %}/{% else %}` branching sensors as a separate
   visualization mode (decision tree instead of boolean tree).
