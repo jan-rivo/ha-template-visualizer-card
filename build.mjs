@@ -1,4 +1,4 @@
-// Build script: bundles the card into a single dist/ha-template-editor-card.js
+// Build script: bundles the card into a single dist/ha-template-visualizer-card.js
 // using esbuild. Run with `node build.mjs` or `node build.mjs --watch`.
 import * as esbuild from 'esbuild';
 
@@ -7,7 +7,7 @@ const watch = process.argv.includes('--watch');
 const options = {
   entryPoints: ['src/index.ts'],
   bundle: true,
-  outfile: 'dist/ha-template-editor-card.js',
+  outfile: 'dist/ha-template-visualizer-card.js',
   format: 'esm',
   target: 'es2021',
   sourcemap: true,

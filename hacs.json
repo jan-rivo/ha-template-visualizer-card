@@ -1,6 +1,6 @@
 {
-  "name": "Template Logic Editor",
+  "name": "Template Logic Visualizer",
   "render_readme": true,
-  "filename": "ha-template-editor-card.js",
+  "filename": "ha-template-visualizer-card.js",
   "content_in_root": false
 }

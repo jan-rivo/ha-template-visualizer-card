@@ -1,6 +1,6 @@
-# Template Logic Editor (Home Assistant custom card)
+# Template Logic Visualizer (Home Assistant custom card)
 
-[![Validate](https://github.com/jan-rivo/ha-template-editor-card/actions/workflows/validate.yml/badge.svg)](https://github.com/jan-rivo/ha-template-editor-card/actions/workflows/validate.yml)
+[![Validate](https://github.com/jan-rivo/ha-template-visualizer-card/actions/workflows/validate.yml/badge.svg)](https://github.com/jan-rivo/ha-template-visualizer-card/actions/workflows/validate.yml)
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -41,7 +41,7 @@ indicator and its current rendered value.
    new value only when one of them actually changes - there is no polling
    anywhere in this card. AND/OR/NOT nodes are recomputed bottom-up in JS
    every time any leaf pushes an update.
-3. **Rendering** — a LitElement-based Lovelace card (`ha-template-editor-card`)
+3. **Rendering** — a LitElement-based Lovelace card (`ha-template-visualizer-card`)
    displays the tree with green/red badges per node, plus a **Referenced
    entities & attributes** table below it: every `states()`, `is_state()`,
    `state_attr()`, and `is_state_attr()` call found anywhere in the template
@@ -82,7 +82,7 @@ src/
   ha/           hass types, entity registry lookup, template-source fetcher,
                 render_template WebSocket helper + truthiness rules
   components/   Lit templates for rendering the tree and references panel
-  card.ts       the Lovelace card (ha-template-editor-card)
+  card.ts       the Lovelace card (ha-template-visualizer-card)
   editor.ts     visual config editor (title field + <ha-entity-picker>)
   index.ts      registers the card with Lovelace's custom card picker
 test/
@@ -94,7 +94,7 @@ test/
 
 ```powershell
 npm install
-npm run build     # bundles to dist/ha-template-editor-card.js
+npm run build     # bundles to dist/ha-template-visualizer-card.js
 npm run watch      # rebuild on change
 npm run typecheck
 npm test           # parser unit tests (node:test via tsx)
@@ -107,22 +107,22 @@ npm test           # parser unit tests (node:test via tsx)
 1. In Home Assistant, go to **HACS > Dashboards** (top-right menu > Custom
    repositories) and add this repository's URL as a **Dashboard/Plugin**
    custom repository (until it's accepted into the HACS default store).
-2. Install "Template Logic Editor" from HACS, then add the Lovelace
+2. Install "Template Logic Visualizer" from HACS, then add the Lovelace
    resource if HACS doesn't do it automatically.
 
 ### Manual
 
-1. Copy `dist/ha-template-editor-card.js` into your HA `www/` folder, and
+1. Copy `dist/ha-template-visualizer-card.js` into your HA `www/` folder, and
    add it as a Lovelace resource:
    ```yaml
    resources:
-     - url: /local/ha-template-editor-card.js
+     - url: /local/ha-template-visualizer-card.js
        type: module
    ```
 2. Add the card and pick a Template Helper entity, either via the visual
-   editor (Add Card > Template Logic Editor) or YAML:
+   editor (Add Card > Template Logic Visualizer) or YAML:
    ```yaml
-   type: custom:ha-template-editor-card
+   type: custom:ha-template-visualizer-card
    title: Alarm arm-ready logic
    entity: binary_sensor.alarm_ready   # must be a UI-created Template Helper
    ```

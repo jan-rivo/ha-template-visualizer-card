@@ -15,7 +15,7 @@ interface EntityPickerStateObj {
   entity_id: string;
 }
 
-@customElement('ha-template-editor-card-editor')
+@customElement('ha-template-visualizer-card-editor')
 export class HaTemplateEditorCardEditor extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   @state() private config?: CardConfig;

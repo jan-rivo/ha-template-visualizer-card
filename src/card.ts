@@ -1,5 +1,5 @@
 // Main Lovelace card. Config:
-//   type: custom:ha-template-editor-card
+//   type: custom:ha-template-visualizer-card
 //   entity: sensor.my_template_helper   # a UI-created Template Helper entity
 //   title: "My logic"                   # optional
 //   icon: mdi:flash                     # optional; defaults to an automatic on/off icon
@@ -28,7 +28,7 @@ export interface CardConfig {
   icon?: string;
 }
 
-@customElement('ha-template-editor-card')
+@customElement('ha-template-visualizer-card')
 export class HaTemplateEditorCard extends LitElement {
   @property({ attribute: false }) hass!: HomeAssistant;
 
@@ -46,18 +46,18 @@ export class HaTemplateEditorCard extends LitElement {
 
   setConfig(config: CardConfig): void {
     if (!config?.entity) {
-      throw new Error('ha-template-editor-card: "entity" is required in the card config.');
+      throw new Error('ha-template-visualizer-card: "entity" is required in the card config.');
     }
     this.config = config;
   }
 
   static getConfigElement() {
-    return document.createElement('ha-template-editor-card-editor');
+    return document.createElement('ha-template-visualizer-card-editor');
   }
 
   static getStubConfig(): CardConfig {
     return {
-      type: 'custom:ha-template-editor-card',
+      type: 'custom:ha-template-visualizer-card',
       entity: 'binary_sensor.example_template_helper',
     };
   }
