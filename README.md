@@ -24,10 +24,13 @@ indicator and its current rendered value.
    confidently parse degrades gracefully to a single leaf covering the
    whole expression.
 2. **Live evaluation** — each leaf's exact source text is re-wrapped as its
-   own `{{ ... }}` template and rendered individually via Home Assistant's
-   `render_template` WebSocket command (the same API HA's own developer
-   tools template editor uses). AND/OR/NOT nodes are then evaluated
-   bottom-up in JavaScript from the leaves' live results.
+   own `{{ ... }}` template and subscribed to individually via Home
+   Assistant's `render_template` WebSocket command (the same one HA's own
+   developer tools template editor uses). This is a genuine push
+   subscription: HA tracks which entities each leaf depends on and pushes a
+   new value only when one of them actually changes - there is no polling
+   anywhere in this card. AND/OR/NOT nodes are recomputed bottom-up in JS
+   every time any leaf pushes an update.
 3. **Rendering** — a LitElement-based Lovelace card (`ha-template-editor-card`)
    displays the tree with green/red badges per node, plus a **Referenced
    entities & attributes** table below it: every `states()`, `is_state()`,
@@ -110,8 +113,6 @@ templates with statements outside a single boolean expression.
 
 ## Roadmap ideas
 
-- Replace polling refresh with live WebSocket subscriptions per leaf so the
-  tree updates instantly on state change instead of every 10s.
 - Add a "paste template sensor entity_id, auto-fetch YAML" helper via a
   companion HA custom integration/service.
 - Support `{% if %}/{% elif %}/{% else %}` branching sensors as a separate

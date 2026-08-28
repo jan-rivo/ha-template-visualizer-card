@@ -9,11 +9,11 @@
 // the template text directly in YAML (copy/paste from your template sensor
 // definition). See README for the reasoning and future ideas (e.g. a backend
 // component that could expose config-defined templates automatically).
-import { LitElement, html, css, type PropertyValues } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { parseBooleanTemplate } from './parser/parser';
 import { extractReferences, groupReferences, type ReferencedEntity } from './parser/references';
-import { evaluateTree, type EvaluatedNode } from './tree/evaluate';
+import { createLiveTree, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
 import type { HomeAssistant } from './ha/render';
 import { renderNode } from './components/logic-tree';
 import { renderReferencesPanel, type HassStates } from './components/references-panel';
@@ -35,11 +35,13 @@ export class HaTemplateEditorCard extends LitElement {
   @state() private config?: CardConfig;
   @state() private tree?: EvaluatedNode;
   @state() private references: ReferencedEntity[] = [];
-  @state() private loading = false;
   @state() private parseFallback = false;
   @state() private globalError?: string;
 
-  private refreshTimer?: ReturnType<typeof setTimeout>;
+  /** Live WS subscriptions for the currently-configured template (no polling: everything here is push-driven). */
+  private liveHandle?: LiveTreeHandle;
+  private subscribedTemplate?: string;
+  private setupGeneration = 0;
 
   setConfig(config: CardConfig): void {
     if (!config?.template) {
@@ -59,42 +61,49 @@ export class HaTemplateEditorCard extends LitElement {
     };
   }
 
-  protected willUpdate(changed: PropertyValues): void {
-    if (changed.has('config') && this.config) {
+  protected willUpdate(): void {
+    if (this.config && this.hass && this.config.template !== this.subscribedTemplate) {
       this.references = groupReferences(extractReferences(this.config.template));
-      void this.refresh();
+      void this.setupLiveTree();
     }
   }
 
-  private async refresh(): Promise<void> {
+  private async setupLiveTree(): Promise<void> {
     if (!this.config || !this.hass) return;
-    this.loading = true;
-    this.globalError = undefined;
-    try {
-      const { ast, fallback } = parseBooleanTemplate(this.config.template);
-      this.parseFallback = fallback;
-      this.tree = await evaluateTree(this.hass, ast);
-    } catch (err) {
-      this.globalError = err instanceof Error ? err.message : String(err);
-    } finally {
-      this.loading = false;
-    }
-  }
+    const template = this.config.template;
+    this.subscribedTemplate = template;
+    const generation = ++this.setupGeneration;
 
-  protected updated(changed: PropertyValues): void {
-    // Cheap live-ish refresh: re-render every 10s while the card is visible.
-    // (A future enhancement is to keep the render_template WS subscriptions
-    // open and push updates instead of polling.) Note: the references panel
-    // below does NOT need this timer - it reads this.hass.states directly
-    // at render time, so it updates instantly whenever `hass` changes.
-    if (changed.has('hass') && !this.refreshTimer) {
-      this.refreshTimer = setInterval(() => void this.refresh(), 10000);
+    const previousHandle = this.liveHandle;
+    this.liveHandle = undefined;
+    this.tree = undefined;
+    this.globalError = undefined;
+    if (previousHandle) void previousHandle.dispose();
+
+    try {
+      const { ast, fallback } = parseBooleanTemplate(template);
+      this.parseFallback = fallback;
+      const handle = await createLiveTree(this.hass, ast, (tree) => {
+        if (generation !== this.setupGeneration) return; // superseded by a newer config/template
+        this.tree = tree;
+      });
+      if (generation !== this.setupGeneration) {
+        // Config changed again while subscriptions were being set up.
+        void handle.dispose();
+        return;
+      }
+      this.liveHandle = handle;
+    } catch (err) {
+      if (generation !== this.setupGeneration) return;
+      this.globalError = err instanceof Error ? err.message : String(err);
     }
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    if (this.refreshTimer) clearInterval(this.refreshTimer);
+    this.setupGeneration++; // invalidates any in-flight setupLiveTree call
+    void this.liveHandle?.dispose();
+    this.liveHandle = undefined;
   }
 
   render() {
@@ -119,8 +128,7 @@ export class HaTemplateEditorCard extends LitElement {
                       <span>Entity state:</span> <b>${actualState ?? 'unknown'}</b>
                     </div>`
                   : ''}
-                ${this.tree ? renderNode(this.tree) : html`<div>Loading…</div>`}
-                ${this.loading ? html`<div class="tpl-loading">Refreshing…</div>` : ''}
+                ${this.tree ? renderNode(this.tree) : html`<div>Setting up live subscriptions…</div>`}
                 <h4 class="tpl-refs-title">Referenced entities &amp; attributes</h4>
                 ${renderReferencesPanel(this.references, this.hass?.states ?? {})}
               `}
@@ -166,6 +174,10 @@ export class HaTemplateEditorCard extends LitElement {
     }
     .tpl-node--error .tpl-node__badge {
       background: var(--warning-color, #ff9800);
+      color: white;
+    }
+    .tpl-node--loading .tpl-node__badge {
+      background: var(--disabled-text-color, #9e9e9e);
       color: white;
     }
     .tpl-node__op {

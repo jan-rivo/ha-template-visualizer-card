@@ -1,6 +1,13 @@
 // Helper for rendering (evaluating) small Jinja sub-expressions against the
 // live Home Assistant instance via the WebSocket API, and interpreting the
 // resulting string as a boolean/truthy value for the tree visualization.
+//
+// This uses HA's `render_template` WS command as a *live subscription*: it
+// pushes an initial result immediately, then pushes a new result every time
+// a referenced entity changes - HA does the dependency tracking for us. We
+// keep the subscription open for the lifetime of the card (see
+// subscribeLiveExpression) instead of resolving once and unsubscribing, so
+// the whole card is push-driven with no polling anywhere.
 
 export interface HomeAssistant {
   connection: {
@@ -16,49 +23,33 @@ interface RenderTemplateResult {
   listeners?: unknown;
 }
 
+export type Unsubscribe = () => Promise<void>;
+
 /**
- * Renders `{{ <expression> }}` via HA's `render_template` WS command
- * (the same one used by the frontend's own template editor / template
- * sensor preview). This is a subscription command: it pushes an initial
- * result immediately, then pushes updates whenever a referenced entity
- * changes. We resolve on the first push and immediately unsubscribe,
- * giving a one-shot render of the current live state.
+ * Subscribes to the live rendered value of `{{ <expression> }}`. `onValue`
+ * is invoked immediately with the initial render, then again every time HA
+ * pushes an update because a referenced entity changed. `onError` is
+ * invoked if the subscription itself fails to establish (e.g. invalid
+ * template syntax). Returns an unsubscribe function - callers MUST call it
+ * when the expression is no longer being displayed (e.g. on card teardown
+ * or when the template config changes) to avoid leaking WS subscriptions.
  */
-export async function renderExpression(hass: HomeAssistant, expression: string): Promise<string> {
+export async function subscribeLiveExpression(
+  hass: HomeAssistant,
+  expression: string,
+  onValue: (rendered: string) => void,
+  onError: (error: Error) => void
+): Promise<Unsubscribe> {
   const template = `{{ (${expression}) }}`;
-  return new Promise<string>((resolve, reject) => {
-    let unsubscribe: (() => Promise<void>) | undefined;
-    let settled = false;
-
-    const timeout = setTimeout(() => {
-      if (settled) return;
-      settled = true;
-      unsubscribe?.().catch(() => undefined);
-      reject(new Error('Template render timed out'));
-    }, 8000);
-
-    hass.connection
-      .subscribeMessage<RenderTemplateResult>(
-        (result) => {
-          if (settled) return;
-          settled = true;
-          clearTimeout(timeout);
-          resolve(String(result?.result ?? ''));
-          unsubscribe?.().catch(() => undefined);
-        },
-        { type: 'render_template', template }
-      )
-      .then((unsub) => {
-        unsubscribe = unsub;
-        if (settled) unsubscribe().catch(() => undefined);
-      })
-      .catch((err) => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timeout);
-        reject(err instanceof Error ? err : new Error(String(err)));
-      });
-  });
+  try {
+    return await hass.connection.subscribeMessage<RenderTemplateResult>(
+      (result) => onValue(String(result?.result ?? '')),
+      { type: 'render_template', template }
+    );
+  } catch (err) {
+    onError(err instanceof Error ? err : new Error(String(err)));
+    return async () => undefined;
+  }
 }
 
 /** Home Assistant / Jinja truthiness rules applied to a rendered string. */

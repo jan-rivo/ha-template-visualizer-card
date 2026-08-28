@@ -17,17 +17,25 @@ function kindLabel(kind: string): string {
 }
 
 export function renderNode(evalNode: EvaluatedNode, depth = 0): TemplateResult {
-  const { node, value, rendered, error } = evalNode;
-  const stateClass = error ? 'tpl-node--error' : value ? 'tpl-node--true' : 'tpl-node--false';
+  const { node, value, rendered, error, loading } = evalNode;
+  const stateClass = loading
+    ? 'tpl-node--loading'
+    : error
+      ? 'tpl-node--error'
+      : value
+        ? 'tpl-node--true'
+        : 'tpl-node--false';
 
   if (node.kind === 'LEAF') {
     return html`
       <div class="tpl-node ${stateClass}" style="--depth: ${depth}">
-        <span class="tpl-node__badge">${error ? '!' : value ? '✓' : '✗'}</span>
+        <span class="tpl-node__badge">${loading ? '…' : error ? '!' : value ? '✓' : '✗'}</span>
         <code class="tpl-node__source">${node.source}</code>
-        ${error
-          ? html`<span class="tpl-node__meta tpl-node__meta--error">${error}</span>`
-          : html`<span class="tpl-node__meta">→ ${rendered}</span>`}
+        ${loading
+          ? html`<span class="tpl-node__meta">loading…</span>`
+          : error
+            ? html`<span class="tpl-node__meta tpl-node__meta--error">${error}</span>`
+            : html`<span class="tpl-node__meta">→ ${rendered}</span>`}
       </div>
     `;
   }

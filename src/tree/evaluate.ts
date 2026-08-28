@@ -1,38 +1,98 @@
-// Walks an AST, renders every LEAF's live value via Home Assistant, and
-// evaluates AND/OR/NOT nodes bottom-up so every node in the tree ends up
-// with a boolean result plus (for leaves) the raw rendered text.
+// Builds a *live* evaluated tree: every LEAF subscribes to its expression's
+// rendered value via HA's render_template WS subscription (push-based, no
+// polling) and every time any leaf updates, the whole tree is cheaply
+// recomputed bottom-up in JS and handed to `onUpdate`.
 import type { AstNode } from '../parser/types';
-import { isTruthy, renderExpression, type HomeAssistant } from '../ha/render';
+import { isTruthy, subscribeLiveExpression, type HomeAssistant, type Unsubscribe } from '../ha/render';
 
 export interface EvaluatedNode {
   node: AstNode;
   value: boolean;
+  /** True while waiting for this leaf's first render_template push. */
+  loading?: boolean;
   /** Raw rendered string, only present for LEAF nodes. */
   rendered?: string;
   error?: string;
   children?: EvaluatedNode[];
 }
 
-export async function evaluateTree(hass: HomeAssistant, node: AstNode): Promise<EvaluatedNode> {
+export interface LiveTreeHandle {
+  /** Unsubscribes every leaf's WS subscription. Always call on teardown. */
+  dispose: () => Promise<void>;
+}
+
+interface LeafState {
+  loading: boolean;
+  rendered?: string;
+  error?: string;
+}
+
+function collectLeaves(node: AstNode, out: AstNode[]): void {
   if (node.kind === 'LEAF') {
-    try {
-      const rendered = await renderExpression(hass, node.source);
-      return { node, value: isTruthy(rendered), rendered };
-    } catch (err) {
-      return {
-        node,
-        value: false,
-        error: err instanceof Error ? err.message : String(err),
-      };
-    }
+    out.push(node);
+    return;
+  }
+  for (const child of node.children ?? []) collectLeaves(child, out);
+}
+
+function buildEvaluated(node: AstNode, leafState: Map<AstNode, LeafState>): EvaluatedNode {
+  if (node.kind === 'LEAF') {
+    const st = leafState.get(node)!;
+    if (st.loading) return { node, value: false, loading: true };
+    if (st.error !== undefined) return { node, value: false, error: st.error };
+    return { node, value: isTruthy(st.rendered ?? ''), rendered: st.rendered };
   }
 
-  const children = await Promise.all((node.children ?? []).map((c) => evaluateTree(hass, c)));
-
+  const children = (node.children ?? []).map((c) => buildEvaluated(c, leafState));
   let value: boolean;
   if (node.kind === 'AND') value = children.every((c) => c.value);
   else if (node.kind === 'OR') value = children.some((c) => c.value);
   else value = !children[0].value; // NOT
 
   return { node, value, children };
+}
+
+/**
+ * Sets up live subscriptions for every leaf in the AST and calls `onUpdate`
+ * with a freshly recomputed tree every time any leaf's value changes
+ * (including once synchronously up front, with every leaf marked loading).
+ */
+export async function createLiveTree(
+  hass: HomeAssistant,
+  root: AstNode,
+  onUpdate: (tree: EvaluatedNode) => void
+): Promise<LiveTreeHandle> {
+  const leaves: AstNode[] = [];
+  collectLeaves(root, leaves);
+
+  const leafState = new Map<AstNode, LeafState>();
+  for (const leaf of leaves) leafState.set(leaf, { loading: true });
+
+  const emit = () => onUpdate(buildEvaluated(root, leafState));
+  emit(); // initial "everything loading" frame
+
+  const unsubscribers: Unsubscribe[] = [];
+  await Promise.all(
+    leaves.map(async (leaf) => {
+      const unsub = await subscribeLiveExpression(
+        hass,
+        leaf.source,
+        (rendered) => {
+          leafState.set(leaf, { loading: false, rendered });
+          emit();
+        },
+        (error) => {
+          leafState.set(leaf, { loading: false, error: error.message });
+          emit();
+        }
+      );
+      unsubscribers.push(unsub);
+    })
+  );
+
+  return {
+    dispose: async () => {
+      await Promise.all(unsubscribers.map((u) => u().catch(() => undefined)));
+    },
+  };
 }
