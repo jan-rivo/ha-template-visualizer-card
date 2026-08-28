@@ -29,7 +29,14 @@ indicator and its current rendered value.
    tools template editor uses). AND/OR/NOT nodes are then evaluated
    bottom-up in JavaScript from the leaves' live results.
 3. **Rendering** — a LitElement-based Lovelace card (`ha-template-editor-card`)
-   displays the tree with green/red badges per node.
+   displays the tree with green/red badges per node, plus a **Referenced
+   entities & attributes** table below it: every `states()`, `is_state()`,
+   `state_attr()`, and `is_state_attr()` call found anywhere in the template
+   (via a separate regex-based scan of the full text, not just the parsed
+   boolean subset) is deduped down to one row per entity/attribute pair and
+   shown with its live current value straight from `hass.states` - so you can
+   see exactly what data the template is working with, even for parts of the
+   template the boolean-tree parser couldn't structure.
 
 ### Important limitation
 
@@ -52,7 +59,8 @@ src/
   editor.ts     visual config editor (title / entity / template fields)
   index.ts      registers the card with Lovelace's custom card picker
 test/
-  parser.test.ts  unit tests for the parser subset
+  parser.test.ts      unit tests for the boolean-expression parser subset
+  references.test.ts  unit tests for the states()/is_state()/state_attr() reference extractor
 ```
 
 ## Development

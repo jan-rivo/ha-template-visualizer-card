@@ -12,9 +12,11 @@
 import { LitElement, html, css, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { parseBooleanTemplate } from './parser/parser';
+import { extractReferences, groupReferences, type ReferencedEntity } from './parser/references';
 import { evaluateTree, type EvaluatedNode } from './tree/evaluate';
 import type { HomeAssistant } from './ha/render';
 import { renderNode } from './components/logic-tree';
+import { renderReferencesPanel, type HassStates } from './components/references-panel';
 import './editor';
 
 export interface CardConfig {
@@ -27,11 +29,12 @@ export interface CardConfig {
 @customElement('ha-template-editor-card')
 export class HaTemplateEditorCard extends LitElement {
   @property({ attribute: false }) hass!: HomeAssistant & {
-    states: Record<string, { state: string }>;
+    states: HassStates;
   };
 
   @state() private config?: CardConfig;
   @state() private tree?: EvaluatedNode;
+  @state() private references: ReferencedEntity[] = [];
   @state() private loading = false;
   @state() private parseFallback = false;
   @state() private globalError?: string;
@@ -58,6 +61,7 @@ export class HaTemplateEditorCard extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('config') && this.config) {
+      this.references = groupReferences(extractReferences(this.config.template));
       void this.refresh();
     }
   }
@@ -80,7 +84,9 @@ export class HaTemplateEditorCard extends LitElement {
   protected updated(changed: PropertyValues): void {
     // Cheap live-ish refresh: re-render every 10s while the card is visible.
     // (A future enhancement is to keep the render_template WS subscriptions
-    // open and push updates instead of polling.)
+    // open and push updates instead of polling.) Note: the references panel
+    // below does NOT need this timer - it reads this.hass.states directly
+    // at render time, so it updates instantly whenever `hass` changes.
     if (changed.has('hass') && !this.refreshTimer) {
       this.refreshTimer = setInterval(() => void this.refresh(), 10000);
     }
@@ -115,6 +121,8 @@ export class HaTemplateEditorCard extends LitElement {
                   : ''}
                 ${this.tree ? renderNode(this.tree) : html`<div>Loading…</div>`}
                 ${this.loading ? html`<div class="tpl-loading">Refreshing…</div>` : ''}
+                <h4 class="tpl-refs-title">Referenced entities &amp; attributes</h4>
+                ${renderReferencesPanel(this.references, this.hass?.states ?? {})}
               `}
         </div>
       </ha-card>
@@ -194,6 +202,41 @@ export class HaTemplateEditorCard extends LitElement {
       font-size: 13px;
     }
     .tpl-loading {
+      font-size: 12px;
+      color: var(--secondary-text-color);
+      margin-top: 8px;
+    }
+    .tpl-refs-title {
+      margin: 16px 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--secondary-text-color);
+    }
+    .tpl-refs {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .tpl-refs th {
+      text-align: left;
+      font-weight: 600;
+      color: var(--secondary-text-color);
+      border-bottom: 1px solid var(--divider-color, #ccc);
+      padding: 4px 8px 4px 0;
+    }
+    .tpl-refs td {
+      padding: 4px 8px 4px 0;
+      border-bottom: 1px solid var(--divider-color, rgba(127, 127, 127, 0.15));
+      vertical-align: top;
+    }
+    .tpl-refs__row--missing td {
+      color: var(--error-color, #db4437);
+    }
+    .tpl-refs__used-as {
+      color: var(--secondary-text-color);
+      font-size: 11px;
+    }
+    .tpl-refs-empty {
       font-size: 12px;
       color: var(--secondary-text-color);
       margin-top: 8px;
