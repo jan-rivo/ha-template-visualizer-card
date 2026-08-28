@@ -17,6 +17,8 @@ export const es: Translation = {
   'tree.not': 'NO',
   'editor.title_label': 'Título (opcional)',
   'editor.entity_label': 'Entidad de ayudante de plantilla',
+  'editor.icon_label': 'Icono (opcional)',
+  'editor.icon_hint': 'Déjelo en blanco para mostrar automáticamente un icono de encendido/apagado según el estado de la entidad.',
   'editor.hint':
     'Solo se admiten entidades creadas mediante Ajustes → Dispositivos y servicios → Ayudantes → Plantilla. La tarjeta lee directamente la definición de la plantilla de ese ayudante, por lo que siempre permanece sincronizada - no hay nada que pegar ni actualizar manualmente.',
 };

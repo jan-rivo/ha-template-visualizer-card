@@ -18,6 +18,8 @@ export const nn: Translation = {
   'tree.not': 'IKKJE',
   'editor.title_label': 'Tittel (valfritt)',
   'editor.entity_label': 'Malhjelpar-eining',
+  'editor.icon_label': 'Ikon (valfritt)',
+  'editor.icon_hint': 'La stå tomt for å automatisk visa eit på/av-ikon basert på tilstanden til eininga.',
   'editor.hint':
     'Berre einingar oppretta via Innstillingar → Einingar og tenester → Hjelparar → Mal er støtta. Kortet les maldefinisjonen til den hjelparen direkte, så det held seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
 };

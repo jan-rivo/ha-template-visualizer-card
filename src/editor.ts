@@ -71,6 +71,13 @@ export class HaTemplateEditorCardEditor extends LitElement {
           .entityFilter=${this.entityFilter}
           @value-changed=${(e: CustomEvent<{ value: string }>) => this.emit({ entity: e.detail.value })}
         ></ha-entity-picker>
+        <ha-icon-picker
+          .hass=${this.hass}
+          .value=${this.config.icon ?? ''}
+          .label=${t(this.hass, 'editor.icon_label')}
+          @value-changed=${(e: CustomEvent<{ value: string }>) => this.emit({ icon: e.detail.value || undefined })}
+        ></ha-icon-picker>
+        <p class="tpl-hint">${t(this.hass, 'editor.icon_hint')}</p>
         <p class="tpl-hint">${t(this.hass, 'editor.hint')}</p>
       </div>
     `;

@@ -17,6 +17,9 @@ export const nl: Translation = {
   'tree.not': 'NIET',
   'editor.title_label': 'Titel (optioneel)',
   'editor.entity_label': 'Sjabloonhelper-entiteit',
+  'editor.icon_label': 'Pictogram (optioneel)',
+  'editor.icon_hint':
+    'Laat leeg om automatisch een aan/uit-pictogram te tonen op basis van de status van de entiteit.',
   'editor.hint':
     'Alleen entiteiten die zijn aangemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen → Sjabloon worden ondersteund. De kaart leest de sjabloondefinitie van die hulp rechtstreeks, zodat deze altijd gesynchroniseerd blijft - niets om te plakken of handmatig bij te werken.',
 };

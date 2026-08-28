@@ -17,6 +17,9 @@ export const it: Translation = {
   'tree.not': 'NON',
   'editor.title_label': 'Titolo (opzionale)',
   'editor.entity_label': 'Entità helper modello',
+  'editor.icon_label': 'Icona (opzionale)',
+  'editor.icon_hint':
+    "Lascia vuoto per mostrare automaticamente un'icona on/off in base allo stato dell'entità.",
   'editor.hint':
     "Sono supportate solo le entità create tramite Impostazioni → Dispositivi e servizi → Helper → Modello. La scheda legge direttamente la definizione del modello di quell'helper, quindi rimane sempre sincronizzata - niente da incollare o aggiornare manualmente.",
 };

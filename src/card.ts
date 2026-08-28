@@ -2,6 +2,7 @@
 //   type: custom:ha-template-editor-card
 //   entity: sensor.my_template_helper   # a UI-created Template Helper entity
 //   title: "My logic"                   # optional
+//   icon: mdi:flash                     # optional; defaults to an automatic on/off icon
 //
 // This card only supports entities created via Settings > Devices &
 // Services > Helpers > Template. It reads the helper's actual template text
@@ -24,6 +25,7 @@ export interface CardConfig {
   type: string;
   entity: string;
   title?: string;
+  icon?: string;
 }
 
 @customElement('ha-template-editor-card')
@@ -118,7 +120,13 @@ export class HaTemplateEditorCard extends LitElement {
     const stateObj = this.hass?.states?.[this.config.entity];
 
     return html`
-      <ha-card header=${title}>
+      <ha-card>
+        <div class="card-header">
+          ${this.config.icon
+            ? html`<ha-icon icon=${this.config.icon}></ha-icon>`
+            : html`<ha-state-icon .hass=${this.hass} .stateObj=${stateObj}></ha-state-icon>`}
+          <span class="card-header__title">${title}</span>
+        </div>
         <div class="card-content">
           ${this.globalError
             ? html`<div class="tpl-error">${this.globalError}</div>`
@@ -126,10 +134,6 @@ export class HaTemplateEditorCard extends LitElement {
                 ${this.parseFallback
                   ? html`<div class="tpl-warning">${t(this.hass, 'card.parse_fallback_warning')}</div>`
                   : ''}
-                <div class="tpl-summary">
-                  <ha-state-icon .hass=${this.hass} .stateObj=${stateObj}></ha-state-icon>
-                  <b>${stateObj?.state ?? 'unknown'}</b>
-                </div>
                 ${this.tree
                   ? renderNode(this.tree, this.hass)
                   : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
@@ -154,6 +158,21 @@ export class HaTemplateEditorCard extends LitElement {
   static styles = css`
     :host {
       display: block;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 16px 0;
+      font-size: 1.2em;
+      font-weight: 400;
+      color: var(--ha-card-header-color, var(--primary-text-color));
+    }
+    .card-header ha-icon,
+    .card-header ha-state-icon {
+      --mdc-icon-size: 24px;
+      color: var(--paper-item-icon-color, #44739e);
+      flex: none;
     }
     .card-content {
       padding: 8px 16px 16px;
@@ -222,17 +241,6 @@ export class HaTemplateEditorCard extends LitElement {
       color: var(--warning-color, #ff9800);
       font-size: 12px;
       margin-bottom: 8px;
-    }
-    .tpl-summary {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      font-size: 13px;
-    }
-    .tpl-summary ha-state-icon {
-      --mdc-icon-size: 22px;
-      color: var(--paper-item-icon-color, #44739e);
     }
     .tpl-source,
     .tpl-refs-details {
