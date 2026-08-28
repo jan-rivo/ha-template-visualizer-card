@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "description": "Home Assistant Lovelace card that parses a template sensor's Jinja logic and visualizes which sub-conditions are true/false, and why the overall result is what it is.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jan-rivo/ha-template-editor-card.git"
+  },
+  "homepage": "https://github.com/jan-rivo/ha-template-editor-card#readme",
+  "bugs": {
+    "url": "https://github.com/jan-rivo/ha-template-editor-card/issues"
+  },
   "scripts": {
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",

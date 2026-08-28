@@ -1,8 +1,18 @@
 # Template Logic Editor (Home Assistant custom card)
 
+[![Validate](https://github.com/jan-rivo/ha-template-editor-card/actions/workflows/validate.yml/badge.svg)](https://github.com/jan-rivo/ha-template-editor-card/actions/workflows/validate.yml)
+[![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Visualizes a Home Assistant template sensor's boolean logic as an indented
 tree, showing which sub-conditions are currently `true`/`false` against your
 live entities, and why the overall result comes out the way it does.
+
+<!--
+TODO before submitting to HACS default: add at least one screenshot here,
+e.g. `![Card screenshot](docs/screenshot.png)`. HACS requires an image in
+the README for plugin/dashboard repositories.
+-->
 
 ## Why
 
@@ -90,11 +100,20 @@ npm run typecheck
 npm test           # parser unit tests (node:test via tsx)
 ```
 
-## Using the card
+## Installation
 
-1. Copy `dist/ha-template-editor-card.js` into your HA `www/` folder (or
-   install via HACS once published as a custom repository), and add it as a
-   Lovelace resource:
+### HACS (recommended)
+
+1. In Home Assistant, go to **HACS > Dashboards** (top-right menu > Custom
+   repositories) and add this repository's URL as a **Dashboard/Plugin**
+   custom repository (until it's accepted into the HACS default store).
+2. Install "Template Logic Editor" from HACS, then add the Lovelace
+   resource if HACS doesn't do it automatically.
+
+### Manual
+
+1. Copy `dist/ha-template-editor-card.js` into your HA `www/` folder, and
+   add it as a Lovelace resource:
    ```yaml
    resources:
      - url: /local/ha-template-editor-card.js
@@ -128,3 +147,8 @@ templates with statements outside a single boolean expression.
 
 - Support `{% if %}/{% elif %}/{% else %}` branching sensors as a separate
   visualization mode (decision tree instead of boolean tree).
+
+## License
+
+[MIT](LICENSE)
+
