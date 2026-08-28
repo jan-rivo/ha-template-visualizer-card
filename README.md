@@ -40,26 +40,40 @@ indicator and its current rendered value.
    shown with its live current value straight from `hass.states` - so you can
    see exactly what data the template is working with, even for parts of the
    template the boolean-tree parser couldn't structure.
+4. **Auto-sync with the real template** — you pick an entity (via a native
+   `<ha-entity-picker>`, filtered to Template Helper entities), and the card
+   fetches that helper's actual template text itself (see
+   `src/ha/template-source.ts`) instead of you pasting it. There is nothing
+   to keep in sync manually.
 
 ### Important limitation
 
-Home Assistant does not expose a template sensor's *source* Jinja through
-its entity/state APIs — only the rendered value is available at runtime. So
-this card takes the template text directly in the card config (copy it from
-your `template:` YAML). A future enhancement could add a small backend
-integration/API to expose configured templates automatically so you don't
-have to paste them by hand.
+This card **only supports entities created via Settings > Devices &
+Services > Helpers > Template** (the UI-based "Template" helper), not
+YAML-defined `template:` sensors. Home Assistant doesn't expose a config
+entry's stored options through any documented, stable public API (this is
+deliberate - entries can hold secrets), so we reuse the same semi-internal
+mechanism HA's own "edit helper" dialog uses: starting that helper's config
+entry *options flow* and reading the `suggested_value` it returns for the
+template field, then immediately discarding the flow. This is not a
+documented API, so it can break across Home Assistant versions - if that
+happens, the card will show a clear error rather than silently failing.
+YAML-defined template sensors have no config entry at all, so there's no
+equivalent for them; a future backend integration is the real fix for that
+(see Roadmap).
 
 ## Project structure
 
 ```
 src/
   parser/       tokenizer + recursive-descent parser -> AST (AND/OR/NOT/LEAF)
-  tree/         evaluates an AST against a live `hass` object
-  ha/           render_template WebSocket helper + truthiness rules
-  components/   Lit template for rendering the tree
+                plus the states()/is_state()/state_attr() reference extractor
+  tree/         builds a live, subscription-backed evaluated tree from an AST
+  ha/           hass types, entity registry lookup, template-source fetcher,
+                render_template WebSocket helper + truthiness rules
+  components/   Lit templates for rendering the tree and references panel
   card.ts       the Lovelace card (ha-template-editor-card)
-  editor.ts     visual config editor (title / entity / template fields)
+  editor.ts     visual config editor (title field + <ha-entity-picker>)
   index.ts      registers the card with Lovelace's custom card picker
 test/
   parser.test.ts      unit tests for the boolean-expression parser subset
@@ -86,16 +100,15 @@ npm test           # parser unit tests (node:test via tsx)
      - url: /local/ha-template-editor-card.js
        type: module
    ```
-2. Add the card:
+2. Add the card and pick a Template Helper entity, either via the visual
+   editor (Add Card > Template Logic Editor) or YAML:
    ```yaml
    type: custom:ha-template-editor-card
    title: Alarm arm-ready logic
-   entity: binary_sensor.alarm_ready        # optional: shows actual entity state too
-   template: >
-     {{ is_state('binary_sensor.front_door', 'off')
-        and is_state('binary_sensor.back_door', 'off')
-        and (states('sensor.house_mode') == 'away' or states('sensor.house_mode') == 'night') }}
+   entity: binary_sensor.alarm_ready   # must be a UI-created Template Helper
    ```
+   That's it - no template text to paste. The card fetches the helper's
+   actual template definition itself and stays in sync automatically.
 
 ## Supported template subset
 
@@ -113,7 +126,9 @@ templates with statements outside a single boolean expression.
 
 ## Roadmap ideas
 
-- Add a "paste template sensor entity_id, auto-fetch YAML" helper via a
-  companion HA custom integration/service.
+- A companion backend integration to support YAML-defined `template:`
+  sensors too (they have no config entry, so the options-flow trick used
+  for UI helpers can't reach them) - and to replace the semi-internal
+  options-flow mechanism with a stable, purpose-built API.
 - Support `{% if %}/{% elif %}/{% else %}` branching sensors as a separate
   visualization mode (decision tree instead of boolean tree).

@@ -1,51 +1,49 @@
 // Main Lovelace card. Config:
 //   type: custom:ha-template-editor-card
-//   template: "{{ is_state('binary_sensor.door','on') and states('sensor.mode') == 'home' }}"
-//   entity: sensor.my_template_sensor   # optional, just for comparing actual vs computed
+//   entity: sensor.my_template_helper   # a UI-created Template Helper entity
 //   title: "My logic"                   # optional
 //
-// Note: Home Assistant does not expose a template sensor's source Jinja via
-// its state/entity registry - only the rendered value. So this card takes
-// the template text directly in YAML (copy/paste from your template sensor
-// definition). See README for the reasoning and future ideas (e.g. a backend
-// component that could expose config-defined templates automatically).
+// This card only supports entities created via Settings > Devices &
+// Services > Helpers > Template. It reads the helper's actual template text
+// directly from its config entry (see src/ha/template-source.ts), so the
+// visualization always reflects the real, current definition - never a
+// manually pasted copy that can drift out of sync.
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { parseBooleanTemplate } from './parser/parser';
 import { extractReferences, groupReferences, type ReferencedEntity } from './parser/references';
 import { createLiveTree, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
-import type { HomeAssistant } from './ha/render';
+import type { HomeAssistant } from './ha/hass';
+import { fetchTemplateForEntity } from './ha/template-source';
 import { renderNode } from './components/logic-tree';
-import { renderReferencesPanel, type HassStates } from './components/references-panel';
+import { renderReferencesPanel } from './components/references-panel';
 import './editor';
 
 export interface CardConfig {
   type: string;
-  template: string;
-  entity?: string;
+  entity: string;
   title?: string;
 }
 
 @customElement('ha-template-editor-card')
 export class HaTemplateEditorCard extends LitElement {
-  @property({ attribute: false }) hass!: HomeAssistant & {
-    states: HassStates;
-  };
+  @property({ attribute: false }) hass!: HomeAssistant;
 
   @state() private config?: CardConfig;
   @state() private tree?: EvaluatedNode;
   @state() private references: ReferencedEntity[] = [];
   @state() private parseFallback = false;
   @state() private globalError?: string;
+  @state() private templateText?: string;
 
-  /** Live WS subscriptions for the currently-configured template (no polling: everything here is push-driven). */
+  /** Live WS subscriptions for the currently-configured entity's template (no polling: everything here is push-driven). */
   private liveHandle?: LiveTreeHandle;
-  private subscribedTemplate?: string;
+  private subscribedEntity?: string;
   private setupGeneration = 0;
 
   setConfig(config: CardConfig): void {
-    if (!config?.template) {
-      throw new Error('ha-template-editor-card: "template" is required in the card config.');
+    if (!config?.entity) {
+      throw new Error('ha-template-editor-card: "entity" is required in the card config.');
     }
     this.config = config;
   }
@@ -57,38 +55,45 @@ export class HaTemplateEditorCard extends LitElement {
   static getStubConfig(): CardConfig {
     return {
       type: 'custom:ha-template-editor-card',
-      template: "{{ is_state('binary_sensor.front_door', 'on') and states('sensor.mode') == 'home' }}",
+      entity: 'binary_sensor.example_template_helper',
     };
   }
 
   protected willUpdate(): void {
-    if (this.config && this.hass && this.config.template !== this.subscribedTemplate) {
-      this.references = groupReferences(extractReferences(this.config.template));
+    if (this.config && this.hass && this.config.entity !== this.subscribedEntity) {
       void this.setupLiveTree();
     }
   }
 
   private async setupLiveTree(): Promise<void> {
     if (!this.config || !this.hass) return;
-    const template = this.config.template;
-    this.subscribedTemplate = template;
+    const entityId = this.config.entity;
+    this.subscribedEntity = entityId;
     const generation = ++this.setupGeneration;
 
     const previousHandle = this.liveHandle;
     this.liveHandle = undefined;
     this.tree = undefined;
+    this.references = [];
+    this.templateText = undefined;
     this.globalError = undefined;
     if (previousHandle) void previousHandle.dispose();
 
     try {
+      const template = await fetchTemplateForEntity(this.hass, entityId);
+      if (generation !== this.setupGeneration) return; // superseded by a newer entity selection
+
+      this.templateText = template;
+      this.references = groupReferences(extractReferences(template));
+
       const { ast, fallback } = parseBooleanTemplate(template);
       this.parseFallback = fallback;
       const handle = await createLiveTree(this.hass, ast, (tree) => {
-        if (generation !== this.setupGeneration) return; // superseded by a newer config/template
+        if (generation !== this.setupGeneration) return; // superseded by a newer entity selection
         this.tree = tree;
       });
       if (generation !== this.setupGeneration) {
-        // Config changed again while subscriptions were being set up.
+        // Entity changed again while subscriptions were being set up.
         void handle.dispose();
         return;
       }
@@ -109,7 +114,7 @@ export class HaTemplateEditorCard extends LitElement {
   render() {
     if (!this.config) return html``;
     const title = this.config.title ?? 'Template logic';
-    const actualState = this.config.entity ? this.hass?.states?.[this.config.entity]?.state : undefined;
+    const actualState = this.hass?.states?.[this.config.entity]?.state;
 
     return html`
       <ha-card header=${title}>
@@ -123,10 +128,14 @@ export class HaTemplateEditorCard extends LitElement {
                       single evaluated expression instead.
                     </div>`
                   : ''}
-                ${this.config.entity
-                  ? html`<div class="tpl-summary">
-                      <span>Entity state:</span> <b>${actualState ?? 'unknown'}</b>
-                    </div>`
+                <div class="tpl-summary">
+                  <span>Entity state:</span> <b>${actualState ?? 'unknown'}</b>
+                </div>
+                ${this.templateText
+                  ? html`<details class="tpl-source">
+                      <summary>Template source (live-synced from ${this.config.entity})</summary>
+                      <pre>${this.templateText}</pre>
+                    </details>`
                   : ''}
                 ${this.tree ? renderNode(this.tree) : html`<div>Setting up live subscriptions…</div>`}
                 <h4 class="tpl-refs-title">Referenced entities &amp; attributes</h4>
@@ -212,6 +221,21 @@ export class HaTemplateEditorCard extends LitElement {
     .tpl-summary {
       margin-bottom: 8px;
       font-size: 13px;
+    }
+    .tpl-source {
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .tpl-source summary {
+      cursor: pointer;
+      color: var(--secondary-text-color);
+    }
+    .tpl-source pre {
+      white-space: pre-wrap;
+      background: var(--code-editor-background-color, rgba(127, 127, 127, 0.08));
+      padding: 8px;
+      border-radius: 4px;
+      margin: 6px 0 0;
     }
     .tpl-loading {
       font-size: 12px;

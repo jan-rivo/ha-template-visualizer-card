@@ -4,10 +4,9 @@
 // live value pulled straight from hass.states.
 import { html, type TemplateResult } from 'lit';
 import type { ReferencedEntity } from '../parser/references';
+import type { HomeAssistant } from '../ha/hass';
 
-export interface HassStates {
-  [entityId: string]: { state: string; attributes: Record<string, unknown> } | undefined;
-}
+export type HassStates = HomeAssistant['states'];
 
 function formatValue(value: unknown): string {
   if (value === undefined) return '—';

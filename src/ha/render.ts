@@ -8,15 +8,9 @@
 // keep the subscription open for the lifetime of the card (see
 // subscribeLiveExpression) instead of resolving once and unsubscribing, so
 // the whole card is push-driven with no polling anywhere.
+import type { HomeAssistant } from './hass';
 
-export interface HomeAssistant {
-  connection: {
-    subscribeMessage: <T = unknown>(
-      callback: (result: T) => void,
-      msg: Record<string, unknown>
-    ) => Promise<() => Promise<void>>;
-  };
-}
+export type { HomeAssistant };
 
 interface RenderTemplateResult {
   result: unknown;
