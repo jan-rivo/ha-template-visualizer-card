@@ -17,6 +17,7 @@ import type { HomeAssistant } from './ha/hass';
 import { fetchTemplateForEntity } from './ha/template-source';
 import { renderNode } from './components/logic-tree';
 import { renderReferencesPanel } from './components/references-panel';
+import { t } from './i18n';
 import './editor';
 
 export interface CardConfig {
@@ -113,7 +114,7 @@ export class HaTemplateEditorCard extends LitElement {
 
   render() {
     if (!this.config) return html``;
-    const title = this.config.title ?? 'Template logic';
+    const title = this.config.title ?? t(this.hass, 'card.default_title');
     const stateObj = this.hass?.states?.[this.config.entity];
 
     return html`
@@ -123,25 +124,26 @@ export class HaTemplateEditorCard extends LitElement {
             ? html`<div class="tpl-error">${this.globalError}</div>`
             : html`
                 ${this.parseFallback
-                  ? html`<div class="tpl-warning">
-                      Couldn't fully parse this template's boolean structure - showing it as a
-                      single evaluated expression instead.
-                    </div>`
+                  ? html`<div class="tpl-warning">${t(this.hass, 'card.parse_fallback_warning')}</div>`
                   : ''}
                 <div class="tpl-summary">
                   <ha-state-icon .hass=${this.hass} .stateObj=${stateObj}></ha-state-icon>
                   <b>${stateObj?.state ?? 'unknown'}</b>
                 </div>
-                ${this.tree ? renderNode(this.tree) : html`<div>Setting up live subscriptions…</div>`}
+                ${this.tree
+                  ? renderNode(this.tree, this.hass)
+                  : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
                 ${this.templateText
                   ? html`<details class="tpl-source">
-                      <summary>Template source (live-synced from ${this.config.entity})</summary>
+                      <summary>
+                        ${t(this.hass, 'card.template_source_summary', { entity: this.config.entity })}
+                      </summary>
                       <pre>${this.templateText}</pre>
                     </details>`
                   : ''}
                 <details class="tpl-refs-details">
-                  <summary>Referenced entities &amp; attributes</summary>
-                  ${renderReferencesPanel(this.references, this.hass?.states ?? {})}
+                  <summary>${t(this.hass, 'card.references_summary')}</summary>
+                  ${renderReferencesPanel(this.references, this.hass?.states ?? {}, this.hass)}
                 </details>
               `}
         </div>

@@ -1,0 +1,22 @@
+import type { Translation } from './en';
+
+export const nl: Translation = {
+  'card.default_title': 'Sjabloonlogica',
+  'card.parse_fallback_warning':
+    'Kon de booleaanse structuur van dit sjabloon niet volledig analyseren - wordt weergegeven als één geëvalueerde expressie.',
+  'card.setting_up': 'Live-abonnementen worden ingesteld…',
+  'card.template_source_summary': 'Sjabloonbron (live gesynchroniseerd vanaf {entity})',
+  'card.references_summary': 'Gerefereerde entiteiten & attributen',
+  'references.entity_column': 'Entiteit',
+  'references.value_column': 'Huidige waarde',
+  'references.entity_not_found': 'entiteit niet gevonden',
+  'references.empty': 'Geen states()/is_state()/state_attr()-referenties gevonden.',
+  'tree.loading': 'laden…',
+  'tree.and': 'EN',
+  'tree.or': 'OF',
+  'tree.not': 'NIET',
+  'editor.title_label': 'Titel (optioneel)',
+  'editor.entity_label': 'Sjabloonhelper-entiteit',
+  'editor.hint':
+    'Alleen entiteiten die zijn aangemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen → Sjabloon worden ondersteund. De kaart leest de sjabloondefinitie van die hulp rechtstreeks, zodat deze altijd gesynchroniseerd blijft - niets om te plakken of handmatig bij te werken.',
+};

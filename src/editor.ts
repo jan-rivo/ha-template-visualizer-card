@@ -9,6 +9,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { CardConfig } from './card';
 import type { HomeAssistant } from './ha/hass';
 import { fetchEntityRegistry } from './ha/entity-registry';
+import { t } from './i18n';
 
 interface EntityPickerStateObj {
   entity_id: string;
@@ -56,7 +57,7 @@ export class HaTemplateEditorCardEditor extends LitElement {
     return html`
       <div class="form">
         <label>
-          Title (optional)
+          ${t(this.hass, 'editor.title_label')}
           <input
             type="text"
             .value=${this.config.title ?? ''}
@@ -66,15 +67,11 @@ export class HaTemplateEditorCardEditor extends LitElement {
         <ha-entity-picker
           .hass=${this.hass}
           .value=${this.config.entity ?? ''}
-          .label=${'Template Helper entity'}
+          .label=${t(this.hass, 'editor.entity_label')}
           .entityFilter=${this.entityFilter}
           @value-changed=${(e: CustomEvent<{ value: string }>) => this.emit({ entity: e.detail.value })}
         ></ha-entity-picker>
-        <p class="tpl-hint">
-          Only entities created via Settings &rarr; Devices &amp; Services &rarr; Helpers &rarr; Template are
-          supported. The card reads that helper's template definition directly, so it always stays in sync -
-          nothing to paste or keep updated manually.
-        </p>
+        <p class="tpl-hint">${t(this.hass, 'editor.hint')}</p>
       </div>
     `;
   }

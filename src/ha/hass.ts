@@ -8,6 +8,8 @@ export interface HassEntity {
 
 export interface HomeAssistant {
   states: Record<string, HassEntity | undefined>;
+  /** BCP-47 language code of the logged-in user's selected language (e.g. "en", "nb", "pt-BR"). */
+  language?: string;
   connection: {
     subscribeMessage: <T = unknown>(
       callback: (result: T) => void,
