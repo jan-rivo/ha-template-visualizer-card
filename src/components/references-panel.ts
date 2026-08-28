@@ -25,9 +25,7 @@ export function renderReferencesPanel(entities: ReferencedEntity[], states: Hass
       <thead>
         <tr>
           <th>Entity</th>
-          <th>Attribute</th>
           <th>Current value</th>
-          <th>Used as</th>
         </tr>
       </thead>
       <tbody>
@@ -35,13 +33,11 @@ export function renderReferencesPanel(entities: ReferencedEntity[], states: Hass
           const stateObj = states[entry.entityId];
           const missing = stateObj === undefined;
           const value = entry.attribute ? stateObj?.attributes?.[entry.attribute] : stateObj?.state;
-          const usedAs = Array.from(new Set(entry.usages.map((u) => u.fn))).join(', ');
+          const label = entry.attribute ? `${entry.entityId}.${entry.attribute}` : entry.entityId;
           return html`
             <tr class=${missing ? 'tpl-refs__row--missing' : ''}>
-              <td><code>${entry.entityId}</code></td>
-              <td>${entry.attribute ? html`<code>${entry.attribute}</code>` : '—'}</td>
+              <td><code>${label}</code></td>
               <td>${missing ? 'entity not found' : formatValue(value)}</td>
-              <td class="tpl-refs__used-as">${usedAs}</td>
             </tr>
           `;
         })}

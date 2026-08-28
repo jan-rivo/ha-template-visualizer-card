@@ -114,7 +114,7 @@ export class HaTemplateEditorCard extends LitElement {
   render() {
     if (!this.config) return html``;
     const title = this.config.title ?? 'Template logic';
-    const actualState = this.hass?.states?.[this.config.entity]?.state;
+    const stateObj = this.hass?.states?.[this.config.entity];
 
     return html`
       <ha-card header=${title}>
@@ -129,17 +129,20 @@ export class HaTemplateEditorCard extends LitElement {
                     </div>`
                   : ''}
                 <div class="tpl-summary">
-                  <span>Entity state:</span> <b>${actualState ?? 'unknown'}</b>
+                  <ha-state-icon .hass=${this.hass} .stateObj=${stateObj}></ha-state-icon>
+                  <b>${stateObj?.state ?? 'unknown'}</b>
                 </div>
+                ${this.tree ? renderNode(this.tree) : html`<div>Setting up live subscriptions…</div>`}
                 ${this.templateText
                   ? html`<details class="tpl-source">
                       <summary>Template source (live-synced from ${this.config.entity})</summary>
                       <pre>${this.templateText}</pre>
                     </details>`
                   : ''}
-                ${this.tree ? renderNode(this.tree) : html`<div>Setting up live subscriptions…</div>`}
-                <h4 class="tpl-refs-title">Referenced entities &amp; attributes</h4>
-                ${renderReferencesPanel(this.references, this.hass?.states ?? {})}
+                <details class="tpl-refs-details">
+                  <summary>Referenced entities &amp; attributes</summary>
+                  ${renderReferencesPanel(this.references, this.hass?.states ?? {})}
+                </details>
               `}
         </div>
       </ha-card>
@@ -219,13 +222,22 @@ export class HaTemplateEditorCard extends LitElement {
       margin-bottom: 8px;
     }
     .tpl-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 8px;
       font-size: 13px;
     }
-    .tpl-source {
-      margin-bottom: 12px;
+    .tpl-summary ha-state-icon {
+      --mdc-icon-size: 22px;
+      color: var(--paper-item-icon-color, #44739e);
+    }
+    .tpl-source,
+    .tpl-refs-details {
+      margin: 12px 0 0;
       font-size: 12px;
     }
+    .tpl-refs-details summary,
     .tpl-source summary {
       cursor: pointer;
       color: var(--secondary-text-color);
@@ -241,12 +253,6 @@ export class HaTemplateEditorCard extends LitElement {
       font-size: 12px;
       color: var(--secondary-text-color);
       margin-top: 8px;
-    }
-    .tpl-refs-title {
-      margin: 16px 0 4px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--secondary-text-color);
     }
     .tpl-refs {
       width: 100%;
@@ -267,10 +273,6 @@ export class HaTemplateEditorCard extends LitElement {
     }
     .tpl-refs__row--missing td {
       color: var(--error-color, #db4437);
-    }
-    .tpl-refs__used-as {
-      color: var(--secondary-text-color);
-      font-size: 11px;
     }
     .tpl-refs-empty {
       font-size: 12px;
