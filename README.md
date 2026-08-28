@@ -8,11 +8,7 @@ Visualizes a Home Assistant template sensor's boolean logic as an indented
 tree, showing which sub-conditions are currently `true`/`false` against your
 live entities, and why the overall result comes out the way it does.
 
-<!--
-TODO before submitting to HACS default: add at least one screenshot here,
-e.g. `![Card screenshot](docs/screenshot.png)`. HACS requires an image in
-the README for plugin/dashboard repositories.
--->
+![Card screenshot](docs/screenshot-1.png)
 
 ## Disclaimer!
 
