@@ -22,4 +22,12 @@ export const nb: Translation = {
   'editor.icon_hint': 'La stå tomt for å automatisk vise et på/av-ikon basert på enhetens tilstand.',
   'editor.hint':
     'Kun enheter opprettet via Innstillinger → Enheter og tjenester → Hjelpere → Mal støttes. Kortet leser malens definisjon direkte fra hjelperen, så det holder seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
+  'humanize.is': 'er',
+  'humanize.is_not': 'er ikke',
+  'humanize.less_than': 'er mindre enn',
+  'humanize.less_than_or_equal': 'er mindre enn eller lik',
+  'humanize.greater_than': 'er større enn',
+  'humanize.greater_than_or_equal': 'er større enn eller lik',
+  'humanize.is_in': 'er i',
+  'humanize.is_not_in': 'er ikke i',
 };

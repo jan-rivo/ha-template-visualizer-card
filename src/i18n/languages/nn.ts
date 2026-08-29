@@ -22,4 +22,12 @@ export const nn: Translation = {
   'editor.icon_hint': 'La stå tomt for å automatisk visa eit på/av-ikon basert på tilstanden til eininga.',
   'editor.hint':
     'Berre einingar oppretta via Innstillingar → Einingar og tenester → Hjelparar → Mal er støtta. Kortet les maldefinisjonen til den hjelparen direkte, så det held seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
+  'humanize.is': 'er',
+  'humanize.is_not': 'er ikkje',
+  'humanize.less_than': 'er mindre enn',
+  'humanize.less_than_or_equal': 'er mindre enn eller lik',
+  'humanize.greater_than': 'er større enn',
+  'humanize.greater_than_or_equal': 'er større enn eller lik',
+  'humanize.is_in': 'er i',
+  'humanize.is_not_in': 'er ikkje i',
 };

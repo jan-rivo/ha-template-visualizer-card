@@ -22,4 +22,12 @@ export const fr: Translation = {
     "Laissez vide pour afficher automatiquement une icône marche/arrêt selon l'état de l'entité.",
   'editor.hint':
     "Seules les entités créées via Paramètres → Appareils et services → Assistants → Modèle sont prises en charge. La carte lit directement la définition du modèle de cet assistant, elle reste donc toujours synchronisée - rien à coller ni à mettre à jour manuellement.",
+  'humanize.is': 'est',
+  'humanize.is_not': "n'est pas",
+  'humanize.less_than': 'est inférieur à',
+  'humanize.less_than_or_equal': 'est inférieur ou égal à',
+  'humanize.greater_than': 'est supérieur à',
+  'humanize.greater_than_or_equal': 'est supérieur ou égal à',
+  'humanize.is_in': 'est dans',
+  'humanize.is_not_in': "n'est pas dans",
 };

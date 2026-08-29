@@ -4,6 +4,7 @@ import { html, type TemplateResult } from 'lit';
 import type { EvaluatedNode } from '../tree/evaluate';
 import type { HomeAssistant } from '../ha/hass';
 import { t } from '../i18n';
+import { humanizeLeaf } from '../parser/humanize';
 
 function kindLabel(kind: string, hass: HomeAssistant | undefined): string {
   switch (kind) {
@@ -29,10 +30,12 @@ export function renderNode(evalNode: EvaluatedNode, hass?: HomeAssistant, depth 
         : 'tpl-node--false';
 
   if (node.kind === 'LEAF') {
+    const humanized = humanizeLeaf(node.source, hass);
     return html`
       <div class="tpl-node ${stateClass}" style="--depth: ${depth}">
         <span class="tpl-node__badge">${loading ? '…' : error ? '!' : value ? '✓' : '✗'}</span>
-        <code class="tpl-node__source">${node.source}</code>
+        <span class="tpl-node__label">${humanized ?? node.source}</span>
+        ${humanized !== null ? html`<code class="tpl-node__source">${node.source}</code>` : ''}
         ${loading
           ? html`<span class="tpl-node__meta">${t(hass, 'tree.loading')}</span>`
           : error

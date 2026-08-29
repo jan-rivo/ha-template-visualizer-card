@@ -22,4 +22,12 @@ export const nl: Translation = {
     'Laat leeg om automatisch een aan/uit-pictogram te tonen op basis van de status van de entiteit.',
   'editor.hint':
     'Alleen entiteiten die zijn aangemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen → Sjabloon worden ondersteund. De kaart leest de sjabloondefinitie van die hulp rechtstreeks, zodat deze altijd gesynchroniseerd blijft - niets om te plakken of handmatig bij te werken.',
+  'humanize.is': 'is',
+  'humanize.is_not': 'is niet',
+  'humanize.less_than': 'is kleiner dan',
+  'humanize.less_than_or_equal': 'is kleiner dan of gelijk aan',
+  'humanize.greater_than': 'is groter dan',
+  'humanize.greater_than_or_equal': 'is groter dan of gelijk aan',
+  'humanize.is_in': 'is in',
+  'humanize.is_not_in': 'is niet in',
 };

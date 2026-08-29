@@ -21,4 +21,12 @@ export const es: Translation = {
   'editor.icon_hint': 'Déjelo en blanco para mostrar automáticamente un icono de encendido/apagado según el estado de la entidad.',
   'editor.hint':
     'Solo se admiten entidades creadas mediante Ajustes → Dispositivos y servicios → Ayudantes → Plantilla. La tarjeta lee directamente la definición de la plantilla de ese ayudante, por lo que siempre permanece sincronizada - no hay nada que pegar ni actualizar manualmente.',
+  'humanize.is': 'es',
+  'humanize.is_not': 'no es',
+  'humanize.less_than': 'es menor que',
+  'humanize.less_than_or_equal': 'es menor o igual que',
+  'humanize.greater_than': 'es mayor que',
+  'humanize.greater_than_or_equal': 'es mayor o igual que',
+  'humanize.is_in': 'está en',
+  'humanize.is_not_in': 'no está en',
 };

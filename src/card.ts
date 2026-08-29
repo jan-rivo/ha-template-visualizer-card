@@ -218,10 +218,14 @@ export class HaTemplateEditorCard extends LitElement {
       letter-spacing: 0.5px;
       color: var(--secondary-text-color);
     }
+    .tpl-node__label {
+      font-weight: 500;
+    }
     .tpl-node__source {
       background: var(--code-editor-background-color, rgba(127, 127, 127, 0.08));
       padding: 1px 6px;
       border-radius: 4px;
+      font-size: 12px;
     }
     .tpl-node__meta {
       color: var(--secondary-text-color);

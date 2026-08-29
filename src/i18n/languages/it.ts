@@ -22,4 +22,12 @@ export const it: Translation = {
     "Lascia vuoto per mostrare automaticamente un'icona on/off in base allo stato dell'entità.",
   'editor.hint':
     "Sono supportate solo le entità create tramite Impostazioni → Dispositivi e servizi → Helper → Modello. La scheda legge direttamente la definizione del modello di quell'helper, quindi rimane sempre sincronizzata - niente da incollare o aggiornare manualmente.",
+  'humanize.is': 'è',
+  'humanize.is_not': 'non è',
+  'humanize.less_than': 'è minore di',
+  'humanize.less_than_or_equal': 'è minore o uguale a',
+  'humanize.greater_than': 'è maggiore di',
+  'humanize.greater_than_or_equal': 'è maggiore o uguale a',
+  'humanize.is_in': 'è in',
+  'humanize.is_not_in': 'non è in',
 };
