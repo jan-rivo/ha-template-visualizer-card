@@ -33,11 +33,11 @@ var nt=Object.defineProperty;var it=Object.getOwnPropertyDescriptor;var _=(i,e,t
     </table>
   `}var x=class extends b{constructor(){super(...arguments);this.entityFilter=t=>!this.templateEntityIds||this.templateEntityIds.size===0||this.templateEntityIds.has(t.entity_id)}setConfig(t){this.config=t}willUpdate(){this.hass&&!this.templateEntityIds&&this.loadTemplateEntities()}async loadTemplateEntities(){if(this.hass){this.templateEntityIds=new Set;try{let t=await he(this.hass);this.templateEntityIds=new Set(t.filter(n=>n.platform==="template").map(n=>n.entity_id))}catch{this.templateEntityIds=new Set}}}emit(t){if(!this.config)return;let n={...this.config,...t};this.config=n,this.dispatchEvent(new CustomEvent("config-changed",{detail:{config:n}}))}render(){return this.config?m`
       <div class="form">
-        <ha-textfield
+        <ha-input
           .label=${h(this.hass,"editor.title_label")}
           .value=${this.config.title??""}
           @input=${t=>this.emit({title:t.target.value})}
-        ></ha-textfield>
+        ></ha-input>
         <ha-entity-picker
           .hass=${this.hass}
           .value=${this.config.entity??""}
@@ -54,9 +54,10 @@ var nt=Object.defineProperty;var it=Object.getOwnPropertyDescriptor;var _=(i,e,t
         <p class="tpl-hint">${h(this.hass,"editor.icon_hint")}</p>
         <ha-switch
           .checked=${this.config.showCode!==!0}
-          .label=${h(this.hass,"editor.humanize_label")}
           @change=${t=>this.emit({showCode:!t.target.checked})}
-        ></ha-switch>
+        >
+          <span slot="label">${h(this.hass,"editor.humanize_label")}</span>
+        </ha-switch>
         <p class="tpl-hint">${h(this.hass,"editor.hint")}</p>
       </div>
     `:m``}};x.styles=L`

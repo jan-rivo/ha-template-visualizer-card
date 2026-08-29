@@ -56,11 +56,11 @@ export class HaTemplateEditorCardEditor extends LitElement {
     if (!this.config) return html``;
     return html`
       <div class="form">
-        <ha-textfield
+        <ha-input
           .label=${t(this.hass, 'editor.title_label')}
           .value=${this.config.title ?? ''}
           @input=${(e: Event) => this.emit({ title: (e.target as HTMLInputElement).value })}
-        ></ha-textfield>
+        ></ha-input>
         <ha-entity-picker
           .hass=${this.hass}
           .value=${this.config.entity ?? ''}
@@ -77,9 +77,10 @@ export class HaTemplateEditorCardEditor extends LitElement {
         <p class="tpl-hint">${t(this.hass, 'editor.icon_hint')}</p>
         <ha-switch
           .checked=${this.config.showCode !== true}
-          .label=${t(this.hass, 'editor.humanize_label')}
           @change=${(e: Event) => this.emit({ showCode: !(e.target as HTMLInputElement).checked })}
-        ></ha-switch>
+        >
+          <span slot="label">${t(this.hass, 'editor.humanize_label')}</span>
+        </ha-switch>
         <p class="tpl-hint">${t(this.hass, 'editor.hint')}</p>
       </div>
     `;
