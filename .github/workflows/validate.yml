@@ -8,12 +8,14 @@ on:
     - cron: "0 0 * * 0" # weekly, so we notice if HACS's own rules change
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   hacs:
     name: HACS validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: HACS validation
         uses: hacs/action@main
         with:
