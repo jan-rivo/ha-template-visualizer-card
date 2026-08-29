@@ -40,11 +40,14 @@ export class HaTemplateEditorCard extends LitElement {
   @state() private parseFallback = false;
   @state() private globalError?: string;
   @state() private templateText?: string;
+  @state() private editing = false;
+  @state() private draft = '';
 
   /** Live WS subscriptions for the currently-configured entity's template (no polling: everything here is push-driven). */
   private liveHandle?: LiveTreeHandle;
   private subscribedEntity?: string;
   private setupGeneration = 0;
+  private draftTimer?: number;
 
   setConfig(config: CardConfig): void {
     if (!config?.entity) {
@@ -74,39 +77,75 @@ export class HaTemplateEditorCard extends LitElement {
     if (!this.config || !this.hass) return;
     const entityId = this.config.entity;
     this.subscribedEntity = entityId;
-    const generation = ++this.setupGeneration;
-
-    const previousHandle = this.liveHandle;
-    this.liveHandle = undefined;
-    this.tree = undefined;
-    this.references = [];
-    this.templateText = undefined;
-    this.globalError = undefined;
-    if (previousHandle) void previousHandle.dispose();
+    const generation = this.beginSetup();
 
     try {
       const template = await fetchTemplateForEntity(this.hass, entityId);
       if (generation !== this.setupGeneration) return; // superseded by a newer entity selection
 
       this.templateText = template;
-      this.references = groupReferences(extractReferences(template));
-
-      const { ast, fallback } = parseBooleanTemplate(template);
-      this.parseFallback = fallback;
-      const handle = await createLiveTree(this.hass, ast, (tree) => {
-        if (generation !== this.setupGeneration) return; // superseded by a newer entity selection
-        this.tree = tree;
-      });
-      if (generation !== this.setupGeneration) {
-        // Entity changed again while subscriptions were being set up.
-        void handle.dispose();
-        return;
-      }
-      this.liveHandle = handle;
+      if (!this.editing) this.draft = template;
+      await this.setupFromTemplate(template, generation);
     } catch (err) {
       if (generation !== this.setupGeneration) return;
       this.globalError = err instanceof Error ? err.message : String(err);
     }
+  }
+
+  /** Tears down the previous live tree and returns a fresh setup generation id. */
+  private beginSetup(): number {
+    const generation = ++this.setupGeneration;
+    const previousHandle = this.liveHandle;
+    this.liveHandle = undefined;
+    this.tree = undefined;
+    this.references = [];
+    this.globalError = undefined;
+    if (previousHandle) void previousHandle.dispose();
+    return generation;
+  }
+
+  /** Runs the parse -> subscribe -> render pipeline against an arbitrary template string (live-synced or a draft). */
+  private async setupFromTemplate(template: string, generation: number): Promise<void> {
+    this.references = groupReferences(extractReferences(template));
+
+    const { ast, fallback } = parseBooleanTemplate(template);
+    this.parseFallback = fallback;
+    const handle = await createLiveTree(this.hass, ast, (tree) => {
+      if (generation !== this.setupGeneration) return; // superseded
+      this.tree = tree;
+    });
+    if (generation !== this.setupGeneration) {
+      // the template/entity changed again while subscriptions were being set up.
+      void handle.dispose();
+      return;
+    }
+    this.liveHandle = handle;
+  }
+
+  /** Live-editing: re-parse and re-subscribe to the user's draft, debounced to avoid churning WS subscriptions per keystroke. */
+  private handleDraftChange(value: string): void {
+    this.draft = value;
+    window.clearTimeout(this.draftTimer);
+    this.draftTimer = window.setTimeout(() => {
+      this.editing = true;
+      const generation = this.beginSetup();
+      void this.setupFromTemplate(this.draft, generation);
+    }, 400);
+  }
+
+  private startEditing(): void {
+    this.editing = true;
+    this.draft = this.templateText ?? '';
+  }
+
+  private stopEditing(): void {
+    window.clearTimeout(this.draftTimer);
+    this.editing = false;
+    // Revert to the live-synced helper template.
+    if (!this.templateText) return;
+    this.draft = this.templateText;
+    const generation = this.beginSetup();
+    void this.setupFromTemplate(this.templateText, generation);
   }
 
   disconnectedCallback(): void {
@@ -128,18 +167,40 @@ export class HaTemplateEditorCard extends LitElement {
             ? html`<ha-icon icon=${this.config.icon}></ha-icon>`
             : html`<ha-state-icon .hass=${this.hass} .stateObj=${stateObj}></ha-state-icon>`}
           <span class="card-header__title">${title}</span>
+          <ha-icon-button
+            class="card-header__edit"
+            .label=${t(this.hass, 'card.edit_template')}
+            @click=${this.editing ? this.stopEditing : this.startEditing}
+          >
+            <ha-icon icon=${this.editing ? 'mdi:close' : 'mdi:code-tags'}></ha-icon>
+          </ha-icon-button>
         </div>
         <div class="card-content">
           ${this.globalError
             ? html`<div class="tpl-error">${this.globalError}</div>`
             : html`
+                ${this.editing
+                  ? html`
+                      <div class="tpl-edit">
+                        <div class="tpl-edit__hint">${t(this.hass, 'card.edit_hint')}</div>
+                        <ha-code-editor
+                          .value=${this.draft}
+                          @value-changed=${(e: CustomEvent<{ value: string }>) =>
+                            this.handleDraftChange(e.detail.value ?? '')}
+                        ></ha-code-editor>
+                        <ha-button class="tpl-edit__done" @click=${this.stopEditing}>
+                          ${t(this.hass, 'card.done_editing')}
+                        </ha-button>
+                      </div>
+                    `
+                  : ''}
                 ${this.parseFallback
                   ? html`<div class="tpl-warning">${t(this.hass, 'card.parse_fallback_warning')}</div>`
                   : ''}
                 ${this.tree
                   ? renderNode(this.tree, this.hass, this.config.showCode === true)
                   : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
-                ${this.templateText
+                ${this.templateText && !this.editing
                   ? html`<details class="tpl-source">
                       <summary>
                         ${t(this.hass, 'card.template_source_summary', { entity: this.config.entity })}
@@ -175,6 +236,11 @@ export class HaTemplateEditorCard extends LitElement {
       --mdc-icon-size: 24px;
       color: var(--paper-item-icon-color, #44739e);
       flex: none;
+    }
+    .card-header__edit {
+      margin-left: auto;
+      --mdc-icon-button-size: 32px;
+      color: var(--secondary-text-color);
     }
     .card-content {
       padding: 8px 16px 16px;
@@ -242,6 +308,25 @@ export class HaTemplateEditorCard extends LitElement {
     }
     .tpl-error {
       color: var(--error-color, #db4437);
+    }
+    .tpl-edit {
+      margin: 12px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tpl-edit__hint {
+      font-size: 12px;
+      color: var(--secondary-text-color);
+    }
+    .tpl-edit__done {
+      align-self: flex-end;
+    }
+    ha-code-editor {
+      width: 100%;
+      min-height: 160px;
+      border: 1px solid var(--divider-color, #ccc);
+      border-radius: 4px;
     }
     .tpl-warning {
       color: var(--warning-color, #ff9800);

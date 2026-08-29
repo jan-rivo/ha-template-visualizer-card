@@ -8,6 +8,10 @@ export const nb: Translation = {
   'card.setting_up': 'Setter opp direkteabonnementer…',
   'card.template_source_summary': 'Malkilde (synkronisert direkte fra {entity})',
   'card.references_summary': 'Refererte enheter og attributter',
+  'card.edit_template': 'Rediger mal',
+  'card.done_editing': 'Ferdig',
+  'card.edit_hint':
+    'Redigerer et utkast nedenfor. Visualiseringen re-analyseres direkte mens du skriver. Trykk Ferdig for å gå tilbake til hjelperens lagrede mal (lagring støttes ennå ikke).',
   'references.entity_column': 'Enhet',
   'references.value_column': 'Nåværende verdi',
   'references.entity_not_found': 'enheten ble ikke funnet',

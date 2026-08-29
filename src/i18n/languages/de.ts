@@ -7,6 +7,10 @@ export const de: Translation = {
   'card.setting_up': 'Live-Abonnements werden eingerichtet…',
   'card.template_source_summary': 'Vorlagenquelle (live synchronisiert von {entity})',
   'card.references_summary': 'Referenzierte Entitäten & Attribute',
+  'card.edit_template': 'Vorlage bearbeiten',
+  'card.done_editing': 'Fertig',
+  'card.edit_hint':
+    "Unten wird ein Entwurf bearbeitet. Die Visualisierung wird beim Tippen live neu analysiert. Mit 'Fertig' wird zur gespeicherten Vorlage des Helfers zurückgekehrt (Speichern wird noch nicht unterstützt).",
   'references.entity_column': 'Entität',
   'references.value_column': 'Aktueller Wert',
   'references.entity_not_found': 'Entität nicht gefunden',

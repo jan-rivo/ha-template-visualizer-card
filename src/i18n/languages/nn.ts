@@ -8,6 +8,10 @@ export const nn: Translation = {
   'card.setting_up': 'Set opp direkteabonnement…',
   'card.template_source_summary': 'Malkjelde (synkronisert direkte frå {entity})',
   'card.references_summary': 'Refererte einingar og attributt',
+  'card.edit_template': 'Rediger mal',
+  'card.done_editing': 'Ferdig',
+  'card.edit_hint':
+    'Redigerer eit utkast nedanfor. Visualiseringa vert analysert på nytt direkte medan du skriv. Trykk Ferdig for å gå attende til den lagra malen til hjelparen (lagring vert enno ikkje støtta).',
   'references.entity_column': 'Eining',
   'references.value_column': 'Gjeldande verdi',
   'references.entity_not_found': 'eininga vart ikkje funnen',

@@ -7,6 +7,10 @@ export const fr: Translation = {
   'card.setting_up': 'Configuration des abonnements en direct…',
   'card.template_source_summary': 'Source du modèle (synchronisée en direct depuis {entity})',
   'card.references_summary': 'Entités et attributs référencés',
+  'card.edit_template': "Modifier le modèle",
+  'card.done_editing': 'Terminé',
+  'card.edit_hint':
+    "Modification d'un brouillon ci-dessous. La visualisation est re-analysée en direct pendant la saisie. Appuyez sur Terminé pour revenir au modèle enregistré de l'assistant (l'enregistrement n'est pas encore pris en charge).",
   'references.entity_column': 'Entité',
   'references.value_column': 'Valeur actuelle',
   'references.entity_not_found': 'entité introuvable',

@@ -7,6 +7,10 @@ export const es: Translation = {
   'card.setting_up': 'Configurando suscripciones en vivo…',
   'card.template_source_summary': 'Origen de la plantilla (sincronizado en vivo desde {entity})',
   'card.references_summary': 'Entidades y atributos referenciados',
+  'card.edit_template': 'Editar plantilla',
+  'card.done_editing': 'Hecho',
+  'card.edit_hint':
+    "Editando un borrador a continuación. La visualización se vuelve a analizar en vivo mientras escribes. Pulsa Hecho para volver a la plantilla guardada del ayudante (guardar aún no es compatible).",
   'references.entity_column': 'Entidad',
   'references.value_column': 'Valor actual',
   'references.entity_not_found': 'entidad no encontrada',
