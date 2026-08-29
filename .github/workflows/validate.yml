@@ -2,7 +2,7 @@ name: Validate
 
 on:
   push:
-    branches: [main]
+    branches: [main, "v*"]
   pull_request:
   schedule:
     - cron: "0 0 * * 0" # weekly, so we notice if HACS's own rules change

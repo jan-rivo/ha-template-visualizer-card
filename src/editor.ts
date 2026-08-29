@@ -56,14 +56,11 @@ export class HaTemplateEditorCardEditor extends LitElement {
     if (!this.config) return html``;
     return html`
       <div class="form">
-        <label>
-          ${t(this.hass, 'editor.title_label')}
-          <input
-            type="text"
-            .value=${this.config.title ?? ''}
-            @change=${(e: Event) => this.emit({ title: (e.target as HTMLInputElement).value })}
-          />
-        </label>
+        <ha-input
+          .label=${t(this.hass, 'editor.title_label')}
+          .value=${this.config.title ?? ''}
+          @input=${(e: Event) => this.emit({ title: (e.target as HTMLInputElement).value })}
+        ></ha-input>
         <ha-entity-picker
           .hass=${this.hass}
           .value=${this.config.entity ?? ''}
@@ -78,7 +75,11 @@ export class HaTemplateEditorCardEditor extends LitElement {
           @value-changed=${(e: CustomEvent<{ value: string }>) => this.emit({ icon: e.detail.value || undefined })}
         ></ha-icon-picker>
         <p class="tpl-hint">${t(this.hass, 'editor.icon_hint')}</p>
-        <p class="tpl-hint">${t(this.hass, 'editor.hint')}</p>
+        <ha-switch
+          .checked=${this.config.showCode !== true}
+          @change=${(e: Event) => this.emit({ showCode: !(e.target as HTMLInputElement).checked })}
+        >${t(this.hass, 'editor.humanize_label')}</ha-switch>
+        <ha-alert alert-type="info">${t(this.hass, 'editor.hint')}</ha-alert>
       </div>
     `;
   }
@@ -87,24 +88,16 @@ export class HaTemplateEditorCardEditor extends LitElement {
     .form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: var(--ha-space-3, 12px);
       padding: 8px 0;
-    }
-    label {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 13px;
-    }
-    input {
-      font-family: monospace;
-      font-size: 13px;
-      padding: 6px;
     }
     .tpl-hint {
       font-size: 12px;
       color: var(--secondary-text-color);
       margin: 0;
+    }
+    ha-alert {
+      margin-top: var(--ha-space-1, 4px);
     }
   `;
 }

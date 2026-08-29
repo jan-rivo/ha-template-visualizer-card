@@ -20,6 +20,15 @@ export const de: Translation = {
   'editor.icon_label': 'Symbol (optional)',
   'editor.icon_hint':
     'Leer lassen, um automatisch ein Ein/Aus-Symbol basierend auf dem Zustand der Entität anzuzeigen.',
+  'editor.humanize_label': 'Einfache Sprache',
   'editor.hint':
     'Es werden nur Entitäten unterstützt, die über Einstellungen → Geräte & Dienste → Helfer → Vorlage erstellt wurden. Die Karte liest die Vorlagendefinition dieses Helfers direkt aus, sodass sie immer synchron bleibt - nichts muss manuell eingefügt oder aktualisiert werden.',
+  'humanize.is': 'ist',
+  'humanize.is_not': 'ist nicht',
+  'humanize.less_than': 'ist kleiner als',
+  'humanize.less_than_or_equal': 'ist kleiner oder gleich',
+  'humanize.greater_than': 'ist größer als',
+  'humanize.greater_than_or_equal': 'ist größer oder gleich',
+  'humanize.is_in': 'ist in',
+  'humanize.is_not_in': 'ist nicht in',
 };

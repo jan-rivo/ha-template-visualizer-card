@@ -48,3 +48,43 @@ test('groupReferences dedupes by entity+attribute and merges usages', () => {
   const stateEntry = grouped.find((g) => !g.attribute);
   assert.equal(stateEntry?.usages.length, 2);
 });
+
+test('unescapes escaped quotes inside entity/attribute strings', () => {
+  const refs = extractReferences("{{ states('sensor.it\\'s') }}");
+  assert.equal(refs.length, 1);
+  assert.equal(refs[0].entityId, "sensor.it's");
+
+  const attrRefs = extractReferences("{{ state_attr('sensor.x', 'temp\"unit') }}");
+  assert.equal(attrRefs[0].attribute, 'temp"unit');
+});
+
+test('single-arg is_state() and state_attr() yield undefined for missing parts', () => {
+  const state = extractReferences("{{ is_state('binary_sensor.x') }}")[0];
+  assert.equal(state.fn, 'is_state');
+  assert.equal(state.compareValue, undefined);
+
+  const attr = extractReferences("{{ state_attr('sensor.x') }}")[0];
+  assert.equal(attr.fn, 'state_attr');
+  assert.equal(attr.attribute, undefined);
+});
+
+test('does not extract references with unquoted or malformed arguments', () => {
+  assert.equal(extractReferences("{{ states(sensor.x) }}").length, 0); // unquoted
+  assert.equal(extractReferences("{{ states('sensor.x') }}").length, 1); // sanity: quoted works
+  assert.equal(extractReferences("{{ mystates('sensor.x') }}").length, 0); // not our function
+});
+
+test('groupReferences sorts by entity then attribute', () => {
+  const refs = extractReferences("{{ states('sensor.z') or states('sensor.a') or state_attr('sensor.a','zz') }}");
+  const grouped = groupReferences(refs);
+  assert.deepEqual(
+    grouped.map((g) => `${g.entityId}${g.attribute ? '.' + g.attribute : ''}`),
+    ['sensor.a', 'sensor.a.zz', 'sensor.z']
+  );
+});
+
+test('records the raw matched call text on each reference', () => {
+  const refs = extractReferences("{{ is_state('binary_sensor.door','on') }}");
+  assert.equal(refs[0].raw, "is_state('binary_sensor.door','on')");
+});
+

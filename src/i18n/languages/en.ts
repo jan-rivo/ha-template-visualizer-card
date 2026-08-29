@@ -21,8 +21,17 @@ export const en = {
   'editor.entity_label': 'Template Helper entity',
   'editor.icon_label': 'Icon (optional)',
   'editor.icon_hint': "Leave blank to automatically show an on/off icon based on the entity's state.",
+  'editor.humanize_label': 'Plain language',
   'editor.hint':
     'Only entities created via Settings → Devices & Services → Helpers → Template are supported. The card reads that helper\'s template definition directly, so it always stays in sync - nothing to paste or keep updated manually.',
+  'humanize.is': 'is',
+  'humanize.is_not': 'is not',
+  'humanize.less_than': 'is less than',
+  'humanize.less_than_or_equal': 'is less than or equal to',
+  'humanize.greater_than': 'is greater than',
+  'humanize.greater_than_or_equal': 'is greater than or equal to',
+  'humanize.is_in': 'is in',
+  'humanize.is_not_in': 'is not in',
 } as const;
 
 export type TranslationKey = keyof typeof en;

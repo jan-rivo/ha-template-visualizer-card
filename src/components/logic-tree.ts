@@ -1,9 +1,10 @@
 // Recursive Lit template for rendering one EvaluatedNode and its children as
 // an indented logic tree, coloring each node green (true) or red (false).
-import { html, nothing, type TemplateResult } from 'lit';
+import { html, type TemplateResult } from 'lit';
 import type { EvaluatedNode } from '../tree/evaluate';
 import type { HomeAssistant } from '../ha/hass';
 import { t } from '../i18n';
+import { humanizeLeaf } from '../parser/humanize';
 
 function kindLabel(kind: string, hass: HomeAssistant | undefined): string {
   switch (kind) {
@@ -18,7 +19,12 @@ function kindLabel(kind: string, hass: HomeAssistant | undefined): string {
   }
 }
 
-export function renderNode(evalNode: EvaluatedNode, hass?: HomeAssistant, depth = 0): TemplateResult {
+export function renderNode(
+  evalNode: EvaluatedNode,
+  hass?: HomeAssistant,
+  showCode = false,
+  depth = 0,
+): TemplateResult {
   const { node, value, rendered, error, loading } = evalNode;
   const stateClass = loading
     ? 'tpl-node--loading'
@@ -29,10 +35,12 @@ export function renderNode(evalNode: EvaluatedNode, hass?: HomeAssistant, depth 
         : 'tpl-node--false';
 
   if (node.kind === 'LEAF') {
+    const humanized = humanizeLeaf(node.source, hass);
+    const label = showCode ? node.source : humanized ?? node.source;
     return html`
       <div class="tpl-node ${stateClass}" style="--depth: ${depth}">
         <span class="tpl-node__badge">${loading ? '…' : error ? '!' : value ? '✓' : '✗'}</span>
-        <code class="tpl-node__source">${node.source}</code>
+        <span class="tpl-node__label${showCode ? ' tpl-node__label--code' : ''}">${label}</span>
         ${loading
           ? html`<span class="tpl-node__meta">${t(hass, 'tree.loading')}</span>`
           : error
@@ -49,9 +57,7 @@ export function renderNode(evalNode: EvaluatedNode, hass?: HomeAssistant, depth 
       <span class="tpl-node__op">${kindLabel(node.kind, hass)}</span>
     </div>
     <div class="tpl-children">
-      ${children.map((c) => renderNode(c, hass, depth + 1))}
+      ${children.map((c) => renderNode(c, hass, showCode, depth + 1))}
     </div>
   `;
 }
-
-export const nothingTemplate = nothing;

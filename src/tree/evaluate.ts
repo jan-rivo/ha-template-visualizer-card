@@ -21,21 +21,35 @@ export interface LiveTreeHandle {
   dispose: () => Promise<void>;
 }
 
-interface LeafState {
+export interface LeafState {
   loading: boolean;
   rendered?: string;
   error?: string;
 }
 
-function collectLeaves(node: AstNode, out: AstNode[]): void {
-  if (node.kind === 'LEAF') {
-    out.push(node);
-    return;
-  }
-  for (const child of node.children ?? []) collectLeaves(child, out);
+/** LeafState for a leaf that has not yet received its first render push. */
+export function loadingLeafState(): LeafState {
+  return { loading: true };
 }
 
-function buildEvaluated(node: AstNode, leafState: Map<AstNode, LeafState>): EvaluatedNode {
+/** Collects every LEAF node in the AST, in document order. */
+export function collectLeaves(node: AstNode, out: AstNode[] = []): AstNode[] {
+  if (node.kind === 'LEAF') {
+    out.push(node);
+    return out;
+  }
+  for (const child of node.children ?? []) collectLeaves(child, out);
+  return out;
+}
+
+/**
+ * Recomputes the whole tree bottom-up from the given per-leaf states.
+ * Pure (no side effects, no HA dependency), so it is straightforward to
+ * unit test in isolation. Handles loading / error states on each leaf:
+ * a leaf that is still loading or errored evaluates to false and the flag
+ * is carried up on that node.
+ */
+export function buildEvaluated(node: AstNode, leafState: Map<AstNode, LeafState>): EvaluatedNode {
   if (node.kind === 'LEAF') {
     const st = leafState.get(node)!;
     if (st.loading) return { node, value: false, loading: true };
@@ -66,7 +80,7 @@ export async function createLiveTree(
   collectLeaves(root, leaves);
 
   const leafState = new Map<AstNode, LeafState>();
-  for (const leaf of leaves) leafState.set(leaf, { loading: true });
+  for (const leaf of leaves) leafState.set(leaf, loadingLeafState());
 
   const emit = () => onUpdate(buildEvaluated(root, leafState));
   emit(); // initial "everything loading" frame
