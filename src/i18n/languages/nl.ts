@@ -8,7 +8,9 @@ export const nl: Translation = {
   'card.template_source_summary': 'Sjabloonbron (live gesynchroniseerd vanaf {entity})',
   'card.references_summary': 'Gerefereerde entiteiten & attributen',
   'card.edit_template': 'Sjabloon bewerken',
-  'card.done_editing': 'Klaar',
+  'card.discard_changes': 'Verwerpen',
+  'card.save_template': 'Opslaan in de helper',
+  'card.saving_template': 'Opslaan…',
   'card.edit_hint':
     "U bewerkt hieronder een concept. De visualisatie wordt live opnieuw geanalyseerd terwijl u typt. Druk op Klaar om terug te keren naar het opgeslagen sjabloon van de helper (opslaan wordt nog niet ondersteund).",
   'references.entity_column': 'Entiteit',

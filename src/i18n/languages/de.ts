@@ -8,7 +8,9 @@ export const de: Translation = {
   'card.template_source_summary': 'Vorlagenquelle (live synchronisiert von {entity})',
   'card.references_summary': 'Referenzierte Entitäten & Attribute',
   'card.edit_template': 'Vorlage bearbeiten',
-  'card.done_editing': 'Fertig',
+  'card.discard_changes': 'Verwerfen',
+  'card.save_template': 'Im Helfer speichern',
+  'card.saving_template': 'Speichert…',
   'card.edit_hint':
     "Unten wird ein Entwurf bearbeitet. Die Visualisierung wird beim Tippen live neu analysiert. Mit 'Fertig' wird zur gespeicherten Vorlage des Helfers zurückgekehrt (Speichern wird noch nicht unterstützt).",
   'references.entity_column': 'Entität',

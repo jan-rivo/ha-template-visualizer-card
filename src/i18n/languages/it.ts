@@ -8,7 +8,9 @@ export const it: Translation = {
   'card.template_source_summary': 'Sorgente del modello (sincronizzata in tempo reale da {entity})',
   'card.references_summary': 'Entità e attributi referenziati',
   'card.edit_template': 'Modifica modello',
-  'card.done_editing': 'Fatto',
+  'card.discard_changes': 'Annulla',
+  'card.save_template': "Salva nell'helper",
+  'card.saving_template': 'Salvataggio…',
   'card.edit_hint':
     "Modifica di una bozza qui sotto. La visualizzazione viene ri-analizzata in tempo reale mentre digiti. Premi Fatto per tornare al modello salvato dell'helper (il salvataggio non è ancora supportato).",
   'references.entity_column': 'Entità',

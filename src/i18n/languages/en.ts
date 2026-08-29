@@ -10,9 +10,11 @@ export const en = {
   'card.template_source_summary': 'Template source (live-synced from {entity})',
   'card.references_summary': 'Referenced entities & attributes',
   'card.edit_template': 'Edit template',
-  'card.done_editing': 'Done',
+  'card.discard_changes': 'Discard',
+  'card.save_template': 'Save to helper',
+  'card.saving_template': 'Saving…',
   'card.edit_hint':
-    'Editing a draft below. The visualization re-parses live as you type. Press Done to revert to the helper\'s saved template (saving is not yet supported).',
+    'Editing a draft below. The visualization re-parses live as you type. Save writes it back to the helper; Discard reverts to the helper\'s saved template.',
   'references.entity_column': 'Entity',
   'references.value_column': 'Current value',
   'references.entity_not_found': 'entity not found',

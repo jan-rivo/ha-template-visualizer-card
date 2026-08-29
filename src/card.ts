@@ -15,7 +15,7 @@ import { parseBooleanTemplate } from './parser/parser';
 import { extractReferences, groupReferences, type ReferencedEntity } from './parser/references';
 import { createLiveTree, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
 import type { HomeAssistant } from './ha/hass';
-import { fetchTemplateForEntity } from './ha/template-source';
+import { fetchTemplateForEntity, saveTemplateForEntity } from './ha/template-source';
 import { renderNode } from './components/logic-tree';
 import { renderReferencesPanel } from './components/references-panel';
 import { t } from './i18n';
@@ -42,12 +42,19 @@ export class HaTemplateEditorCard extends LitElement {
   @state() private templateText?: string;
   @state() private editing = false;
   @state() private draft = '';
+  @state() private saving = false;
+  @state() private saveError?: string;
 
   /** Live WS subscriptions for the currently-configured entity's template (no polling: everything here is push-driven). */
   private liveHandle?: LiveTreeHandle;
   private subscribedEntity?: string;
   private setupGeneration = 0;
   private draftTimer?: number;
+
+  /** Whether the logged-in user can actually edit config entries (admins). Saving uses the same options flow as Settings, which is admin-only. */
+  private get canEdit(): boolean {
+    return this.hass?.user?.is_admin === true;
+  }
 
   setConfig(config: CardConfig): void {
     if (!config?.entity) {
@@ -135,17 +142,40 @@ export class HaTemplateEditorCard extends LitElement {
 
   private startEditing(): void {
     this.editing = true;
+    this.saveError = undefined;
     this.draft = this.templateText ?? '';
   }
 
-  private stopEditing(): void {
+  /** Discard draft edits and revert the view to the helper's live-synced template. */
+  private discardChanges(): void {
     window.clearTimeout(this.draftTimer);
     this.editing = false;
+    this.saveError = undefined;
     // Revert to the live-synced helper template.
     if (!this.templateText) return;
     this.draft = this.templateText;
     const generation = this.beginSetup();
     void this.setupFromTemplate(this.templateText, generation);
+  }
+
+  /** Persist the draft back to the helper via its options flow, then reload from the saved value. */
+  private async saveDraft(): Promise<void> {
+    if (!this.config || !this.hass || !this.editing || !this.canEdit) return;
+    window.clearTimeout(this.draftTimer);
+    this.saving = true;
+    this.saveError = undefined;
+    try {
+      await saveTemplateForEntity(this.hass, this.config.entity, this.draft);
+      this.saving = false;
+      this.editing = false;
+      this.draft = this.draft; // keep the just-saved text as the new baseline
+      this.templateText = this.draft;
+      const generation = this.beginSetup();
+      await this.setupFromTemplate(this.draft, generation);
+    } catch (err) {
+      this.saving = false;
+      this.saveError = err instanceof Error ? err.message : String(err);
+    }
   }
 
   disconnectedCallback(): void {
@@ -167,13 +197,15 @@ export class HaTemplateEditorCard extends LitElement {
             ? html`<ha-icon icon=${this.config.icon}></ha-icon>`
             : html`<ha-state-icon .hass=${this.hass} .stateObj=${stateObj}></ha-state-icon>`}
           <span class="card-header__title">${title}</span>
-          <ha-icon-button
-            class="card-header__edit"
-            .label=${t(this.hass, 'card.edit_template')}
-            @click=${this.editing ? this.stopEditing : this.startEditing}
-          >
-            <ha-icon icon=${this.editing ? 'mdi:close' : 'mdi:code-tags'}></ha-icon>
-          </ha-icon-button>
+          ${this.canEdit
+            ? html`<ha-icon-button
+                class="card-header__edit"
+                .label=${t(this.hass, 'card.edit_template')}
+                @click=${this.editing ? this.discardChanges : this.startEditing}
+              >
+                <ha-icon icon=${this.editing ? 'mdi:close' : 'mdi:code-tags'}></ha-icon>
+              </ha-icon-button>`
+            : ''}
         </div>
         <div class="card-content">
           ${this.globalError
@@ -188,9 +220,23 @@ export class HaTemplateEditorCard extends LitElement {
                           @value-changed=${(e: CustomEvent<{ value: string }>) =>
                             this.handleDraftChange(e.detail.value ?? '')}
                         ></ha-code-editor>
-                        <ha-button class="tpl-edit__done" @click=${this.stopEditing}>
-                          ${t(this.hass, 'card.done_editing')}
-                        </ha-button>
+                        ${this.saveError
+                          ? html`<div class="tpl-error">${this.saveError}</div>`
+                          : ''}
+                        <div class="tpl-edit__actions">
+                          <ha-button .disabled=${this.saving} @click=${this.discardChanges}>
+                            ${t(this.hass, 'card.discard_changes')}
+                          </ha-button>
+                          <ha-button
+                            class="tpl-edit__save"
+                            .disabled=${this.saving || this.draft.trim() === ''}
+                            @click=${this.saveDraft}
+                          >
+                            ${this.saving
+                              ? t(this.hass, 'card.saving_template')
+                              : t(this.hass, 'card.save_template')}
+                          </ha-button>
+                        </div>
                       </div>
                     `
                   : ''}
@@ -319,8 +365,13 @@ export class HaTemplateEditorCard extends LitElement {
       font-size: 12px;
       color: var(--secondary-text-color);
     }
-    .tpl-edit__done {
-      align-self: flex-end;
+    .tpl-edit__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .tpl-edit__save {
+      --mdc-theme-primary: var(--green-color, #4caf50);
     }
     ha-code-editor {
       width: 100%;

@@ -8,7 +8,9 @@ export const fr: Translation = {
   'card.template_source_summary': 'Source du modèle (synchronisée en direct depuis {entity})',
   'card.references_summary': 'Entités et attributs référencés',
   'card.edit_template': "Modifier le modèle",
-  'card.done_editing': 'Terminé',
+  'card.discard_changes': 'Ignorer',
+  'card.save_template': "Enregistrer dans l'assistant",
+  'card.saving_template': 'Enregistrement…',
   'card.edit_hint':
     "Modification d'un brouillon ci-dessous. La visualisation est re-analysée en direct pendant la saisie. Appuyez sur Terminé pour revenir au modèle enregistré de l'assistant (l'enregistrement n'est pas encore pris en charge).",
   'references.entity_column': 'Entité',
