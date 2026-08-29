@@ -21,6 +21,7 @@ export const en = {
   'editor.entity_label': 'Template Helper entity',
   'editor.icon_label': 'Icon (optional)',
   'editor.icon_hint': "Leave blank to automatically show an on/off icon based on the entity's state.",
+  'editor.humanize_label': 'Plain language',
   'editor.hint':
     'Only entities created via Settings → Devices & Services → Helpers → Template are supported. The card reads that helper\'s template definition directly, so it always stays in sync - nothing to paste or keep updated manually.',
   'humanize.is': 'is',

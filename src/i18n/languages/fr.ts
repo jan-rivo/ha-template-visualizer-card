@@ -20,6 +20,7 @@ export const fr: Translation = {
   'editor.icon_label': 'Icône (facultative)',
   'editor.icon_hint':
     "Laissez vide pour afficher automatiquement une icône marche/arrêt selon l'état de l'entité.",
+  'editor.humanize_label': 'Langage simple',
   'editor.hint':
     "Seules les entités créées via Paramètres → Appareils et services → Assistants → Modèle sont prises en charge. La carte lit directement la définition du modèle de cet assistant, elle reste donc toujours synchronisée - rien à coller ni à mettre à jour manuellement.",
   'humanize.is': 'est',

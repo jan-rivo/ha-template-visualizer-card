@@ -26,6 +26,8 @@ export interface CardConfig {
   entity: string;
   title?: string;
   icon?: string;
+  /** When true, show the raw template code for leaf conditions instead of humanized text. */
+  showCode?: boolean;
 }
 
 @customElement('ha-template-visualizer-card')
@@ -135,7 +137,7 @@ export class HaTemplateEditorCard extends LitElement {
                   ? html`<div class="tpl-warning">${t(this.hass, 'card.parse_fallback_warning')}</div>`
                   : ''}
                 ${this.tree
-                  ? renderNode(this.tree, this.hass)
+                  ? renderNode(this.tree, this.hass, this.config.showCode === true)
                   : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
                 ${this.templateText
                   ? html`<details class="tpl-source">
@@ -221,11 +223,11 @@ export class HaTemplateEditorCard extends LitElement {
     .tpl-node__label {
       font-weight: 500;
     }
-    .tpl-node__source {
-      background: var(--code-editor-background-color, rgba(127, 127, 127, 0.08));
-      padding: 1px 6px;
-      border-radius: 4px;
+    .tpl-node__label--code {
+      font-family: var(--code-editor-font-family, monospace);
       font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
     .tpl-node__meta {
       color: var(--secondary-text-color);

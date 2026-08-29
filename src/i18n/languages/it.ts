@@ -20,6 +20,7 @@ export const it: Translation = {
   'editor.icon_label': 'Icona (opzionale)',
   'editor.icon_hint':
     "Lascia vuoto per mostrare automaticamente un'icona on/off in base allo stato dell'entità.",
+  'editor.humanize_label': 'Linguaggio semplice',
   'editor.hint':
     "Sono supportate solo le entità create tramite Impostazioni → Dispositivi e servizi → Helper → Modello. La scheda legge direttamente la definizione del modello di quell'helper, quindi rimane sempre sincronizzata - niente da incollare o aggiornare manualmente.",
   'humanize.is': 'è',

@@ -75,6 +75,11 @@ export class HaTemplateEditorCardEditor extends LitElement {
           @value-changed=${(e: CustomEvent<{ value: string }>) => this.emit({ icon: e.detail.value || undefined })}
         ></ha-icon-picker>
         <p class="tpl-hint">${t(this.hass, 'editor.icon_hint')}</p>
+        <ha-switch
+          .checked=${this.config.showCode !== true}
+          .label=${t(this.hass, 'editor.humanize_label')}
+          @change=${(e: Event) => this.emit({ showCode: !(e.target as HTMLInputElement).checked })}
+        ></ha-switch>
         <p class="tpl-hint">${t(this.hass, 'editor.hint')}</p>
       </div>
     `;
