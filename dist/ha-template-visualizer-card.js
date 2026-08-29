@@ -55,22 +55,23 @@ var nt=Object.defineProperty;var it=Object.getOwnPropertyDescriptor;var _=(i,e,t
         <ha-switch
           .checked=${this.config.showCode!==!0}
           @change=${t=>this.emit({showCode:!t.target.checked})}
-        >
-          <span slot="label">${h(this.hass,"editor.humanize_label")}</span>
-        </ha-switch>
-        <p class="tpl-hint">${h(this.hass,"editor.hint")}</p>
+        >${h(this.hass,"editor.humanize_label")}</ha-switch>
+        <ha-alert alert-type="info">${h(this.hass,"editor.hint")}</ha-alert>
       </div>
     `:m``}};x.styles=L`
     .form {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: var(--ha-space-3, 12px);
       padding: 8px 0;
     }
     .tpl-hint {
       font-size: 12px;
       color: var(--secondary-text-color);
       margin: 0;
+    }
+    ha-alert {
+      margin-top: var(--ha-space-1, 4px);
     }
   `,_([O({attribute:!1})],x.prototype,"hass",2),_([$()],x.prototype,"config",2),_([$()],x.prototype,"templateEntityIds",2),x=_([J("ha-template-visualizer-card-editor")],x);var v=class extends b{constructor(){super(...arguments);this.references=[];this.parseFallback=!1;this.setupGeneration=0}setConfig(t){if(!t?.entity)throw new Error('ha-template-visualizer-card: "entity" is required in the card config.');this.config=t}static getConfigElement(){return document.createElement("ha-template-visualizer-card-editor")}static getStubConfig(){return{type:"custom:ha-template-visualizer-card",entity:"binary_sensor.example_template_helper"}}willUpdate(){this.config&&this.hass&&this.config.entity!==this.subscribedEntity&&this.setupLiveTree()}async setupLiveTree(){if(!this.config||!this.hass)return;let t=this.config.entity;this.subscribedEntity=t;let n=++this.setupGeneration,r=this.liveHandle;this.liveHandle=void 0,this.tree=void 0,this.references=[],this.templateText=void 0,this.globalError=void 0,r&&r.dispose();try{let s=await Fe(this.hass,t);if(n!==this.setupGeneration)return;this.templateText=s,this.references=Le(R(s));let{ast:o,fallback:a}=Pe(s);this.parseFallback=a;let l=await Ue(this.hass,o,d=>{n===this.setupGeneration&&(this.tree=d)});if(n!==this.setupGeneration){l.dispose();return}this.liveHandle=l}catch(s){if(n!==this.setupGeneration)return;this.globalError=s instanceof Error?s.message:String(s)}}disconnectedCallback(){super.disconnectedCallback(),this.setupGeneration++,this.liveHandle?.dispose(),this.liveHandle=void 0}render(){if(!this.config)return m``;let t=this.config.title??h(this.hass,"card.default_title"),n=this.hass?.states?.[this.config.entity];return m`
       <ha-card>

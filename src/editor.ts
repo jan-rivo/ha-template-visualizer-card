@@ -78,10 +78,8 @@ export class HaTemplateEditorCardEditor extends LitElement {
         <ha-switch
           .checked=${this.config.showCode !== true}
           @change=${(e: Event) => this.emit({ showCode: !(e.target as HTMLInputElement).checked })}
-        >
-          <span slot="label">${t(this.hass, 'editor.humanize_label')}</span>
-        </ha-switch>
-        <p class="tpl-hint">${t(this.hass, 'editor.hint')}</p>
+        >${t(this.hass, 'editor.humanize_label')}</ha-switch>
+        <ha-alert alert-type="info">${t(this.hass, 'editor.hint')}</ha-alert>
       </div>
     `;
   }
@@ -90,13 +88,16 @@ export class HaTemplateEditorCardEditor extends LitElement {
     .form {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: var(--ha-space-3, 12px);
       padding: 8px 0;
     }
     .tpl-hint {
       font-size: 12px;
       color: var(--secondary-text-color);
       margin: 0;
+    }
+    ha-alert {
+      margin-top: var(--ha-space-1, 4px);
     }
   `;
 }
