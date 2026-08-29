@@ -25,7 +25,7 @@ export function renderNode(
   showCode = false,
   depth = 0,
 ): TemplateResult {
-  const { node, value, rendered, error, loading } = evalNode;
+  const { node, value, error, loading } = evalNode;
   const stateClass = loading
     ? 'tpl-node--loading'
     : error
@@ -45,7 +45,7 @@ export function renderNode(
           ? html`<span class="tpl-node__meta">${t(hass, 'tree.loading')}</span>`
           : error
             ? html`<span class="tpl-node__meta tpl-node__meta--error">${error}</span>`
-            : html`<span class="tpl-node__meta">→ ${rendered}</span>`}
+            : ''}
       </div>
     `;
   }

@@ -98,7 +98,8 @@ export async function createLiveTree(
         (error) => {
           leafState.set(leaf, { loading: false, error: error.message });
           emit();
-        }
+        },
+        leaf.preamble
       );
       unsubscribers.push(unsub);
     })

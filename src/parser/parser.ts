@@ -10,6 +10,7 @@
 // Any parse failure falls back to a single LEAF covering the whole input,
 // so the UI never hard-crashes on templates outside this subset.
 import { tokenize } from './tokenizer';
+import { splitTemplate, type TemplateSegment } from './template-splitter';
 import type { AstNode, Token } from './types';
 
 class Parser {
@@ -109,14 +110,89 @@ export function extractExpression(template: string): string {
   return trimmed;
 }
 
-export function parseBooleanTemplate(template: string): { ast: AstNode; fallback: boolean } {
+export function parseBooleanTemplate(template: string): { ast: AstNode; fallback: boolean; preamble?: string } {
+  const segments = splitTemplate(template);
+  const singleOutput = detectSingleOutput(segments, template);
+
+  if (singleOutput) {
+    // Single-output form: optional `{% set ... %}` prelude + one `{{ expr }}`.
+    // Stamp the prelude onto every leaf so HA re-renders each leaf with its
+    // local variables defined.
+    try {
+      const expr = singleOutput.expr;
+      const parser = new Parser(expr);
+      const ast = parser.parse();
+      collectNodes(ast).forEach((node) => {
+        if (node.kind === 'LEAF') node.preamble = singleOutput.preamble;
+      });
+      return { ast, fallback: false, preamble: singleOutput.preamble };
+    } catch {
+      // fall through to the legacy single-leaf fallback below
+    }
+  }
+
+  // Legacy behavior (unchanged): strip `{{ }}` if it wraps the whole input,
+  // then either parse it or degrade to one opaque leaf.
   const expr = extractExpression(template);
   try {
     const parser = new Parser(expr);
     const ast = parser.parse();
     return { ast, fallback: false };
   } catch {
-    // Graceful degradation: whole expression as one opaque leaf.
     return { ast: { kind: 'LEAF', source: expr }, fallback: true };
   }
+}
+
+interface SingleOutput {
+  expr: string;
+  preamble: string;
+}
+
+/**
+ * Recognizes the Phase-1 "single-output" shape: any number of leading
+ * `{% set ... %}` statements (the prelude), then exactly one `{{ expr }}`
+ * output tag, with only whitespace text or comments in between. Returns the
+ * trimmed expression and its prelude string, or undefined if the template is
+ * not of this shape (e.g. multiple outputs, or control-flow tags).
+ */
+function detectSingleOutput(segments: TemplateSegment[], template: string): SingleOutput | undefined {
+  let expr: TemplateSegment | undefined;
+  const preludeSegs: TemplateSegment[] = [];
+  let sawExpr = false;
+
+  for (const seg of segments) {
+    switch (seg.type) {
+      case 'text':
+        if (seg.content.trim() !== '') return undefined; // non-whitespace literal -> not single output
+        break;
+      case 'comment':
+        break; // comments are value-neutral; allow them anywhere
+      case 'stmt':
+        if (sawExpr || !isSetStatement(seg.content)) return undefined;
+        preludeSegs.push(seg);
+        break;
+      case 'expr':
+        if (sawExpr) return undefined; // multiple outputs -> not single output
+        sawExpr = true;
+        expr = seg;
+        break;
+    }
+  }
+
+  if (!expr) return undefined; // no output tag at all (pure text/set-only template)
+
+  const preamble = preludeSegs.map((seg) => template.slice(seg.start, seg.end)).join(' ');
+  return { expr: expr.content.trim(), preamble };
+}
+
+/** Whether a `{% ... %}` statement content is a `{% set %}` assignment. */
+function isSetStatement(content: string): boolean {
+  return /^\s*set\b/i.test(content);
+}
+
+/** Collects every node in the tree, in document order. */
+function collectNodes(node: AstNode, out: AstNode[] = []): AstNode[] {
+  out.push(node);
+  for (const child of node.children ?? []) collectNodes(child, out);
+  return out;
 }

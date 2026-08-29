@@ -1,6 +1,6 @@
 # Parser expansion plan (v0.3)
 
-Status: accepted plan, not yet implemented. Work happens on the `v0.3` branch.
+Status: Phase 1 implemented on `v0.3` (pending beta). Phases 2-5 not yet started.
 
 ## Goal
 
@@ -15,7 +15,7 @@ subscriptions -> truthiness**. HA does all value rendering; we only structure it
   (`states()`, `is_state()`, `state_attr()`, `float()`, etc.).
 - Everything else -> one opaque leaf + `parse_fallback_warning` (graceful, no crash).
 
-## Phase 1 - Statement-aware splitting + `{% set %}` prelude
+## Phase 1 - Statement-aware splitting + `{% set %}` prelude  ✅ IMPLEMENTED
 
 Problem today: `{% set threshold = 10 %}{{ states('sensor.x') > threshold }}`
 fails, because each leaf is rendered as an isolated `{{ (expr) }}` where
@@ -23,15 +23,19 @@ fails, because each leaf is rendered as an isolated `{{ (expr) }}` where
 
 - New scanner (`template-splitter`) that splits a template into top-level
   pieces: literal text, `{{ expr }}`, and `{% stmt %}` tags (quote/brace-aware,
-  honors whitespace control `{%- -%}`).
+  honors whitespace control `{%- -%}`). ✅
 - Single-output form `{% set ... %}* + {{ expr }}` -> keep existing boolean
   tree, but attach the *applicable* `{% set %}` preamble to each leaf
-  subscription: `{{ set_preamble }}{{ (expr) }}`.
-- Multi-output / control-flow forms get handed to Phase 2.
+  subscription: `{{ set_preamble }}{{ (expr) }}`. ✅
+  - Implemented via `preamble?: string` on `AstNode` (stamped on each LEAF),
+    passed from `createLiveTree` into `subscribeLiveExpression`, which renders
+    `{preamble}{{ (expr) }}`.
+- Multi-output / control-flow forms get handed to Phase 2. ✅ (they still fall
+  back to the legacy opaque single leaf until Phase 2 lands)
 
 Acceptance: the `threshold` example renders correctly; existing
 single-expression behavior is byte-for-byte unchanged; `default()` / `|d(...)`
-leaves still work.
+leaves still work. ✅ 67 tests pass (new: splitter + prelude).
 
 ## Phase 2 - `{% if %} / elif / else` as a real node
 

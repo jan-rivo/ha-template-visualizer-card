@@ -32,9 +32,10 @@ export async function subscribeLiveExpression(
   hass: HomeAssistant,
   expression: string,
   onValue: (rendered: string) => void,
-  onError: (error: Error) => void
+  onError: (error: Error) => void,
+  preamble = ''
 ): Promise<Unsubscribe> {
-  const template = `{{ (${expression}) }}`;
+  const template = `${preamble}${preamble ? ' ' : ''}{{ (${expression}) }}`;
   try {
     return await hass.connection.subscribeMessage<RenderTemplateResult>(
       (result) => onValue(String(result?.result ?? '')),

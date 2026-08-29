@@ -15,6 +15,12 @@ export interface AstNode {
   source: string;
   /** Child nodes for AND / OR (2+ for AND/OR chains) and NOT (exactly 1). */
   children?: AstNode[];
+  /**
+   * For LEAF nodes: a `{% set ... %}` prelude that must be prepended to this
+   * leaf's expression so referenced local variables (e.g. `threshold`) are
+   * defined when HA renders it in isolation (Phase 1 "single-output" form).
+   */
+  preamble?: string;
 }
 
 export type TokenType =
