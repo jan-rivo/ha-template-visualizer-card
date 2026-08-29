@@ -1,6 +1,6 @@
 // Recursive Lit template for rendering one EvaluatedNode and its children as
 // an indented logic tree, coloring each node green (true) or red (false).
-import { html, nothing, type TemplateResult } from 'lit';
+import { html, type TemplateResult } from 'lit';
 import type { EvaluatedNode } from '../tree/evaluate';
 import type { HomeAssistant } from '../ha/hass';
 import { t } from '../i18n';
@@ -53,5 +53,3 @@ export function renderNode(evalNode: EvaluatedNode, hass?: HomeAssistant, depth 
     </div>
   `;
 }
-
-export const nothingTemplate = nothing;

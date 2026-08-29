@@ -85,7 +85,10 @@ class Parser {
         throw new Error(`Expected ')' at position ${closing.start}`);
       }
       this.advance();
-      return inner;
+      // Preserve the parentheses in the node's source so that re-rendering via
+      // HA keeps the same operator precedence (e.g. `not (a and b)` must stay
+      // `not (a and b)`, not become `not a and b`).
+      return { ...inner, source: this.sourceBetween(tok, this.tokens[this.pos - 1]) };
     }
     if (tok.type === 'ATOM') {
       this.advance();
