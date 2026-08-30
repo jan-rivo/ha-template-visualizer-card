@@ -42,6 +42,10 @@ export const en = {
   'humanize.greater_than_or_equal': 'is greater than or equal to',
   'humanize.is_in': 'is in',
   'humanize.is_not_in': 'is not in',
+  'humanize.now': 'the current time',
+  'humanize.current': 'current',
+  'humanize.and': 'and',
+  'humanize.between': 'is between',
 } as const;
 
 export type TranslationKey = keyof typeof en;

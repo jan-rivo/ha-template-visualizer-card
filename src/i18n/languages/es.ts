@@ -40,4 +40,8 @@ export const es: Translation = {
   'humanize.greater_than_or_equal': 'es mayor o igual que',
   'humanize.is_in': 'está en',
   'humanize.is_not_in': 'no está en',
+  'humanize.now': 'la hora actual',
+  'humanize.current': 'actual',
+  'humanize.and': 'y',
+  'humanize.between': 'está entre',
 };

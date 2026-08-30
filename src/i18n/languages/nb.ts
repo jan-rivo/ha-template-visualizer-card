@@ -41,4 +41,8 @@ export const nb: Translation = {
   'humanize.greater_than_or_equal': 'er større enn eller lik',
   'humanize.is_in': 'er i',
   'humanize.is_not_in': 'er ikke i',
+  'humanize.now': 'gjeldende tid',
+  'humanize.current': 'gjeldende',
+  'humanize.and': 'og',
+  'humanize.between': 'er mellom',
 };

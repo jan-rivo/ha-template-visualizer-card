@@ -41,4 +41,8 @@ export const fr: Translation = {
   'humanize.greater_than_or_equal': 'est supérieur ou égal à',
   'humanize.is_in': 'est dans',
   'humanize.is_not_in': "n'est pas dans",
+  'humanize.now': 'l’heure actuelle',
+  'humanize.current': 'actuel',
+  'humanize.and': 'et',
+  'humanize.between': 'est entre',
 };

@@ -59,3 +59,25 @@ test('unrecognized leaves fall back to null (caller shows raw source)', () => {
 test('an entity referencing another entity still reads naturally', () => {
   assert.equal(humanizeLeaf("states('sensor.mode') == states('sensor.snuffy')", hass), 'Mode is Snuffy');
 });
+
+test('local variables (non-entity operands) still get operator words', () => {
+  assert.equal(humanizeLeaf('elevation < 0', hass), 'elevation is less than 0');
+  assert.equal(humanizeLeaf('elevation >= 100', hass), 'elevation is greater than or equal to 100');
+});
+
+test("now() comparisons humanize to the current clock component", () => {
+  assert.equal(humanizeLeaf('now().hour > 21', hass), 'current hour is greater than 21');
+  assert.equal(humanizeLeaf('now().hour < 6', hass), 'current hour is less than 6');
+  assert.equal(humanizeLeaf('now() < some_time', hass), 'the current time is less than some_time');
+});
+
+test('chained comparisons render as a between range', () => {
+  assert.equal(humanizeLeaf('0 < elevation < 20', hass), 'elevation is between 0 and 20');
+  assert.equal(humanizeLeaf('20 > elevation > 0', hass), 'elevation is between 0 and 20');
+  assert.equal(humanizeLeaf('10 <= x <= 50', hass), 'x is between 10 and 50');
+});
+
+test('chained comparisons resolve entity friendly names and bound order', () => {
+  assert.equal(humanizeLeaf("0 < states('sensor.some_sensor') < 30", hass), 'Some Sensor is between 0 and 30');
+  assert.equal(humanizeLeaf("30 > states('sensor.some_sensor') > 0", hass), 'Some Sensor is between 0 and 30');
+});
