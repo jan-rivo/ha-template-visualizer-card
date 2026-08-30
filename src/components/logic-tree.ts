@@ -49,6 +49,8 @@ export function renderNode(
     }
     const rendered = evalNode.rendered;
     const isBool = rendered !== undefined && isBooleanRendered(rendered);
+    const humanized = humanizeLeaf(node.source, hass);
+    const stmt = showCode ? node.source : humanized ?? node.source;
     return html`<div class="tpl-node ${stateClass} tpl-node--output" style="--depth: ${depth}">
       ${loading
         ? html`<span class="tpl-node__badge">…</span>`
@@ -56,9 +58,15 @@ export function renderNode(
           ? html`<span class="tpl-node__badge">!</span>`
           : isBool
             ? html`<span class="tpl-node__badge">${value ? '✓' : '✗'}</span>`
-            : html`<ha-icon class="tpl-node__value-icon" icon="mdi:triangle-outline"></ha-icon>`}
+            : html`<ha-icon class="tpl-node__value-icon" icon="mdi:variable-box"></ha-icon>`}
       <span class="tpl-node__label tpl-node__label--output">
-        ${loading ? t(hass, 'tree.loading') : error ? error : isBool ? rendered : html`→ ${rendered}`}
+        ${loading
+          ? t(hass, 'tree.loading')
+          : error
+            ? error
+            : isBool
+              ? rendered
+              : html`<span class="tpl-node__stmt">${stmt}</span><span class="tpl-node__arrow">→</span>${rendered}`}
       </span>
     </div>`;
   }

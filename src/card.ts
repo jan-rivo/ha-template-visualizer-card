@@ -360,14 +360,20 @@ export class HaTemplateEditorCard extends LitElement {
       flex: none;
       color: var(--secondary-text-color, #888);
     }
+    .tpl-node__stmt {
+      font-family: var(--code-editor-font-family, monospace);
+      font-size: 12px;
+      color: var(--secondary-text-color, #888);
+    }
+    .tpl-node__arrow {
+      color: var(--secondary-text-color, #888);
+      margin: 0 6px;
+    }
     .tpl-node--empty {
       font-style: italic;
     }
     .tpl-branch {
       padding: 4px 0;
-    }
-    .tpl-branch--fired {
-      background: var(--state-active-color, rgba(76, 175, 80, 0.06));
     }
     .tpl-branch__head {
       display: flex;
