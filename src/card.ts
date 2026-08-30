@@ -363,7 +363,7 @@ export class HaTemplateEditorCard extends LitElement {
       padding: 4px 0;
     }
     .tpl-branch--fired {
-      background: var(--state-active-color, rgba(76, 175, 80, 0.1));
+      background: var(--state-active-color, rgba(76, 175, 80, 0.06));
     }
     .tpl-branch__head {
       display: flex;
@@ -377,23 +377,15 @@ export class HaTemplateEditorCard extends LitElement {
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .tpl-branch__tag--else {
-      text-transform: none;
-    }
-    .tpl-branch__cond {
-      font-weight: 500;
-      color: var(--primary-text-color);
-    }
-    .tpl-branch__fired {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    .tpl-branch__tag--true {
       color: var(--success-color, #4caf50);
-      background: rgba(76, 175, 80, 0.12);
-      border-radius: 4px;
-      padding: 1px 6px;
+    }
+    .tpl-branch__tag--false {
+      color: var(--error-color, #db4437);
     }
     .tpl-error {
       color: var(--error-color, #db4437);

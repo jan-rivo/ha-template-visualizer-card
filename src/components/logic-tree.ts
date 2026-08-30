@@ -65,12 +65,8 @@ export function renderNode(
   if (node.kind === 'CONDITIONAL') {
     const branches = evalNode.branches ?? [];
     return html`
-      <div class="tpl-node ${stateClass} tpl-node--group" style="--depth: ${depth}">
-        <span class="tpl-node__badge">${loading ? '…' : error ? '!' : value ? '✓' : '✗'}</span>
-        <span class="tpl-node__op">${t(hass, 'tree.if')}</span>
-      </div>
       <div class="tpl-children">
-        ${branches.map((branch) => renderBranch(branch, hass, showCode, depth + 1))}
+        ${branches.map((branch, index) => renderBranch(branch, index, hass, showCode, depth + 1))}
       </div>
     `;
   }
@@ -87,21 +83,25 @@ export function renderNode(
   `;
 }
 
-/** Renders one branch of a CONDITIONAL: its condition tree + its body, marked when it fires. */
+/** Renders one branch of a CONDITIONAL: its if/else-if/else tag with a truthy
+ *  checkmark (✓ when this branch fires, ✗ otherwise), its condition tree
+ *  (humanized per the showCode toggle), and its output text. */
 function renderBranch(
   branch: EvaluatedBranch,
+  index: number,
   hass?: HomeAssistant,
   showCode = false,
   depth = 0,
 ): TemplateResult {
+  const isElse = branch.condition === undefined;
+  const tag = isElse ? t(hass, 'tree.else') : index === 0 ? t(hass, 'tree.if') : t(hass, 'tree.else_if');
+  const fired = branch.fired;
   return html`
-    <div class="tpl-branch${branch.fired ? ' tpl-branch--fired' : ''}" style="--depth: ${depth}">
+    <div class="tpl-branch${fired ? ' tpl-branch--fired' : ''}" style="--depth: ${depth}">
       <div class="tpl-branch__head">
-        ${branch.condition
-          ? html`<span class="tpl-branch__tag">${t(hass, 'tree.when')}</span>`
-          : html`<span class="tpl-branch__tag tpl-branch__tag--else">${t(hass, 'tree.else')}</span>`}
-        ${branch.fired ? html`<span class="tpl-branch__fired">${t(hass, 'tree.fired')}</span>` : ''}
-        ${branch.condition && !showCode ? html`<span class="tpl-branch__cond">${humanizeLeaf(branch.condition.node.source, hass) ?? branch.condition.node.source}</span>` : ''}
+        <span class="tpl-branch__tag tpl-branch__tag--${fired ? 'true' : 'false'}">
+          ${fired ? '✓' : '✗'} ${tag}
+        </span>
       </div>
       ${branch.condition ? renderNode(branch.condition, hass, showCode, depth) : ''}
       ${renderNode(branch.body, hass, showCode, depth)}
