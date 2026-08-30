@@ -356,6 +356,10 @@ export class HaTemplateEditorCard extends LitElement {
       font-weight: 400;
       color: var(--primary-text-color, #000);
     }
+    .tpl-node__value-icon {
+      flex: none;
+      color: var(--secondary-text-color, #888);
+    }
     .tpl-node--empty {
       font-style: italic;
     }

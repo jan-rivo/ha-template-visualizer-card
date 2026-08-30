@@ -19,6 +19,13 @@ function kindLabel(kind: string, hass: HomeAssistant | undefined): string {
   }
 }
 
+/** Whether a rendered OUTPUT string is a boolean literal (true/false), which
+ *  should keep the check/cross badge rather than the value arrow. */
+function isBooleanRendered(rendered: string): boolean {
+  const v = rendered.trim().toLowerCase();
+  return v === 'true' || v === 'false';
+}
+
 export function renderNode(
   evalNode: EvaluatedNode,
   hass?: HomeAssistant,
@@ -40,9 +47,19 @@ export function renderNode(
         <span class="tpl-node__meta">${t(hass, 'tree.empty_output')}</span>
       </div>`;
     }
-    return html`<div class="tpl-node tpl-node--output" style="--depth: ${depth}">
-      <span class="tpl-node__badge">${loading ? '…' : error ? '!' : value ? '✓' : '✗'}</span>
-      <span class="tpl-node__label tpl-node__label--output">${loading ? t(hass, 'tree.loading') : error ? error : evalNode.rendered}</span>
+    const rendered = evalNode.rendered;
+    const isBool = rendered !== undefined && isBooleanRendered(rendered);
+    return html`<div class="tpl-node ${stateClass} tpl-node--output" style="--depth: ${depth}">
+      ${loading
+        ? html`<span class="tpl-node__badge">…</span>`
+        : error
+          ? html`<span class="tpl-node__badge">!</span>`
+          : isBool
+            ? html`<span class="tpl-node__badge">${value ? '✓' : '✗'}</span>`
+            : html`<ha-icon class="tpl-node__value-icon" icon="mdi:triangle-outline"></ha-icon>`}
+      <span class="tpl-node__label tpl-node__label--output">
+        ${loading ? t(hass, 'tree.loading') : error ? error : isBool ? rendered : html`→ ${rendered}`}
+      </span>
     </div>`;
   }
 
