@@ -352,6 +352,49 @@ export class HaTemplateEditorCard extends LitElement {
       border-left: 1px dashed var(--divider-color, #ccc);
       margin-left: 8px;
     }
+    .tpl-node--output .tpl-node__label {
+      font-weight: 400;
+      color: var(--primary-text-color, #000);
+    }
+    .tpl-node--empty {
+      font-style: italic;
+    }
+    .tpl-branch {
+      padding: 4px 0;
+    }
+    .tpl-branch--fired {
+      background: var(--state-active-color, rgba(76, 175, 80, 0.1));
+    }
+    .tpl-branch__head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--secondary-text-color);
+      margin-bottom: 2px;
+    }
+    .tpl-branch__tag {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tpl-branch__tag--else {
+      text-transform: none;
+    }
+    .tpl-branch__cond {
+      font-weight: 500;
+      color: var(--primary-text-color);
+    }
+    .tpl-branch__fired {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--success-color, #4caf50);
+      background: rgba(76, 175, 80, 0.12);
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
     .tpl-error {
       color: var(--error-color, #db4437);
     }

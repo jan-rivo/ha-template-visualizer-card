@@ -103,9 +103,10 @@ test('multiple outputs are handed to the legacy path as a single opaque leaf', (
   assert.equal(ast.kind, 'LEAF');
 });
 
-test('control-flow statements are handed to the legacy path (Phase 2 covers if/elif/else)', () => {
-  const { ast } = parseBooleanTemplate("{% if x %}{{ y }}{% endif %}");
-  assert.equal(ast.kind, 'LEAF');
+test('control-flow if/else templates now parse as a CONDITIONAL node (Phase 2)', () => {
+  const { ast, fallback } = parseBooleanTemplate("{% if x %}{{ y }}{% endif %}");
+  assert.equal(fallback, false);
+  assert.equal(ast.kind, 'CONDITIONAL');
 });
 
 test('extractExpression still behaves as before', () => {

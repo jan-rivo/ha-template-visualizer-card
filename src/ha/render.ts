@@ -20,6 +20,32 @@ interface RenderTemplateResult {
 export type Unsubscribe = () => Promise<void>;
 
 /**
+ * Subscribes to the live rendered result of an arbitrary template fragment
+ * (e.g. a conditional branch body like `You have {{ states('sensor.x') }}
+ * visitors`). `template` is rendered as-is; an optional `{% set %}` prelude
+ * is prepended so local variables are defined. `onValue` is invoked
+ * immediately with the initial render, then again on every push.
+ */
+export async function subscribeTemplate(
+  hass: HomeAssistant,
+  template: string,
+  onValue: (rendered: string) => void,
+  onError: (error: Error) => void,
+  preamble = ''
+): Promise<Unsubscribe> {
+  const full = `${preamble}${preamble ? ' ' : ''}${template}`;
+  try {
+    return await hass.connection.subscribeMessage<RenderTemplateResult>(
+      (result) => onValue(String(result?.result ?? '')),
+      { type: 'render_template', template: full }
+    );
+  } catch (err) {
+    onError(err instanceof Error ? err : new Error(String(err)));
+    return async () => undefined;
+  }
+}
+
+/**
  * Subscribes to the live rendered value of `{{ <expression> }}`. `onValue`
  * is invoked immediately with the initial render, then again every time HA
  * pushes an update because a referenced entity changed. `onError` is
@@ -35,16 +61,7 @@ export async function subscribeLiveExpression(
   onError: (error: Error) => void,
   preamble = ''
 ): Promise<Unsubscribe> {
-  const template = `${preamble}${preamble ? ' ' : ''}{{ (${expression}) }}`;
-  try {
-    return await hass.connection.subscribeMessage<RenderTemplateResult>(
-      (result) => onValue(String(result?.result ?? '')),
-      { type: 'render_template', template }
-    );
-  } catch (err) {
-    onError(err instanceof Error ? err : new Error(String(err)));
-    return async () => undefined;
-  }
+  return subscribeTemplate(hass, `{{ (${expression}) }}`, onValue, onError, preamble);
 }
 
 /** Home Assistant / Jinja truthiness rules applied to a rendered string. */

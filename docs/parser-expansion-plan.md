@@ -51,7 +51,28 @@ is one opaque leaf.
 - Humanize: "If 'Guest mode is on' -> We have a guest" style rows.
 
 Acceptance: if/elif/else, nested ifs, `{%- -%}` whitespace control, comments
-`{# #}` all behave; the fired branch is always the one HA would output.
+`{# #}` all behave; the fired branch is always the one HA would output. ✅ 79 tests pass.
+
+## Phase 2 status ✅ IMPLEMENTED (v0.3 beta, in progress)
+
+- `NodeKind` gained `CONDITIONAL` and `OUTPUT`; `AstNode` gained `branches?`
+  and `ConditionalBranch` (`condition?`, `body`, `source`).
+- `detectConditional` / `findEndif` (nesting-aware) / `parseConditionalBlock`
+  / `parseBody` parse top-level `{% if %}/elif/else/endif` blocks, recursively
+  structuring nested bodies that are *entirely* one if-block; other bodies
+  become `OUTPUT` nodes rendering raw template text live.
+- Whitespace-control markers (`{%- -%}`) normalized via `normalizeStmtContent`;
+  trailing comments/whitespace tolerated; `{% set %}` prelude stamped onto
+  every LEAF and OUTPUT inside the tree.
+- `evaluate.ts`: `buildEvaluated` computes CONDITIONAL fired-branch (first
+  true condition, else otherwise) and OUTPUT rendered text; `collectLeaves`
+  now gathers LEAF + OUTPUT render units; `createLiveTree` subscribes boolean
+  leaves via `subscribeLiveExpression` and OUTPUT bodies via new
+  `subscribeTemplate` (raw render).
+- `logic-tree.ts` renders branches with condition tree, live output text, and
+  an "active" marker on the fired branch; i18n keys `tree.if/when/else/fired/
+  empty_output` across all 9 languages.
+- 79 tests pass (new: `conditional.test.ts` parser + evaluated fired-branch).
 
 ## Phase 3 - Lenient fallback ("second-chance" parse)
 
