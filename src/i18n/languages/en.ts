@@ -7,7 +7,6 @@ export const en = {
   'card.parse_fallback_warning':
     "Couldn't fully parse this template's boolean structure - showing it as a single evaluated expression instead.",
   'card.setting_up': 'Setting up live subscriptions…',
-  'card.template_source_summary': 'Template source (live-synced from {entity})',
   'card.references_summary': 'Referenced entities & attributes',
   'card.edit_template': 'Edit template',
   'card.discard_changes': 'Discard',
@@ -30,8 +29,9 @@ export const en = {
   'editor.title_label': 'Title (optional)',
   'editor.entity_label': 'Template Helper entity',
   'editor.icon_label': 'Icon (optional)',
-  'editor.icon_hint': "Leave blank to automatically show an on/off icon based on the entity's state.",
   'editor.humanize_label': 'Plain language',
+  'editor.show_references_label': 'Show referenced entities & attributes',
+  'editor.show_header_label': 'Show icon & title',
   'editor.hint':
     'Only entities created via Settings → Devices & Services → Helpers → Template are supported. The card reads that helper\'s template definition directly, so it always stays in sync - nothing to paste or keep updated manually.',
   'humanize.is': 'is',

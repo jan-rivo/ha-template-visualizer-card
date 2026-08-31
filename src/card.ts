@@ -2,7 +2,10 @@
 //   type: custom:ha-template-visualizer-card
 //   entity: sensor.my_template_helper   # a UI-created Template Helper entity
 //   title: "My logic"                   # optional
-//   icon: mdi:flash                     # optional; defaults to an automatic on/off icon
+//   icon: mdi:ab-testing                # optional; defaults to mdi:ab-testing
+//   showCode: false                     # optional; when true show raw template code
+//   showReferences: true                # optional; show referenced entities panel
+//   showHeader: true                    # optional; show the header icon + title
 //
 // This card only supports entities created via Settings > Devices &
 // Services > Helpers > Template. It reads the helper's actual template text
@@ -28,7 +31,13 @@ export interface CardConfig {
   icon?: string;
   /** When true, show the raw template code for leaf conditions instead of humanized text. */
   showCode?: boolean;
+  /** Show the referenced entities & attributes panel. Defaults to true. */
+  showReferences?: boolean;
+  /** Show the header icon + title. Defaults to true. */
+  showHeader?: boolean;
 }
+
+export const DEFAULT_ICON = 'mdi:ab-testing';
 
 @customElement('ha-template-visualizer-card')
 export class HaTemplateEditorCard extends LitElement {
@@ -188,25 +197,30 @@ export class HaTemplateEditorCard extends LitElement {
   render() {
     if (!this.config) return html``;
     const title = this.config.title ?? t(this.hass, 'card.default_title');
-    const stateObj = this.hass?.states?.[this.config.entity];
+    const showHeader = this.config.showHeader !== false;
+    const headerContent = showHeader
+      ? html`
+          <ha-icon icon=${this.config.icon ?? DEFAULT_ICON}></ha-icon>
+          <span class="card-header__title">${title}</span>
+        `
+      : '';
 
     return html`
       <ha-card>
-        <div class="card-header">
-          ${this.config.icon
-            ? html`<ha-icon icon=${this.config.icon}></ha-icon>`
-            : html`<ha-state-icon .hass=${this.hass} .stateObj=${stateObj}></ha-state-icon>`}
-          <span class="card-header__title">${title}</span>
-          ${this.canEdit
-            ? html`<ha-icon-button
-                class="card-header__edit"
-                .label=${t(this.hass, 'card.edit_template')}
-                @click=${this.editing ? this.discardChanges : this.startEditing}
-              >
-                <ha-icon icon=${this.editing ? 'mdi:close' : 'mdi:code-tags'}></ha-icon>
-              </ha-icon-button>`
-            : ''}
-        </div>
+        ${showHeader || this.canEdit
+          ? html`<div class="card-header">
+              ${headerContent}
+              ${this.canEdit
+                ? html`<ha-icon-button
+                    class="card-header__edit"
+                    .label=${t(this.hass, 'card.edit_template')}
+                    @click=${this.editing ? this.discardChanges : this.startEditing}
+                  >
+                    <ha-icon icon=${this.editing ? 'mdi:close' : 'mdi:code-tags'}></ha-icon>
+                  </ha-icon-button>`
+                : ''}
+            </div>`
+          : ''}
         <div class="card-content">
           ${this.globalError
             ? html`<div class="tpl-error">${this.globalError}</div>`
@@ -246,18 +260,12 @@ export class HaTemplateEditorCard extends LitElement {
                 ${this.tree
                   ? renderNode(this.tree, this.hass, this.config.showCode === true)
                   : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
-                ${this.templateText && !this.editing
-                  ? html`<details class="tpl-source">
-                      <summary>
-                        ${t(this.hass, 'card.template_source_summary', { entity: this.config.entity })}
-                      </summary>
-                      <pre>${this.templateText}</pre>
+                ${this.config.showReferences !== false
+                  ? html`<details class="tpl-refs-details">
+                      <summary>${t(this.hass, 'card.references_summary')}</summary>
+                      ${renderReferencesPanel(this.references, this.hass?.states ?? {}, this.hass)}
                     </details>`
                   : ''}
-                <details class="tpl-refs-details">
-                  <summary>${t(this.hass, 'card.references_summary')}</summary>
-                  ${renderReferencesPanel(this.references, this.hass?.states ?? {}, this.hass)}
-                </details>
               `}
         </div>
       </ha-card>
@@ -277,8 +285,7 @@ export class HaTemplateEditorCard extends LitElement {
       font-weight: 400;
       color: var(--ha-card-header-color, var(--primary-text-color));
     }
-    .card-header ha-icon,
-    .card-header ha-state-icon {
+    .card-header ha-icon {
       --mdc-icon-size: 24px;
       color: var(--paper-item-icon-color, #44739e);
       flex: none;
@@ -429,22 +436,13 @@ export class HaTemplateEditorCard extends LitElement {
       font-size: 12px;
       margin-bottom: 8px;
     }
-    .tpl-source,
     .tpl-refs-details {
       margin: 12px 0 0;
       font-size: 12px;
     }
-    .tpl-refs-details summary,
-    .tpl-source summary {
+    .tpl-refs-details summary {
       cursor: pointer;
       color: var(--secondary-text-color);
-    }
-    .tpl-source pre {
-      white-space: pre-wrap;
-      background: var(--code-editor-background-color, rgba(127, 127, 127, 0.08));
-      padding: 8px;
-      border-radius: 4px;
-      margin: 6px 0 0;
     }
     .tpl-loading {
       font-size: 12px;

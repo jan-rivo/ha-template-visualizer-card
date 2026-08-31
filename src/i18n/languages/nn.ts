@@ -6,7 +6,6 @@ export const nn: Translation = {
   'card.parse_fallback_warning':
     'Klarte ikkje å analysere heile den boolske strukturen i denne malen - viser han som eitt enkelt evaluert uttrykk i staden.',
   'card.setting_up': 'Set opp direkteabonnement…',
-  'card.template_source_summary': 'Malkjelde (synkronisert direkte frå {entity})',
   'card.references_summary': 'Refererte einingar og attributt',
   'card.edit_template': 'Rediger mal',
   'card.discard_changes': 'Forkast',
@@ -29,8 +28,9 @@ export const nn: Translation = {
   'editor.title_label': 'Tittel (valfritt)',
   'editor.entity_label': 'Malhjelpar-eining',
   'editor.icon_label': 'Ikon (valfritt)',
-  'editor.icon_hint': 'La stå tomt for å automatisk visa eit på/av-ikon basert på tilstanden til eininga.',
   'editor.humanize_label': 'Enkelt språk',
+  'editor.show_references_label': 'Vis refererte einingar og attributt',
+  'editor.show_header_label': 'Vis ikon og tittel',
   'editor.hint':
     'Berre einingar oppretta via Innstillingar → Einingar og tenester → Hjelparar → Mal er støtta. Kortet les maldefinisjonen til den hjelparen direkte, så det held seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
   'humanize.is': 'er',

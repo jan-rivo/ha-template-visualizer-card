@@ -6,7 +6,6 @@ export const nb: Translation = {
   'card.parse_fallback_warning':
     'Klarte ikke å analysere hele den boolske strukturen i denne malen - viser den som ett enkelt evaluert uttrykk i stedet.',
   'card.setting_up': 'Setter opp direkteabonnementer…',
-  'card.template_source_summary': 'Malkilde (synkronisert direkte fra {entity})',
   'card.references_summary': 'Refererte enheter og attributter',
   'card.edit_template': 'Rediger mal',
   'card.discard_changes': 'Forkast',
@@ -29,8 +28,9 @@ export const nb: Translation = {
   'editor.title_label': 'Tittel (valgfritt)',
   'editor.entity_label': 'Malhjelper-enhet',
   'editor.icon_label': 'Ikon (valgfritt)',
-  'editor.icon_hint': 'La stå tomt for å automatisk vise et på/av-ikon basert på enhetens tilstand.',
   'editor.humanize_label': 'Enkelt språk',
+  'editor.show_references_label': 'Vis refererte enheter og attributter',
+  'editor.show_header_label': 'Vis ikon og tittel',
   'editor.hint':
     'Kun enheter opprettet via Innstillinger → Enheter og tjenester → Hjelpere → Mal støttes. Kortet leser malens definisjon direkte fra hjelperen, så det holder seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
   'humanize.is': 'er',

@@ -5,7 +5,6 @@ export const nl: Translation = {
   'card.parse_fallback_warning':
     'Kon de booleaanse structuur van dit sjabloon niet volledig analyseren - wordt weergegeven als één geëvalueerde expressie.',
   'card.setting_up': 'Live-abonnementen worden ingesteld…',
-  'card.template_source_summary': 'Sjabloonbron (live gesynchroniseerd vanaf {entity})',
   'card.references_summary': 'Gerefereerde entiteiten & attributen',
   'card.edit_template': 'Sjabloon bewerken',
   'card.discard_changes': 'Verwerpen',
@@ -28,9 +27,9 @@ export const nl: Translation = {
   'editor.title_label': 'Titel (optioneel)',
   'editor.entity_label': 'Sjabloonhelper-entiteit',
   'editor.icon_label': 'Pictogram (optioneel)',
-  'editor.icon_hint':
-    'Laat leeg om automatisch een aan/uit-pictogram te tonen op basis van de status van de entiteit.',
   'editor.humanize_label': 'Duidelijke taal',
+  'editor.show_references_label': 'Gerefereerde entiteiten & attributen tonen',
+  'editor.show_header_label': 'Pictogram & titel tonen',
   'editor.hint':
     'Alleen entiteiten die zijn aangemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen → Sjabloon worden ondersteund. De kaart leest de sjabloondefinitie van die hulp rechtstreeks, zodat deze altijd gesynchroniseerd blijft - niets om te plakken of handmatig bij te werken.',
   'humanize.is': 'is',

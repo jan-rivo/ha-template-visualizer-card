@@ -5,7 +5,6 @@ export const it: Translation = {
   'card.parse_fallback_warning':
     "Impossibile analizzare completamente la struttura booleana di questo modello - visualizzato come un'unica espressione valutata.",
   'card.setting_up': 'Configurazione delle sottoscrizioni live…',
-  'card.template_source_summary': 'Sorgente del modello (sincronizzata in tempo reale da {entity})',
   'card.references_summary': 'Entità e attributi referenziati',
   'card.edit_template': 'Modifica modello',
   'card.discard_changes': 'Annulla',
@@ -28,9 +27,9 @@ export const it: Translation = {
   'editor.title_label': 'Titolo (opzionale)',
   'editor.entity_label': 'Entità helper modello',
   'editor.icon_label': 'Icona (opzionale)',
-  'editor.icon_hint':
-    "Lascia vuoto per mostrare automaticamente un'icona on/off in base allo stato dell'entità.",
   'editor.humanize_label': 'Linguaggio semplice',
+  'editor.show_references_label': 'Mostra entità e attributi referenziati',
+  'editor.show_header_label': 'Mostra icona e titolo',
   'editor.hint':
     "Sono supportate solo le entità create tramite Impostazioni → Dispositivi e servizi → Helper → Modello. La scheda legge direttamente la definizione del modello di quell'helper, quindi rimane sempre sincronizzata - niente da incollare o aggiornare manualmente.",
   'humanize.is': 'è',

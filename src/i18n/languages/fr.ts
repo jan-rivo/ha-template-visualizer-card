@@ -5,7 +5,6 @@ export const fr: Translation = {
   'card.parse_fallback_warning':
     "Impossible d'analyser entièrement la structure booléenne de ce modèle - affichage sous forme d'expression unique évaluée.",
   'card.setting_up': 'Configuration des abonnements en direct…',
-  'card.template_source_summary': 'Source du modèle (synchronisée en direct depuis {entity})',
   'card.references_summary': 'Entités et attributs référencés',
   'card.edit_template': "Modifier le modèle",
   'card.discard_changes': 'Ignorer',
@@ -28,9 +27,9 @@ export const fr: Translation = {
   'editor.title_label': 'Titre (facultatif)',
   'editor.entity_label': "Entité d'assistant modèle",
   'editor.icon_label': 'Icône (facultative)',
-  'editor.icon_hint':
-    "Laissez vide pour afficher automatiquement une icône marche/arrêt selon l'état de l'entité.",
   'editor.humanize_label': 'Langage simple',
+  'editor.show_references_label': 'Afficher les entités et attributs référencés',
+  'editor.show_header_label': "Afficher l'icône et le titre",
   'editor.hint':
     "Seules les entités créées via Paramètres → Appareils et services → Assistants → Modèle sont prises en charge. La carte lit directement la définition du modèle de cet assistant, elle reste donc toujours synchronisée - rien à coller ni à mettre à jour manuellement.",
   'humanize.is': 'est',

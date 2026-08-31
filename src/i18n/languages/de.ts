@@ -5,7 +5,6 @@ export const de: Translation = {
   'card.parse_fallback_warning':
     'Die boolesche Struktur dieser Vorlage konnte nicht vollständig analysiert werden - wird als einzelner ausgewerteter Ausdruck angezeigt.',
   'card.setting_up': 'Live-Abonnements werden eingerichtet…',
-  'card.template_source_summary': 'Vorlagenquelle (live synchronisiert von {entity})',
   'card.references_summary': 'Referenzierte Entitäten & Attribute',
   'card.edit_template': 'Vorlage bearbeiten',
   'card.discard_changes': 'Verwerfen',
@@ -28,9 +27,9 @@ export const de: Translation = {
   'editor.title_label': 'Titel (optional)',
   'editor.entity_label': 'Vorlagen-Helfer-Entität',
   'editor.icon_label': 'Symbol (optional)',
-  'editor.icon_hint':
-    'Leer lassen, um automatisch ein Ein/Aus-Symbol basierend auf dem Zustand der Entität anzuzeigen.',
   'editor.humanize_label': 'Einfache Sprache',
+  'editor.show_references_label': 'Referenzierte Entitäten & Attribute anzeigen',
+  'editor.show_header_label': 'Symbol & Titel anzeigen',
   'editor.hint':
     'Es werden nur Entitäten unterstützt, die über Einstellungen → Geräte & Dienste → Helfer → Vorlage erstellt wurden. Die Karte liest die Vorlagendefinition dieses Helfers direkt aus, sodass sie immer synchron bleibt - nichts muss manuell eingefügt oder aktualisiert werden.',
   'humanize.is': 'ist',
