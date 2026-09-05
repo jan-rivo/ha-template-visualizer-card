@@ -28,7 +28,7 @@ export const de: Translation = {
   'editor.entity_label': 'Vorlagen-Helfer-Entität',
   'editor.icon_label': 'Symbol (optional)',
   'editor.humanize_label': 'Einfache Sprache',
-  'editor.show_references_label': 'Referenzierte Entitäten & Attribute anzeigen',
+  'editor.show_references_label': 'Statuswerte-Bereich',
   'editor.show_header_label': 'Symbol & Titel anzeigen',
   'editor.hint':
     'Es werden nur Entitäten unterstützt, die über Einstellungen → Geräte & Dienste → Helfer → Vorlage erstellt wurden. Die Karte liest die Vorlagendefinition dieses Helfers direkt aus, sodass sie immer synchron bleibt - nichts muss manuell eingefügt oder aktualisiert werden.',

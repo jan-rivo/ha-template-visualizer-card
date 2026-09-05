@@ -208,7 +208,7 @@ export class HaTemplateEditorCard extends LitElement {
     return html`
       <ha-card>
         ${showHeader || this.canEdit
-          ? html`<div class="card-header">
+          ? html`<div class="card-header${showHeader ? '' : ' card-header--bare'}">
               ${headerContent}
               ${this.canEdit
                 ? html`<ha-icon-button
@@ -284,6 +284,9 @@ export class HaTemplateEditorCard extends LitElement {
       font-size: 1.2em;
       font-weight: 400;
       color: var(--ha-card-header-color, var(--primary-text-color));
+    }
+    .card-header--bare {
+      padding: 0 4px;
     }
     .card-header ha-icon {
       --mdc-icon-size: 24px;

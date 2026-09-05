@@ -28,7 +28,7 @@ export const it: Translation = {
   'editor.entity_label': 'Entità helper modello',
   'editor.icon_label': 'Icona (opzionale)',
   'editor.humanize_label': 'Linguaggio semplice',
-  'editor.show_references_label': 'Mostra entità e attributi referenziati',
+  'editor.show_references_label': 'Sezione valori di stato',
   'editor.show_header_label': 'Mostra icona e titolo',
   'editor.hint':
     "Sono supportate solo le entità create tramite Impostazioni → Dispositivi e servizi → Helper → Modello. La scheda legge direttamente la definizione del modello di quell'helper, quindi rimane sempre sincronizzata - niente da incollare o aggiornare manualmente.",

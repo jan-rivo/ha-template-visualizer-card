@@ -29,7 +29,7 @@ export const nb: Translation = {
   'editor.entity_label': 'Malhjelper-enhet',
   'editor.icon_label': 'Ikon (valgfritt)',
   'editor.humanize_label': 'Enkelt språk',
-  'editor.show_references_label': 'Vis refererte enheter og attributter',
+  'editor.show_references_label': 'Del for tilstandsverdier',
   'editor.show_header_label': 'Vis ikon og tittel',
   'editor.hint':
     'Kun enheter opprettet via Innstillinger → Enheter og tjenester → Hjelpere → Mal støttes. Kortet leser malens definisjon direkte fra hjelperen, så det holder seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',

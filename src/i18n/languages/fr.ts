@@ -28,7 +28,7 @@ export const fr: Translation = {
   'editor.entity_label': "Entité d'assistant modèle",
   'editor.icon_label': 'Icône (facultative)',
   'editor.humanize_label': 'Langage simple',
-  'editor.show_references_label': 'Afficher les entités et attributs référencés',
+  'editor.show_references_label': "Section des valeurs d'état",
   'editor.show_header_label': "Afficher l'icône et le titre",
   'editor.hint':
     "Seules les entités créées via Paramètres → Appareils et services → Assistants → Modèle sont prises en charge. La carte lit directement la définition du modèle de cet assistant, elle reste donc toujours synchronisée - rien à coller ni à mettre à jour manuellement.",

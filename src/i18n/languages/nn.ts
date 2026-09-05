@@ -29,7 +29,7 @@ export const nn: Translation = {
   'editor.entity_label': 'Malhjelpar-eining',
   'editor.icon_label': 'Ikon (valfritt)',
   'editor.humanize_label': 'Enkelt språk',
-  'editor.show_references_label': 'Vis refererte einingar og attributt',
+  'editor.show_references_label': 'Del for tilstandsverdiar',
   'editor.show_header_label': 'Vis ikon og tittel',
   'editor.hint':
     'Berre einingar oppretta via Innstillingar → Einingar og tenester → Hjelparar → Mal er støtta. Kortet les maldefinisjonen til den hjelparen direkte, så det held seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
