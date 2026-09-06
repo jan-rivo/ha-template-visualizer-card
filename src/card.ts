@@ -89,9 +89,9 @@ export class HaTemplateEditorCard extends LitElement {
     return 5;
   }
 
-  /** Sections-view grid footprint: half-width, minimum 3 rows, height otherwise auto (tree size varies). */
+  /** Sections-view grid footprint: full width, minimum 3 rows, height otherwise auto (tree size varies). */
   getGridOptions(): { columns: number; min_rows: number } {
-    return { columns: 6, min_rows: 3 };
+    return { columns: 12, min_rows: 3 };
   }
 
   static getStubConfig(
