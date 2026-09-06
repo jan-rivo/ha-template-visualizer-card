@@ -6,11 +6,14 @@ export const nn: Translation = {
   'card.parse_fallback_warning':
     'Klarte ikkje å analysere heile den boolske strukturen i denne malen - viser han som eitt enkelt evaluert uttrykk i staden.',
   'card.setting_up': 'Set opp direkteabonnement…',
-  'card.references_summary': 'Refererte einingar og attributt',
+  'card.references_summary': 'Tilstandsverdiar',
   'card.edit_template': 'Rediger mal',
   'card.discard_changes': 'Forkast',
   'card.save_template': 'Lagre i hjelparen',
   'card.saving_template': 'Lagrar…',
+  'card.empty_title': 'Kan ikkje laste malen',
+  'card.empty_hint':
+    'Vel ein Malhjelpar oppretta via Innstillingar → Einingar og tenester → Hjelparar i konfigurasjonen til kortet.',
   'card.edit_hint':
     'Redigerer eit utkast nedanfor. Visualiseringa vert analysert på nytt direkte medan du skriv. Trykk Ferdig for å gå attende til den lagra malen til hjelparen (lagring vert enno ikkje støtta).',
   'references.entity_column': 'Eining',
@@ -29,8 +32,9 @@ export const nn: Translation = {
   'editor.entity_label': 'Malhjelpar-eining',
   'editor.icon_label': 'Ikon (valfritt)',
   'editor.humanize_label': 'Enkelt språk',
-  'editor.show_references_label': 'Del for tilstandsverdiar',
+  'editor.show_references_label': 'Tilstandsverdiar',
   'editor.show_header_label': 'Vis ikon og tittel',
+  'editor.show_edit_button_label': 'Vis redigeringsknapp',
   'editor.hint':
     'Berre einingar oppretta via Innstillingar → Einingar og tenester → Hjelparar → Mal er støtta. Kortet les maldefinisjonen til den hjelparen direkte, så det held seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
   'humanize.is': 'er',

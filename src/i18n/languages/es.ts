@@ -5,11 +5,14 @@ export const es: Translation = {
   'card.parse_fallback_warning':
     'No se pudo analizar completamente la estructura booleana de esta plantilla - se muestra como una única expresión evaluada.',
   'card.setting_up': 'Configurando suscripciones en vivo…',
-  'card.references_summary': 'Entidades y atributos referenciados',
+  'card.references_summary': 'Valores de estado',
   'card.edit_template': 'Editar plantilla',
   'card.discard_changes': 'Descartar',
   'card.save_template': 'Guardar en el ayudante',
   'card.saving_template': 'Guardando…',
+  'card.empty_title': 'No se pudo cargar la plantilla',
+  'card.empty_hint':
+    'Elige un ayudante de Plantilla creado mediante Ajustes → Dispositivos y servicios → Ayudantes en la configuración de la tarjeta.',
   'card.edit_hint':
     "Editando un borrador a continuación. La visualización se vuelve a analizar en vivo mientras escribes. Pulsa Hecho para volver a la plantilla guardada del ayudante (guardar aún no es compatible).",
   'references.entity_column': 'Entidad',
@@ -28,8 +31,9 @@ export const es: Translation = {
   'editor.entity_label': 'Entidad de ayudante de plantilla',
   'editor.icon_label': 'Icono (opcional)',
   'editor.humanize_label': 'Lenguaje sencillo',
-  'editor.show_references_label': 'Sección de valores de estado',
+  'editor.show_references_label': 'Valores de estado',
   'editor.show_header_label': 'Mostrar icono y título',
+  'editor.show_edit_button_label': 'Mostrar el botón de edición',
   'editor.hint':
     'Solo se admiten entidades creadas mediante Ajustes → Dispositivos y servicios → Ayudantes → Plantilla. La tarjeta lee directamente la definición de la plantilla de ese ayudante, por lo que siempre permanece sincronizada - no hay nada que pegar ni actualizar manualmente.',
   'humanize.is': 'es',

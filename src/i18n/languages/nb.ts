@@ -6,11 +6,14 @@ export const nb: Translation = {
   'card.parse_fallback_warning':
     'Klarte ikke å analysere hele den boolske strukturen i denne malen - viser den som ett enkelt evaluert uttrykk i stedet.',
   'card.setting_up': 'Setter opp direkteabonnementer…',
-  'card.references_summary': 'Refererte enheter og attributter',
+  'card.references_summary': 'Tilstandsverdier',
   'card.edit_template': 'Rediger mal',
   'card.discard_changes': 'Forkast',
   'card.save_template': 'Lagre i hjelperen',
   'card.saving_template': 'Lagrer…',
+  'card.empty_title': 'Kan ikke laste malen',
+  'card.empty_hint':
+    'Velg en Malhjelper opprettet via Innstillinger → Enheter og tjenester → Hjelpere i kortets konfigurasjon.',
   'card.edit_hint':
     'Redigerer et utkast nedenfor. Visualiseringen re-analyseres direkte mens du skriver. Trykk Ferdig for å gå tilbake til hjelperens lagrede mal (lagring støttes ennå ikke).',
   'references.entity_column': 'Enhet',
@@ -29,8 +32,9 @@ export const nb: Translation = {
   'editor.entity_label': 'Malhjelper-enhet',
   'editor.icon_label': 'Ikon (valgfritt)',
   'editor.humanize_label': 'Enkelt språk',
-  'editor.show_references_label': 'Del for tilstandsverdier',
+  'editor.show_references_label': 'Tilstandsverdier',
   'editor.show_header_label': 'Vis ikon og tittel',
+  'editor.show_edit_button_label': 'Vis redigeringsknapp',
   'editor.hint':
     'Kun enheter opprettet via Innstillinger → Enheter og tjenester → Hjelpere → Mal støttes. Kortet leser malens definisjon direkte fra hjelperen, så det holder seg alltid synkronisert - ingenting å lime inn eller oppdatere manuelt.',
   'humanize.is': 'er',

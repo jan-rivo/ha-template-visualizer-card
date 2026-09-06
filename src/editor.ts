@@ -87,6 +87,11 @@ export class HaTemplateEditorCardEditor extends LitElement {
           .checked=${this.config.showHeader !== false}
           @change=${(e: Event) => this.emit({ showHeader: (e.target as HTMLInputElement).checked })}
         >${t(this.hass, 'editor.show_header_label')}</ha-switch>
+        <ha-switch
+          .checked=${this.config.showEditButton !== false}
+          @change=${(e: Event) =>
+            this.emit({ showEditButton: (e.target as HTMLInputElement).checked })}
+        >${t(this.hass, 'editor.show_edit_button_label')}</ha-switch>
         <ha-alert alert-type="info">${t(this.hass, 'editor.hint')}</ha-alert>
       </div>
     `;

@@ -7,11 +7,14 @@ export const en = {
   'card.parse_fallback_warning':
     "Couldn't fully parse this template's boolean structure - showing it as a single evaluated expression instead.",
   'card.setting_up': 'Setting up live subscriptions…',
-  'card.references_summary': 'Referenced entities & attributes',
+  'card.references_summary': 'State values',
   'card.edit_template': 'Edit template',
   'card.discard_changes': 'Discard',
   'card.save_template': 'Save to helper',
   'card.saving_template': 'Saving…',
+  'card.empty_title': "Can't load template",
+  'card.empty_hint':
+    'Choose a Template helper created via Settings → Devices & Services → Helpers in the card configuration.',
   'card.edit_hint':
     'Editing a draft below. The visualization re-parses live as you type. Save writes it back to the helper; Discard reverts to the helper\'s saved template.',
   'references.entity_column': 'Entity',
@@ -30,8 +33,9 @@ export const en = {
   'editor.entity_label': 'Template Helper entity',
   'editor.icon_label': 'Icon (optional)',
   'editor.humanize_label': 'Plain language',
-  'editor.show_references_label': 'State values section',
+  'editor.show_references_label': 'State values',
   'editor.show_header_label': 'Show icon & title',
+  'editor.show_edit_button_label': 'Show edit button',
   'editor.hint':
     'Only entities created via Settings → Devices & Services → Helpers → Template are supported. The card reads that helper\'s template definition directly, so it always stays in sync - nothing to paste or keep updated manually.',
   'humanize.is': 'is',

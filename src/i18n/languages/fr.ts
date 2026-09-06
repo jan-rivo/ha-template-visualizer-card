@@ -5,11 +5,14 @@ export const fr: Translation = {
   'card.parse_fallback_warning':
     "Impossible d'analyser entièrement la structure booléenne de ce modèle - affichage sous forme d'expression unique évaluée.",
   'card.setting_up': 'Configuration des abonnements en direct…',
-  'card.references_summary': 'Entités et attributs référencés',
+  'card.references_summary': "Valeurs d'état",
   'card.edit_template': "Modifier le modèle",
   'card.discard_changes': 'Ignorer',
   'card.save_template': "Enregistrer dans l'assistant",
   'card.saving_template': 'Enregistrement…',
+  'card.empty_title': 'Impossible de charger le modèle',
+  'card.empty_hint':
+    'Choisissez un assistant Modèle créé via Paramètres → Appareils et services → Assistants dans la configuration de la carte.',
   'card.edit_hint':
     "Modification d'un brouillon ci-dessous. La visualisation est re-analysée en direct pendant la saisie. Appuyez sur Terminé pour revenir au modèle enregistré de l'assistant (l'enregistrement n'est pas encore pris en charge).",
   'references.entity_column': 'Entité',
@@ -28,8 +31,9 @@ export const fr: Translation = {
   'editor.entity_label': "Entité d'assistant modèle",
   'editor.icon_label': 'Icône (facultative)',
   'editor.humanize_label': 'Langage simple',
-  'editor.show_references_label': "Section des valeurs d'état",
+  'editor.show_references_label': "Valeurs d'état",
   'editor.show_header_label': "Afficher l'icône et le titre",
+  'editor.show_edit_button_label': 'Afficher le bouton de modification',
   'editor.hint':
     "Seules les entités créées via Paramètres → Appareils et services → Assistants → Modèle sont prises en charge. La carte lit directement la définition du modèle de cet assistant, elle reste donc toujours synchronisée - rien à coller ni à mettre à jour manuellement.",
   'humanize.is': 'est',

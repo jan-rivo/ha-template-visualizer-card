@@ -5,11 +5,14 @@ export const it: Translation = {
   'card.parse_fallback_warning':
     "Impossibile analizzare completamente la struttura booleana di questo modello - visualizzato come un'unica espressione valutata.",
   'card.setting_up': 'Configurazione delle sottoscrizioni live…',
-  'card.references_summary': 'Entità e attributi referenziati',
+  'card.references_summary': 'Valori di stato',
   'card.edit_template': 'Modifica modello',
   'card.discard_changes': 'Annulla',
   'card.save_template': "Salva nell'helper",
   'card.saving_template': 'Salvataggio…',
+  'card.empty_title': 'Impossibile caricare il modello',
+  'card.empty_hint':
+    "Scegli un helper Modello creato tramite Impostazioni → Dispositivi e servizi → Helper nella configurazione della scheda.",
   'card.edit_hint':
     "Modifica di una bozza qui sotto. La visualizzazione viene ri-analizzata in tempo reale mentre digiti. Premi Fatto per tornare al modello salvato dell'helper (il salvataggio non è ancora supportato).",
   'references.entity_column': 'Entità',
@@ -28,8 +31,9 @@ export const it: Translation = {
   'editor.entity_label': 'Entità helper modello',
   'editor.icon_label': 'Icona (opzionale)',
   'editor.humanize_label': 'Linguaggio semplice',
-  'editor.show_references_label': 'Sezione valori di stato',
+  'editor.show_references_label': 'Valori di stato',
   'editor.show_header_label': 'Mostra icona e titolo',
+  'editor.show_edit_button_label': 'Mostra il pulsante di modifica',
   'editor.hint':
     "Sono supportate solo le entità create tramite Impostazioni → Dispositivi e servizi → Helper → Modello. La scheda legge direttamente la definizione del modello di quell'helper, quindi rimane sempre sincronizzata - niente da incollare o aggiornare manualmente.",
   'humanize.is': 'è',

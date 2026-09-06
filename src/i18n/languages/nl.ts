@@ -5,11 +5,14 @@ export const nl: Translation = {
   'card.parse_fallback_warning':
     'Kon de booleaanse structuur van dit sjabloon niet volledig analyseren - wordt weergegeven als één geëvalueerde expressie.',
   'card.setting_up': 'Live-abonnementen worden ingesteld…',
-  'card.references_summary': 'Gerefereerde entiteiten & attributen',
+  'card.references_summary': 'Statuswaarden',
   'card.edit_template': 'Sjabloon bewerken',
   'card.discard_changes': 'Verwerpen',
   'card.save_template': 'Opslaan in de helper',
   'card.saving_template': 'Opslaan…',
+  'card.empty_title': 'Kan sjabloon niet laden',
+  'card.empty_hint':
+    'Kies in de kaartconfiguratie een Sjabloonhelper die is gemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen.',
   'card.edit_hint':
     "U bewerkt hieronder een concept. De visualisatie wordt live opnieuw geanalyseerd terwijl u typt. Druk op Klaar om terug te keren naar het opgeslagen sjabloon van de helper (opslaan wordt nog niet ondersteund).",
   'references.entity_column': 'Entiteit',
@@ -28,8 +31,9 @@ export const nl: Translation = {
   'editor.entity_label': 'Sjabloonhelper-entiteit',
   'editor.icon_label': 'Pictogram (optioneel)',
   'editor.humanize_label': 'Duidelijke taal',
-  'editor.show_references_label': 'Sectie statuswaarden',
+  'editor.show_references_label': 'Statuswaarden',
   'editor.show_header_label': 'Pictogram & titel tonen',
+  'editor.show_edit_button_label': 'Bewerkknop tonen',
   'editor.hint':
     'Alleen entiteiten die zijn aangemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen → Sjabloon worden ondersteund. De kaart leest de sjabloondefinitie van die hulp rechtstreeks, zodat deze altijd gesynchroniseerd blijft - niets om te plakken of handmatig bij te werken.',
   'humanize.is': 'is',

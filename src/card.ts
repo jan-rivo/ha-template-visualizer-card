@@ -6,6 +6,11 @@
 //   showCode: false                     # optional; when true show raw template code
 //   showReferences: true                # optional; show referenced entities panel
 //   showHeader: true                    # optional; show the header icon + title
+//   showEditButton: true                # optional; show the "Edit template" button (admins only)
+//
+// Admins get a full-width "Edit template" button between the preview and
+// the state-values section; hiding the header therefore removes the header
+// row entirely - no leftover space.
 //
 // This card only supports entities created via Settings > Devices &
 // Services > Helpers > Template. It reads the helper's actual template text
@@ -19,6 +24,7 @@ import { extractReferences, groupReferences, type ReferencedEntity } from './par
 import { createLiveTree, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
 import type { HomeAssistant } from './ha/hass';
 import { fetchTemplateForEntity, saveTemplateForEntity } from './ha/template-source';
+import { findDefaultTemplateEntity } from './ha/template-entities';
 import { renderNode } from './components/logic-tree';
 import { renderReferencesPanel } from './components/references-panel';
 import { t } from './i18n';
@@ -35,6 +41,8 @@ export interface CardConfig {
   showReferences?: boolean;
   /** Show the header icon + title. Defaults to true. */
   showHeader?: boolean;
+  /** Show the "Edit template" button below the preview (admins only). Defaults to true. */
+  showEditButton?: boolean;
 }
 
 export const DEFAULT_ICON = 'mdi:ab-testing';
@@ -76,10 +84,26 @@ export class HaTemplateEditorCard extends LitElement {
     return document.createElement('ha-template-visualizer-card-editor');
   }
 
-  static getStubConfig(): CardConfig {
+  /** Masonry-view height (1 unit = 50px). Content varies with tree size; 5 is a reasonable middle. */
+  getCardSize(): number {
+    return 5;
+  }
+
+  /** Sections-view grid footprint: half-width, minimum 3 rows, height otherwise auto (tree size varies). */
+  getGridOptions(): { columns: number; min_rows: number } {
+    return { columns: 6, min_rows: 3 };
+  }
+
+  static getStubConfig(
+    hass?: HomeAssistant,
+    entities: string[] = [],
+    entitiesFallback: string[] = []
+  ): CardConfig {
     return {
       type: 'custom:ha-template-visualizer-card',
-      entity: 'binary_sensor.example_template_helper',
+      entity:
+        findDefaultTemplateEntity(hass, entities, entitiesFallback) ??
+        'binary_sensor.example_template_helper',
     };
   }
 
@@ -198,32 +222,23 @@ export class HaTemplateEditorCard extends LitElement {
     if (!this.config) return html``;
     const title = this.config.title ?? t(this.hass, 'card.default_title');
     const showHeader = this.config.showHeader !== false;
-    const headerContent = showHeader
-      ? html`
-          <ha-icon icon=${this.config.icon ?? DEFAULT_ICON}></ha-icon>
-          <span class="card-header__title">${title}</span>
-        `
-      : '';
 
     return html`
       <ha-card>
-        ${showHeader || this.canEdit
-          ? html`<div class="card-header${showHeader ? '' : ' card-header--bare'}">
-              ${headerContent}
-              ${this.canEdit
-                ? html`<ha-icon-button
-                    class="card-header__edit"
-                    .label=${t(this.hass, 'card.edit_template')}
-                    @click=${this.editing ? this.discardChanges : this.startEditing}
-                  >
-                    <ha-icon icon=${this.editing ? 'mdi:close' : 'mdi:code-tags'}></ha-icon>
-                  </ha-icon-button>`
-                : ''}
+        ${showHeader
+          ? html`<div class="card-header">
+              <ha-icon icon=${this.config.icon ?? DEFAULT_ICON}></ha-icon>
+              <span class="card-header__title">${title}</span>
             </div>`
           : ''}
         <div class="card-content">
           ${this.globalError
-            ? html`<div class="tpl-error">${this.globalError}</div>`
+            ? html`<div class="tpl-empty">
+                <ha-icon icon="mdi:alert-circle-outline"></ha-icon>
+                <div class="tpl-empty__title">${t(this.hass, 'card.empty_title')}</div>
+                <div class="tpl-empty__reason">${this.globalError}</div>
+                <div class="tpl-empty__hint">${t(this.hass, 'card.empty_hint')}</div>
+              </div>`
             : html`
                 ${this.editing
                   ? html`
@@ -260,11 +275,21 @@ export class HaTemplateEditorCard extends LitElement {
                 ${this.tree
                   ? renderNode(this.tree, this.hass, this.config.showCode === true)
                   : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
+                ${this.canEdit && !this.editing && this.config.showEditButton !== false
+                  ? html`<div class="tpl-edit-action">
+                      <ha-button appearance="plain" @click=${this.startEditing}>
+                        <ha-icon slot="start" icon="mdi:code-tags"></ha-icon>
+                        ${t(this.hass, 'card.edit_template')}
+                      </ha-button>
+                    </div>`
+                  : ''}
                 ${this.config.showReferences !== false
-                  ? html`<details class="tpl-refs-details">
-                      <summary>${t(this.hass, 'card.references_summary')}</summary>
+                  ? html`<ha-expansion-panel
+                      class="tpl-refs-panel"
+                      .header=${t(this.hass, 'card.references_summary')}
+                    >
                       ${renderReferencesPanel(this.references, this.hass?.states ?? {}, this.hass)}
-                    </details>`
+                    </ha-expansion-panel>`
                   : ''}
               `}
         </div>
@@ -285,18 +310,16 @@ export class HaTemplateEditorCard extends LitElement {
       font-weight: 400;
       color: var(--ha-card-header-color, var(--primary-text-color));
     }
-    .card-header--bare {
-      padding: 0 4px;
-    }
     .card-header ha-icon {
       --mdc-icon-size: 24px;
       color: var(--paper-item-icon-color, #44739e);
       flex: none;
     }
-    .card-header__edit {
-      margin-left: auto;
-      --mdc-icon-button-size: 32px;
-      color: var(--secondary-text-color);
+    .tpl-edit-action {
+      margin-top: 12px;
+    }
+    .tpl-edit-action ha-button {
+      width: 100%;
     }
     .card-content {
       padding: 8px 16px 16px;
@@ -359,7 +382,7 @@ export class HaTemplateEditorCard extends LitElement {
       color: var(--error-color, #db4437);
     }
     .tpl-children {
-      border-left: 1px dashed var(--divider-color, #ccc);
+      border-left: 1px solid var(--divider-color, #ccc);
       margin-left: 8px;
     }
     .tpl-node--output .tpl-node__label {
@@ -410,6 +433,29 @@ export class HaTemplateEditorCard extends LitElement {
     .tpl-error {
       color: var(--error-color, #db4437);
     }
+    .tpl-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      padding: 24px 16px;
+    }
+    .tpl-empty ha-icon {
+      --mdc-icon-size: 40px;
+      color: var(--secondary-text-color);
+    }
+    .tpl-empty__title {
+      font-weight: 500;
+    }
+    .tpl-empty__reason {
+      color: var(--error-color, #db4437);
+      font-size: 12px;
+    }
+    .tpl-empty__hint {
+      font-size: 12px;
+      color: var(--secondary-text-color);
+    }
     .tpl-edit {
       margin: 12px 0;
       display: flex;
@@ -439,13 +485,9 @@ export class HaTemplateEditorCard extends LitElement {
       font-size: 12px;
       margin-bottom: 8px;
     }
-    .tpl-refs-details {
+    .tpl-refs-panel {
       margin: 12px 0 0;
       font-size: 12px;
-    }
-    .tpl-refs-details summary {
-      cursor: pointer;
-      color: var(--secondary-text-color);
     }
     .tpl-loading {
       font-size: 12px;
@@ -468,6 +510,32 @@ export class HaTemplateEditorCard extends LitElement {
       padding: 4px 8px 4px 0;
       border-bottom: 1px solid var(--divider-color, rgba(127, 127, 127, 0.15));
       vertical-align: top;
+    }
+    .tpl-refs__entity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tpl-refs__entity ha-state-icon {
+      width: 20px;
+      height: 20px;
+      flex: none;
+    }
+    .tpl-refs__text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .tpl-refs__name {
+      font-weight: 500;
+    }
+    .tpl-refs__id {
+      font-size: 11px;
+      color: var(--secondary-text-color);
+    }
+    .tpl-refs__value {
+      text-align: right;
+      white-space: nowrap;
     }
     .tpl-refs__row--missing td {
       color: var(--error-color, #db4437);
