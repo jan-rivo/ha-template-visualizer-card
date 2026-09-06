@@ -105,6 +105,33 @@ function findComparison(src: string): { op: OpToken; left: string; right: string
   return null;
 }
 
+/**
+ * Detects a 3-operand chained comparison from the first comparison found in
+ * a leaf: `0 < elevation < 20` -> `{ a:'0', op1:'lt', b:'elevation', op2:'lt',
+ * c:'20' }`. Returns null if the right operand does not contain exactly one
+ * more comparison (e.g. a longer chain or a plain single comparison).
+ */
+function findChainedComparison(first: { op: OpToken; left: string; right: string }): {
+  a: string;
+  op1: OpToken;
+  b: string;
+  op2: OpToken;
+  c: string;
+} | null {
+  const second = findComparison(first.right);
+  if (!second) return null;
+  // Guard against longer chains: the second comparison's right operand must
+  // not itself contain another comparison.
+  if (findComparison(second.right)) return null;
+  return {
+    a: first.left,
+    op1: first.op,
+    b: second.left,
+    op2: second.op,
+    c: second.right,
+  };
+}
+
 /** Inverts a comparison when the entity is on the right side (e.g. `20 < x`). */
 function reverseOp(token: OpToken): OpToken | null {
   switch (token) {
@@ -190,6 +217,25 @@ function splitTopLevel(src: string, sep: string): string[] {
   return out;
 }
 
+/**
+ * Humanizes the *subject* (left operand) of a comparison when it is not an
+ * entity reference. Handles `now()` / `now().attr` specially and otherwise
+ * passes the text through verbatim (e.g. a `{% set %}` local variable).
+ */
+function humanizeSubject(subject: string, hass: HomeAssistant | undefined): string | null {
+  const trimmed = subject.trim();
+  const refs = extractReferences(trimmed);
+  if (refs.length === 1) return entityLabel(hass, refs[0]);
+  const nowMatch = trimmed.match(/^now\s*\(\s*\)\s*(.*)$/);
+  if (nowMatch) {
+    const rest = nowMatch[1].trim();
+    if (rest === '') return t(hass, 'humanize.now');
+    const attr = rest.match(/^\.\s*([A-Za-z_]+)\s*$/);
+    if (attr) return `${t(hass, 'humanize.current')} ${attrLabel(attr[1])}`;
+  }
+  return trimmed.length ? trimmed : null;
+}
+
 function humanizeValue(value: string, hass: HomeAssistant | undefined): string | null {
   const unquoted = unquote(value);
   if (unquoted !== null) return unquoted;
@@ -210,6 +256,34 @@ function humanizeValue(value: string, hass: HomeAssistant | undefined): string |
 export function humanizeLeaf(source: string, hass?: HomeAssistant): string | null {
   const cmp = findComparison(source);
   if (cmp) {
+    // Chained comparison: `0 < elevation < 20` is `A op1 B op2 C`. Reuse the
+    // single-comparison logic on each side so the middle operand (B) becomes
+    // the shared subject and both constraints read naturally:
+    // -> "elevation is greater than 0 and less than 20".
+    const chained = findChainedComparison(cmp);
+    if (chained) {
+      const { a, op1, b, op2, c } = chained;
+      const subject = humanizeSubject(b, hass);
+      if (subject === null) return null;
+      const relLeft = reverseOp(op1); // b compared against the left bound (a)
+      if (relLeft === null) return null;
+      const valueA = humanizeValue(a, hass);
+      const valueC = humanizeValue(c, hass);
+      if (valueA === null || valueC === null) return null;
+      const relRight = op2; // b compared against the right bound (c)
+      const leftIsLower = relLeft === 'gt' || relLeft === 'gte';
+      const leftIsUpper = relLeft === 'lt' || relLeft === 'lte';
+      const rightIsLower = relRight === 'gt' || relRight === 'gte';
+      const rightIsUpper = relRight === 'lt' || relRight === 'lte';
+      // A bounded range, e.g. `0 < elevation < 20` -> "elevation is between 0 and 20".
+      if ((leftIsLower && rightIsUpper) || (leftIsUpper && rightIsLower)) {
+        const low = leftIsLower ? valueA : valueC;
+        const high = leftIsLower ? valueC : valueA;
+        return `${subject} ${t(hass, 'humanize.between')} ${low} ${t(hass, 'humanize.and')} ${high}`;
+      }
+      return `${subject} ${t(hass, OP_KEYS[relLeft])} ${valueA} ${t(hass, 'humanize.and')} ${t(hass, OP_KEYS[relRight])} ${valueC}`;
+    }
+
     const leftRefs = extractReferences(cmp.left);
     const rightRefs = extractReferences(cmp.right);
     let subject: string | null = null;
@@ -226,7 +300,11 @@ export function humanizeLeaf(source: string, hass?: HomeAssistant): string | nul
       valueSource = cmp.left;
       token = reversed;
     } else {
-      return null;
+      // Neither operand is an entity (e.g. a `{% set %}` local variable or a
+      // `now()` call). Humanize generically so the operators still read
+      // naturally: `elevation < 0` -> "elevation is less than 0".
+      subject = humanizeSubject(cmp.left, hass);
+      valueSource = cmp.right;
     }
 
     const value = humanizeValue(valueSource, hass);

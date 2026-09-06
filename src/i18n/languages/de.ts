@@ -5,8 +5,16 @@ export const de: Translation = {
   'card.parse_fallback_warning':
     'Die boolesche Struktur dieser Vorlage konnte nicht vollständig analysiert werden - wird als einzelner ausgewerteter Ausdruck angezeigt.',
   'card.setting_up': 'Live-Abonnements werden eingerichtet…',
-  'card.template_source_summary': 'Vorlagenquelle (live synchronisiert von {entity})',
-  'card.references_summary': 'Referenzierte Entitäten & Attribute',
+  'card.references_summary': 'Statuswerte',
+  'card.edit_template': 'Vorlage bearbeiten',
+  'card.discard_changes': 'Verwerfen',
+  'card.save_template': 'Im Helfer speichern',
+  'card.saving_template': 'Speichert…',
+  'card.empty_title': 'Vorlage kann nicht geladen werden',
+  'card.empty_hint':
+    'Wähle in der Kartenkonfiguration einen Vorlagen-Helfer, der über Einstellungen → Geräte & Dienste → Helfer erstellt wurde.',
+  'card.edit_hint':
+    "Unten wird ein Entwurf bearbeitet. Die Visualisierung wird beim Tippen live neu analysiert. Mit 'Fertig' wird zur gespeicherten Vorlage des Helfers zurückgekehrt (Speichern wird noch nicht unterstützt).",
   'references.entity_column': 'Entität',
   'references.value_column': 'Aktueller Wert',
   'references.entity_not_found': 'Entität nicht gefunden',
@@ -15,12 +23,17 @@ export const de: Translation = {
   'tree.and': 'UND',
   'tree.or': 'ODER',
   'tree.not': 'NICHT',
+  'tree.if': 'WENN',
+  'tree.else_if': 'SONST WENN',
+  'tree.else': 'SONST',
+  'tree.empty_output': '(leere Ausgabe)',
   'editor.title_label': 'Titel (optional)',
   'editor.entity_label': 'Vorlagen-Helfer-Entität',
   'editor.icon_label': 'Symbol (optional)',
-  'editor.icon_hint':
-    'Leer lassen, um automatisch ein Ein/Aus-Symbol basierend auf dem Zustand der Entität anzuzeigen.',
   'editor.humanize_label': 'Einfache Sprache',
+  'editor.show_references_label': 'Statuswerte',
+  'editor.show_header_label': 'Symbol & Titel anzeigen',
+  'editor.show_edit_button_label': 'Bearbeiten-Schaltfläche anzeigen',
   'editor.hint':
     'Es werden nur Entitäten unterstützt, die über Einstellungen → Geräte & Dienste → Helfer → Vorlage erstellt wurden. Die Karte liest die Vorlagendefinition dieses Helfers direkt aus, sodass sie immer synchron bleibt - nichts muss manuell eingefügt oder aktualisiert werden.',
   'humanize.is': 'ist',
@@ -31,4 +44,8 @@ export const de: Translation = {
   'humanize.greater_than_or_equal': 'ist größer oder gleich',
   'humanize.is_in': 'ist in',
   'humanize.is_not_in': 'ist nicht in',
+  'humanize.now': 'die aktuelle Zeit',
+  'humanize.current': 'aktuelle',
+  'humanize.and': 'und',
+  'humanize.between': 'liegt zwischen',
 };

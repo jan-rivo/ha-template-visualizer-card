@@ -74,11 +74,24 @@ export class HaTemplateEditorCardEditor extends LitElement {
           .label=${t(this.hass, 'editor.icon_label')}
           @value-changed=${(e: CustomEvent<{ value: string }>) => this.emit({ icon: e.detail.value || undefined })}
         ></ha-icon-picker>
-        <p class="tpl-hint">${t(this.hass, 'editor.icon_hint')}</p>
         <ha-switch
           .checked=${this.config.showCode !== true}
           @change=${(e: Event) => this.emit({ showCode: !(e.target as HTMLInputElement).checked })}
         >${t(this.hass, 'editor.humanize_label')}</ha-switch>
+        <ha-switch
+          .checked=${this.config.showReferences !== false}
+          @change=${(e: Event) =>
+            this.emit({ showReferences: (e.target as HTMLInputElement).checked })}
+        >${t(this.hass, 'editor.show_references_label')}</ha-switch>
+        <ha-switch
+          .checked=${this.config.showHeader !== false}
+          @change=${(e: Event) => this.emit({ showHeader: (e.target as HTMLInputElement).checked })}
+        >${t(this.hass, 'editor.show_header_label')}</ha-switch>
+        <ha-switch
+          .checked=${this.config.showEditButton !== false}
+          @change=${(e: Event) =>
+            this.emit({ showEditButton: (e.target as HTMLInputElement).checked })}
+        >${t(this.hass, 'editor.show_edit_button_label')}</ha-switch>
         <ha-alert alert-type="info">${t(this.hass, 'editor.hint')}</ha-alert>
       </div>
     `;
@@ -90,11 +103,6 @@ export class HaTemplateEditorCardEditor extends LitElement {
       flex-direction: column;
       gap: var(--ha-space-3, 12px);
       padding: 8px 0;
-    }
-    .tpl-hint {
-      font-size: 12px;
-      color: var(--secondary-text-color);
-      margin: 0;
     }
     ha-alert {
       margin-top: var(--ha-space-1, 4px);

@@ -5,8 +5,16 @@ export const fr: Translation = {
   'card.parse_fallback_warning':
     "Impossible d'analyser entièrement la structure booléenne de ce modèle - affichage sous forme d'expression unique évaluée.",
   'card.setting_up': 'Configuration des abonnements en direct…',
-  'card.template_source_summary': 'Source du modèle (synchronisée en direct depuis {entity})',
-  'card.references_summary': 'Entités et attributs référencés',
+  'card.references_summary': "Valeurs d'état",
+  'card.edit_template': "Modifier le modèle",
+  'card.discard_changes': 'Ignorer',
+  'card.save_template': "Enregistrer dans l'assistant",
+  'card.saving_template': 'Enregistrement…',
+  'card.empty_title': 'Impossible de charger le modèle',
+  'card.empty_hint':
+    'Choisissez un assistant Modèle créé via Paramètres → Appareils et services → Assistants dans la configuration de la carte.',
+  'card.edit_hint':
+    "Modification d'un brouillon ci-dessous. La visualisation est re-analysée en direct pendant la saisie. Appuyez sur Terminé pour revenir au modèle enregistré de l'assistant (l'enregistrement n'est pas encore pris en charge).",
   'references.entity_column': 'Entité',
   'references.value_column': 'Valeur actuelle',
   'references.entity_not_found': 'entité introuvable',
@@ -15,12 +23,17 @@ export const fr: Translation = {
   'tree.and': 'ET',
   'tree.or': 'OU',
   'tree.not': 'NON',
+  'tree.if': 'SI',
+  'tree.else_if': 'SINON SI',
+  'tree.else': 'SINON',
+  'tree.empty_output': '(sortie vide)',
   'editor.title_label': 'Titre (facultatif)',
   'editor.entity_label': "Entité d'assistant modèle",
   'editor.icon_label': 'Icône (facultative)',
-  'editor.icon_hint':
-    "Laissez vide pour afficher automatiquement une icône marche/arrêt selon l'état de l'entité.",
   'editor.humanize_label': 'Langage simple',
+  'editor.show_references_label': "Valeurs d'état",
+  'editor.show_header_label': "Afficher l'icône et le titre",
+  'editor.show_edit_button_label': 'Afficher le bouton de modification',
   'editor.hint':
     "Seules les entités créées via Paramètres → Appareils et services → Assistants → Modèle sont prises en charge. La carte lit directement la définition du modèle de cet assistant, elle reste donc toujours synchronisée - rien à coller ni à mettre à jour manuellement.",
   'humanize.is': 'est',
@@ -31,4 +44,8 @@ export const fr: Translation = {
   'humanize.greater_than_or_equal': 'est supérieur ou égal à',
   'humanize.is_in': 'est dans',
   'humanize.is_not_in': "n'est pas dans",
+  'humanize.now': 'l’heure actuelle',
+  'humanize.current': 'actuel',
+  'humanize.and': 'et',
+  'humanize.between': 'est entre',
 };
