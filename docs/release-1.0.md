@@ -19,7 +19,7 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 |---|------|--------|-------|
 | B1 | Start a CHANGELOG (Added/Changed/Fixed per release, from 1.0.0) | pending | |
 | B2 | Get native-speaker review of translations (`de/es/fr/it/nl/nb/nn` in `src/i18n/languages/`) | pending | Keys are TS-enforced; quality unverified |
-| B3 | Subscription-count guard (surface warning when leaf/output count exceeds ~20) | in_progress | Implemented 2026-09-07 as admin-only `tpl-warning` above 30 subs (`SUBSCRIPTION_WARNING_LIMIT` + `shouldWarnForSubscriptionCount` in `src/card.ts`, `card.too_many_subscriptions` i18n key in all 8 langs — non-English values are English placeholders for B2 to review; `test/subscription-warning.test.ts` 4 tests). Cap raised 20→30 per review. Awaiting screenshot sign-off before marking done |
+| B3 | Subscription-count guard (surface warning when leaf/output count exceeds ~20) | done | Implemented 2026-09-07 as admin-only `tpl-warning` above 30 subs (`SUBSCRIPTION_WARNING_LIMIT` + `shouldWarnForSubscriptionCount` in `src/card.ts`, `card.too_many_subscriptions` i18n key in all 8 langs — non-English values are English placeholders for B2 to review; `test/subscription-warning.test.ts` 4 tests). Cap raised 20→30 per review. Screenshot signed off (admin shows warning, viewer + small templates don't) |
 | B4 | Enable Dependabot (npm + GitHub Actions) | pending | |
 | B5 | Add bug-report issue template (HA version + template text) | pending | |
 | B6 | Branch protection on `main` (require CI) | pending | |
@@ -54,3 +54,4 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 | 2026-09-07 | A1 marked done after `v1.0.0-beta.3` (plain relative screenshot links like v0.3 restored — tables were what broke HACS rendering). Added A5 to finalize screenshots at release time. |
 | 2026-09-07 | A3 done (`screenshot-1.png` deleted, replaced by light/dark Relax-mode shots), A4 done (no-op removed, typecheck + 88/88 green, dist rebuilt). |
 | 2026-09-07 | A2 done: deleted `docs/parser-expansion-plan.md`; README gained a concise "Not broken down" section listing unstructured constructs (`for`/`macro`/`filter`/`call`/`namespace`, multi-output mixes). |
+| 2026-09-07 | B3 done: admin-only subscription warning above 30 subs implemented, tested (92/92), screenshot-signed-off. |
