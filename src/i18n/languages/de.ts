@@ -4,9 +4,12 @@ export const de: Translation = {
   'card.default_title': 'Vorlagenlogik',
   'card.parse_fallback_warning':
     'Die boolesche Struktur dieser Vorlage konnte nicht vollständig analysiert werden - wird als einzelner ausgewerteter Ausdruck angezeigt.',
+  'card.too_many_subscriptions':
+    'Diese Vorlage öffnet {count} Live-Abonnements (empfohlen max. {limit}). Die Karte funktioniert weiterhin, doch sehr große Vorlagen können das Dashboard verlangsamen – vereinfache die Vorlage bei Bedarf.',
   'card.setting_up': 'Live-Abonnements werden eingerichtet…',
   'card.references_summary': 'Statuswerte',
   'card.edit_template': 'Vorlage bearbeiten',
+  'card.output_label': 'Ausgabe',
   'card.discard_changes': 'Verwerfen',
   'card.save_template': 'Im Helfer speichern',
   'card.saving_template': 'Speichert…',
@@ -14,7 +17,7 @@ export const de: Translation = {
   'card.empty_hint':
     'Wähle in der Kartenkonfiguration einen Vorlagen-Helfer, der über Einstellungen → Geräte & Dienste → Helfer erstellt wurde.',
   'card.edit_hint':
-    "Unten wird ein Entwurf bearbeitet. Die Visualisierung wird beim Tippen live neu analysiert. Mit 'Fertig' wird zur gespeicherten Vorlage des Helfers zurückgekehrt (Speichern wird noch nicht unterstützt).",
+    'Unten wird ein Entwurf bearbeitet. Die Visualisierung wird beim Tippen live neu analysiert. Speichern schreibt die Änderungen in den Helfer; Verwerfen kehrt zur gespeicherten Vorlage des Helfers zurück.',
   'references.entity_column': 'Entität',
   'references.value_column': 'Aktueller Wert',
   'references.entity_not_found': 'Entität nicht gefunden',
@@ -26,12 +29,13 @@ export const de: Translation = {
   'tree.if': 'WENN',
   'tree.else_if': 'SONST WENN',
   'tree.else': 'SONST',
+  'tree.outputs': 'Ausgaben',
   'tree.empty_output': '(leere Ausgabe)',
   'editor.title_label': 'Titel (optional)',
   'editor.entity_label': 'Vorlagen-Helfer-Entität',
   'editor.icon_label': 'Symbol (optional)',
   'editor.humanize_label': 'Einfache Sprache',
-  'editor.show_references_label': 'Statuswerte',
+  'editor.show_state_values_label': 'Statuswerte',
   'editor.show_header_label': 'Symbol & Titel anzeigen',
   'editor.show_edit_button_label': 'Bearbeiten-Schaltfläche anzeigen',
   'editor.hint':

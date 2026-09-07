@@ -1,150 +1,101 @@
-# Template Logic Visualizer (Home Assistant custom card)
+# Template Visualizer (Home Assistant custom card)
 
 [![Validate](https://github.com/jan-rivo/ha-template-visualizer-card/actions/workflows/validate.yml/badge.svg)](https://github.com/jan-rivo/ha-template-visualizer-card/actions/workflows/validate.yml)
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Visualizes a Home Assistant template sensor's boolean logic as an indented
-tree, showing which sub-conditions are currently `true`/`false` against your
-live entities, and why the overall result comes out the way it does.
+See *why* your template sensor outputs what it outputs. Template Visualizer
+parses a Template Helper's Jinja logic and renders it as a live tree — every
+condition badged ✓/✗ against your real entity states, updating instantly when
+anything changes.
 
-![Card screenshot](docs/screenshot-1.png)
+| Light — without the Edit button | Dark — with the Edit button |
+|---|---|
+| ![Relax mode card in light theme, no Edit template button](docs/screenshot-light.png) | ![Relax mode card in dark theme, with Edit template button](docs/screenshot-dark.png) |
 
-## Disclaimer!
+- **Live logic tree** — `{% if %}` / `{% elif %}` / `{% else %}` branches and
+  `and` / `or` / `not` conditions, each with a live pass/fail badge and its
+  current rendered value. No polling: every value is a push subscription.
+- **Edit in place** (admins) — tweak the template right on the card with a
+  live-updating preview, then save straight back to the helper.
+- **State values panel** — every entity the template reads, with friendly
+  name, icon and current value.
+- **Zero config drift** — point the card at a helper; it reads the helper's
+  actual template itself. Nothing to paste or keep in sync.
 
-AI was used to develop this card.
+## Requirements
 
-## Why
-
-Home Assistant template sensors built from long `and`/`or`/`not` chains are
-easy to write but hard to debug — you only see the final `on`/`off`, not
-which leg of the condition is failing. This card parses the boolean
-structure of your template and renders every AND/OR/NOT node plus every leaf
-condition (e.g. `is_state('binary_sensor.door','on')`) with a live pass/fail
-indicator and its current rendered value.
-
-## How it works
-
-1. **Parsing** — a small recursive-descent parser (see
-   `src/parser/`) extracts the boolean tree (`AND` / `OR` / `NOT` / leaf
-   comparisons) from the `{{ ... }}` template text. It intentionally
-   supports a *subset* of Jinja (boolean logic, comparisons, function calls
-   like `states()`, `is_state()`, `state_attr()`, `float()`, etc. as opaque
-   leaves) rather than reimplementing all of Jinja. Anything it can't
-   confidently parse degrades gracefully to a single leaf covering the
-   whole expression.
-2. **Live evaluation** — each leaf's exact source text is re-wrapped as its
-   own `{{ ... }}` template and subscribed to individually via Home
-   Assistant's `render_template` WebSocket command (the same one HA's own
-   developer tools template editor uses). This is a genuine push
-   subscription: HA tracks which entities each leaf depends on and pushes a
-   new value only when one of them actually changes - there is no polling
-   anywhere in this card. AND/OR/NOT nodes are recomputed bottom-up in JS
-   every time any leaf pushes an update.
-3. **Rendering** — a LitElement-based Lovelace card (`ha-template-visualizer-card`)
-   displays the tree with green/red badges per node, plus a **Referenced
-   entities & attributes** table below it: every `states()`, `is_state()`,
-   `state_attr()`, and `is_state_attr()` call found anywhere in the template
-   (via a separate regex-based scan of the full text, not just the parsed
-   boolean subset) is deduped down to one row per entity/attribute pair and
-   shown with its live current value straight from `hass.states` - so you can
-   see exactly what data the template is working with, even for parts of the
-   template the boolean-tree parser couldn't structure.
-4. **Auto-sync with the real template** — you pick an entity (via a native
-   `<ha-entity-picker>`, filtered to Template Helper entities), and the card
-   fetches that helper's actual template text itself (see
-   `src/ha/template-source.ts`) instead of you pasting it. There is nothing
-   to keep in sync manually.
-
-### Important limitation
-
-This card **only supports entities created via Settings > Devices &
-Services > Helpers > Template** (the UI-based "Template" helper), not
-YAML-defined `template:` sensors. Home Assistant doesn't expose a config
-entry's stored options through any documented, stable public API (this is
-deliberate - entries can hold secrets), so we reuse the same semi-internal
-mechanism HA's own "edit helper" dialog uses: starting that helper's config
-entry *options flow* and reading the `suggested_value` it returns for the
-template field, then immediately discarding the flow. This is not a
-documented API, so it can break across Home Assistant versions - if that
-happens, the card will show a clear error rather than silently failing.
-YAML-defined template sensors have no config entry at all, so there's no
-equivalent for them and they are out of scope for this project - this card
-only ever supports UI-created Template Helpers.
-
-## Project structure
-
-```
-src/
-  parser/       tokenizer + recursive-descent parser -> AST (AND/OR/NOT/LEAF)
-                plus the states()/is_state()/state_attr() reference extractor
-  tree/         builds a live, subscription-backed evaluated tree from an AST
-  ha/           hass types, entity registry lookup, template-source fetcher,
-                render_template WebSocket helper + truthiness rules
-  components/   Lit templates for rendering the tree and references panel
-  card.ts       the Lovelace card (ha-template-visualizer-card)
-  editor.ts     visual config editor (title field + <ha-entity-picker>)
-  index.ts      registers the card with Lovelace's custom card picker
-test/
-  parser.test.ts      unit tests for the boolean-expression parser subset
-  references.test.ts  unit tests for the states()/is_state()/state_attr() reference extractor
-```
-
-## Development
-
-```powershell
-npm install
-npm run build     # bundles to dist/ha-template-visualizer-card.js
-npm run watch      # rebuild on change
-npm run typecheck
-npm test           # parser unit tests (node:test via tsx)
-```
+Works with entities created via **Settings → Devices & Services → Helpers →
+Template** (UI-based Template Helpers). YAML-defined `template:` sensors are
+not supported — Home Assistant exposes no API to read their definition, so
+there is nothing for the card to visualize.
 
 ## Installation
 
 ### HACS (recommended)
 
-1. In Home Assistant, go to **HACS > Dashboards** (top-right menu > Custom
-   repositories) and add this repository's URL as a **Dashboard/Plugin**
-   custom repository.
-2. Install "Template Logic Visualizer" from HACS, then add the Lovelace
-   resource if HACS doesn't do it automatically.
+1. In Home Assistant, go to **HACS → top-right menu → Custom repositories**,
+   add this repository's URL as a **Dashboard** repository.
+2. Install **Template Visualizer** from HACS (enable *Show beta versions* for
+   pre-releases). HACS adds the Lovelace resource automatically.
 
 ### Manual
 
-1. Copy `dist/ha-template-visualizer-card.js` into your HA `www/` folder, and
+1. Copy `dist/ha-template-visualizer-card.js` into your HA `www/` folder and
    add it as a Lovelace resource:
    ```yaml
    resources:
      - url: /local/ha-template-visualizer-card.js
        type: module
    ```
-2. Add the card and pick a Template Helper entity, either via the visual
-   editor (Add Card > Template Logic Visualizer) or YAML:
-   ```yaml
-   type: custom:ha-template-visualizer-card
-   title: Alarm arm-ready logic
-   entity: binary_sensor.alarm_ready   # must be a UI-created Template Helper
-   ```
 
-## Supported template subset
+## Usage
 
-- `and`, `or`, `not`, parentheses for grouping
-- Comparisons (`==`, `!=`, `<`, `>`, `<=`, `>=`) treated as opaque leaves
-- Function calls as leaves: `states(...)`, `is_state(...)`, `state_attr(...)`,
-  `is_state_attr(...)`, `float(...)`, `int(...)`, attribute chains, etc.
+Add the card (**Add Card → Template Visualizer**) and pick a Template Helper
+— or configure it in YAML:
 
-Not supported (falls back to a single opaque leaf so the card still works,
-just without the sub-tree breakdown): Jinja control flow (`{% if %}` /
-`{% for %}`), filters/pipes as top-level operators, macros, multi-line
-templates with statements outside a single boolean expression.
+```yaml
+type: custom:ha-template-visualizer-card
+title: Relax mode
+entity: binary_sensor.relax_mode
+```
 
-## Roadmap
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `entity` | string | — | **Required.** A UI-created Template Helper entity. |
+| `title` | string | `Template logic` | Card header title. |
+| `icon` | string | `mdi:ab-testing` | Card header icon. |
+| `showCode` | boolean | `false` | Show raw template code instead of human-readable conditions. |
+| `showStateValues` | boolean | `true` | Show the State values panel. |
+| `showHeader` | boolean | `true` | Show the header icon + title. |
+| `showEditButton` | boolean | `true` | Show the Edit template button (admin users only). |
 
-- Support `{% if %}/{% elif %}/{% else %}` branching sensors as a separate
-  visualization mode (decision tree instead of boolean tree).
+## Not broken down
+
+`{% for %}` loops, `{% macro %}`, `{% filter %}`, `{% call %}`,
+`{% namespace %}` and similar are not visualized branch-by-branch — nor are
+templates that mix several `{{ ... }}` outputs with literal text outside an
+`{% if %}` structure. Those still work: the card shows them as a single
+live-evaluated result instead of a sub-condition tree.
+
+## Contributing
+
+Issues and pull requests are welcome — please include your Home Assistant
+version and the template text when reporting a bug.
+
+```bash
+npm install
+npm run build      # bundles to dist/ha-template-visualizer-card.js
+npm run typecheck
+npm test           # unit tests (node:test via tsx)
+```
+
+`dist/` is committed: run `npm run build` before pushing (CI fails otherwise).
+
+## Acknowledgments
+
+This card was developed with AI assistance.
 
 ## License
 
 [MIT](LICENSE)
-

@@ -4,9 +4,12 @@ export const nl: Translation = {
   'card.default_title': 'Sjabloonlogica',
   'card.parse_fallback_warning':
     'Kon de booleaanse structuur van dit sjabloon niet volledig analyseren - wordt weergegeven als één geëvalueerde expressie.',
+  'card.too_many_subscriptions':
+    'Dit sjabloon opent {count} live-abonnementen (aanbevolen max. {limit}). De kaart blijft werken, maar erg grote sjablonen kunnen het dashboard vertragen – overweeg het sjabloon te vereenvoudigen.',
   'card.setting_up': 'Live-abonnementen worden ingesteld…',
   'card.references_summary': 'Statuswaarden',
   'card.edit_template': 'Sjabloon bewerken',
+  'card.output_label': 'Uitvoer',
   'card.discard_changes': 'Verwerpen',
   'card.save_template': 'Opslaan in de helper',
   'card.saving_template': 'Opslaan…',
@@ -14,7 +17,7 @@ export const nl: Translation = {
   'card.empty_hint':
     'Kies in de kaartconfiguratie een Sjabloonhelper die is gemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen.',
   'card.edit_hint':
-    "U bewerkt hieronder een concept. De visualisatie wordt live opnieuw geanalyseerd terwijl u typt. Druk op Klaar om terug te keren naar het opgeslagen sjabloon van de helper (opslaan wordt nog niet ondersteund).",
+    'U bewerkt hieronder een concept. De visualisatie wordt live opnieuw geanalyseerd terwijl u typt. Met Opslaan schrijft u de wijzigingen naar de helper; Verwerpen keert terug naar het opgeslagen sjabloon van de helper.',
   'references.entity_column': 'Entiteit',
   'references.value_column': 'Huidige waarde',
   'references.entity_not_found': 'entiteit niet gevonden',
@@ -26,12 +29,13 @@ export const nl: Translation = {
   'tree.if': 'ALS',
   'tree.else_if': 'ANDERS ALS',
   'tree.else': 'ANDERS',
+  'tree.outputs': 'Uitvoer',
   'tree.empty_output': '(lege uitvoer)',
   'editor.title_label': 'Titel (optioneel)',
   'editor.entity_label': 'Sjabloonhelper-entiteit',
   'editor.icon_label': 'Pictogram (optioneel)',
   'editor.humanize_label': 'Duidelijke taal',
-  'editor.show_references_label': 'Statuswaarden',
+  'editor.show_state_values_label': 'Statuswaarden',
   'editor.show_header_label': 'Pictogram & titel tonen',
   'editor.show_edit_button_label': 'Bewerkknop tonen',
   'editor.hint':

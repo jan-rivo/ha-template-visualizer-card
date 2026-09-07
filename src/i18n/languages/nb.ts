@@ -5,9 +5,12 @@ export const nb: Translation = {
   'card.default_title': 'Malogikk',
   'card.parse_fallback_warning':
     'Klarte ikke å analysere hele den boolske strukturen i denne malen - viser den som ett enkelt evaluert uttrykk i stedet.',
+  'card.too_many_subscriptions':
+    'Denne malen åpner {count} direkteabonnementer (anbefalt maks {limit}). Kortet fungerer fortsatt, men svært store maler kan gjøre dashbordet tregt – vurder å forenkle malen.',
   'card.setting_up': 'Setter opp direkteabonnementer…',
   'card.references_summary': 'Tilstandsverdier',
   'card.edit_template': 'Rediger mal',
+  'card.output_label': 'Resultat',
   'card.discard_changes': 'Forkast',
   'card.save_template': 'Lagre i hjelperen',
   'card.saving_template': 'Lagrer…',
@@ -15,7 +18,7 @@ export const nb: Translation = {
   'card.empty_hint':
     'Velg en Malhjelper opprettet via Innstillinger → Enheter og tjenester → Hjelpere i kortets konfigurasjon.',
   'card.edit_hint':
-    'Redigerer et utkast nedenfor. Visualiseringen re-analyseres direkte mens du skriver. Trykk Ferdig for å gå tilbake til hjelperens lagrede mal (lagring støttes ennå ikke).',
+    'Redigerer et utkast nedenfor. Visualiseringen analyseres på nytt direkte mens du skriver. Lagre skriver endringene til hjelperen; Forkast går tilbake til hjelperens lagrede mal.',
   'references.entity_column': 'Enhet',
   'references.value_column': 'Nåværende verdi',
   'references.entity_not_found': 'enheten ble ikke funnet',
@@ -27,12 +30,13 @@ export const nb: Translation = {
   'tree.if': 'HVIS',
   'tree.else_if': 'ELLERS HVIS',
   'tree.else': 'ELLERS',
-  'tree.empty_output': '(tom utdata)',
+  'tree.outputs': 'Utdata',
+  'tree.empty_output': '(ingen utdata)',
   'editor.title_label': 'Tittel (valgfritt)',
   'editor.entity_label': 'Malhjelper-enhet',
   'editor.icon_label': 'Ikon (valgfritt)',
   'editor.humanize_label': 'Enkelt språk',
-  'editor.show_references_label': 'Tilstandsverdier',
+  'editor.show_state_values_label': 'Tilstandsverdier',
   'editor.show_header_label': 'Vis ikon og tittel',
   'editor.show_edit_button_label': 'Vis redigeringsknapp',
   'editor.hint':

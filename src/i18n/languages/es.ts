@@ -4,9 +4,12 @@ export const es: Translation = {
   'card.default_title': 'Lógica de la plantilla',
   'card.parse_fallback_warning':
     'No se pudo analizar completamente la estructura booleana de esta plantilla - se muestra como una única expresión evaluada.',
+  'card.too_many_subscriptions':
+    'Esta plantilla abre {count} suscripciones en vivo (máximo recomendado {limit}). La tarjeta sigue funcionando, pero las plantillas muy grandes pueden ralentizar el panel: considera simplificar la plantilla.',
   'card.setting_up': 'Configurando suscripciones en vivo…',
   'card.references_summary': 'Valores de estado',
   'card.edit_template': 'Editar plantilla',
+  'card.output_label': 'Salida',
   'card.discard_changes': 'Descartar',
   'card.save_template': 'Guardar en el ayudante',
   'card.saving_template': 'Guardando…',
@@ -14,7 +17,7 @@ export const es: Translation = {
   'card.empty_hint':
     'Elige un ayudante de Plantilla creado mediante Ajustes → Dispositivos y servicios → Ayudantes en la configuración de la tarjeta.',
   'card.edit_hint':
-    "Editando un borrador a continuación. La visualización se vuelve a analizar en vivo mientras escribes. Pulsa Hecho para volver a la plantilla guardada del ayudante (guardar aún no es compatible).",
+    "Editando un borrador a continuación. La visualización se vuelve a analizar en vivo mientras escribes. Guardar escribe los cambios en el ayudante; Descartar vuelve a la plantilla guardada del ayudante.",
   'references.entity_column': 'Entidad',
   'references.value_column': 'Valor actual',
   'references.entity_not_found': 'entidad no encontrada',
@@ -24,14 +27,15 @@ export const es: Translation = {
   'tree.or': 'O',
   'tree.not': 'NO',
   'tree.if': 'SI',
-  'tree.else_if': 'SI NO',
-  'tree.else': 'SI NO',
+  'tree.else_if': 'SINO SI',
+  'tree.else': 'SINO',
+  'tree.outputs': 'Salidas',
   'tree.empty_output': '(salida vacía)',
   'editor.title_label': 'Título (opcional)',
   'editor.entity_label': 'Entidad de ayudante de plantilla',
   'editor.icon_label': 'Icono (opcional)',
   'editor.humanize_label': 'Lenguaje sencillo',
-  'editor.show_references_label': 'Valores de estado',
+  'editor.show_state_values_label': 'Valores de estado',
   'editor.show_header_label': 'Mostrar icono y título',
   'editor.show_edit_button_label': 'Mostrar el botón de edición',
   'editor.hint':

@@ -1,0 +1,41 @@
+name: Bug report
+description: Something broken? Tell us what happened.
+labels: ["bug"]
+title: "[bug]: "
+body:
+  - type: input
+    id: ha-version
+    attributes:
+      label: Home Assistant version
+      description: Core version, e.g. 2026.8.1 (Settings → About).
+      placeholder: "2026.8.1"
+    validations:
+      required: true
+  - type: input
+    id: card-version
+    attributes:
+      label: Card version
+      description: Installed version, e.g. v1.0.0 (HACS → Template Visualizer).
+      placeholder: "v1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: template
+    attributes:
+      label: Template text
+      description: The helper's full template that triggers the bug. This is the single most useful thing for reproducing.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
+      description: What the card shows vs. what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots / browser console errors
+      description: "Optional, but very helpful. Console: browser menu → More tools → Developer tools → Console."

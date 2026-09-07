@@ -4,9 +4,12 @@ export const it: Translation = {
   'card.default_title': 'Logica del modello',
   'card.parse_fallback_warning':
     "Impossibile analizzare completamente la struttura booleana di questo modello - visualizzato come un'unica espressione valutata.",
+  'card.too_many_subscriptions':
+    'Questo modello apre {count} sottoscrizioni live (massimo consigliato {limit}). La scheda continua a funzionare, ma i modelli molto grandi possono rallentare la dashboard – valuta di semplificare il modello.',
   'card.setting_up': 'Configurazione delle sottoscrizioni live…',
   'card.references_summary': 'Valori di stato',
   'card.edit_template': 'Modifica modello',
+  'card.output_label': 'Risultato',
   'card.discard_changes': 'Annulla',
   'card.save_template': "Salva nell'helper",
   'card.saving_template': 'Salvataggio…',
@@ -14,7 +17,7 @@ export const it: Translation = {
   'card.empty_hint':
     "Scegli un helper Modello creato tramite Impostazioni → Dispositivi e servizi → Helper nella configurazione della scheda.",
   'card.edit_hint':
-    "Modifica di una bozza qui sotto. La visualizzazione viene ri-analizzata in tempo reale mentre digiti. Premi Fatto per tornare al modello salvato dell'helper (il salvataggio non è ancora supportato).",
+    "Modifica di una bozza qui sotto. La visualizzazione viene rianalizzata in tempo reale mentre digiti. Salva scrive le modifiche nell'helper; Annulla torna al modello salvato dell'helper.",
   'references.entity_column': 'Entità',
   'references.value_column': 'Valore attuale',
   'references.entity_not_found': 'entità non trovata',
@@ -26,12 +29,13 @@ export const it: Translation = {
   'tree.if': 'SE',
   'tree.else_if': 'ALTRIMENTI SE',
   'tree.else': 'ALTRIMENTI',
+  'tree.outputs': 'Output',
   'tree.empty_output': '(uscita vuota)',
   'editor.title_label': 'Titolo (opzionale)',
   'editor.entity_label': 'Entità helper modello',
   'editor.icon_label': 'Icona (opzionale)',
   'editor.humanize_label': 'Linguaggio semplice',
-  'editor.show_references_label': 'Valori di stato',
+  'editor.show_state_values_label': 'Valori di stato',
   'editor.show_header_label': 'Mostra icona e titolo',
   'editor.show_edit_button_label': 'Mostra il pulsante di modifica',
   'editor.hint':
@@ -44,7 +48,7 @@ export const it: Translation = {
   'humanize.greater_than_or_equal': 'è maggiore o uguale a',
   'humanize.is_in': 'è in',
   'humanize.is_not_in': 'non è in',
-  'humanize.now': 'l’ora corrente',
+  'humanize.now': "l'ora corrente",
   'humanize.current': 'corrente',
   'humanize.and': 'e',
   'humanize.between': 'è tra',

@@ -4,7 +4,7 @@
 //   title: "My logic"                   # optional
 //   icon: mdi:ab-testing                # optional; defaults to mdi:ab-testing
 //   showCode: false                     # optional; when true show raw template code
-//   showReferences: true                # optional; show referenced entities panel
+//   showStateValues: true              # optional; show the State values panel
 //   showHeader: true                    # optional; show the header icon + title
 //   showEditButton: true                # optional; show the "Edit template" button (admins only)
 //
@@ -21,7 +21,8 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { parseBooleanTemplate } from './parser/parser';
 import { extractReferences, groupReferences, type ReferencedEntity } from './parser/references';
-import { createLiveTree, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
+import { createLiveTree, collectLeaves, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
+import { subscribeTemplate, type Unsubscribe } from './ha/render';
 import type { HomeAssistant } from './ha/hass';
 import { fetchTemplateForEntity, saveTemplateForEntity } from './ha/template-source';
 import { findDefaultTemplateEntity } from './ha/template-entities';
@@ -37,7 +38,9 @@ export interface CardConfig {
   icon?: string;
   /** When true, show the raw template code for leaf conditions instead of humanized text. */
   showCode?: boolean;
-  /** Show the referenced entities & attributes panel. Defaults to true. */
+  /** Show the State values panel. Defaults to true. */
+  showStateValues?: boolean;
+  /** @deprecated Renamed to showStateValues (kept so existing configs keep working). */
   showReferences?: boolean;
   /** Show the header icon + title. Defaults to true. */
   showHeader?: boolean;
@@ -47,6 +50,14 @@ export interface CardConfig {
 
 export const DEFAULT_ICON = 'mdi:ab-testing';
 
+/** Above this many live render_template subscriptions, admins see a notice (the card keeps working). */
+export const SUBSCRIPTION_WARNING_LIMIT = 30;
+
+/** Admin-only notice when a template opens unusually many live subscriptions. Below or at the limit: never warns. */
+export function shouldWarnForSubscriptionCount(count: number, canEdit: boolean, limit = SUBSCRIPTION_WARNING_LIMIT): boolean {
+  return canEdit && count > limit;
+}
+
 @customElement('ha-template-visualizer-card')
 export class HaTemplateEditorCard extends LitElement {
   @property({ attribute: false }) hass!: HomeAssistant;
@@ -55,6 +66,9 @@ export class HaTemplateEditorCard extends LitElement {
   @state() private tree?: EvaluatedNode;
   @state() private references: ReferencedEntity[] = [];
   @state() private parseFallback = false;
+  @state() private renderUnitCount = 0;
+  @state() private overallRendered?: string;
+  @state() private overallError?: string;
   @state() private globalError?: string;
   @state() private templateText?: string;
   @state() private editing = false;
@@ -64,6 +78,7 @@ export class HaTemplateEditorCard extends LitElement {
 
   /** Live WS subscriptions for the currently-configured entity's template (no polling: everything here is push-driven). */
   private liveHandle?: LiveTreeHandle;
+  private overallUnsub?: Unsubscribe;
   private subscribedEntity?: string;
   private setupGeneration = 0;
   private draftTimer?: number;
@@ -71,6 +86,11 @@ export class HaTemplateEditorCard extends LitElement {
   /** Whether the logged-in user can actually edit config entries (admins). Saving uses the same options flow as Settings, which is admin-only. */
   private get canEdit(): boolean {
     return this.hass?.user?.is_admin === true;
+  }
+
+  /** State values panel visibility: `showReferences` is the pre-1.0 name, still honored as a fallback. */
+  private get showStateValues(): boolean {
+    return this.config?.showStateValues ?? this.config?.showReferences ?? true;
   }
 
   setConfig(config: CardConfig): void {
@@ -139,8 +159,14 @@ export class HaTemplateEditorCard extends LitElement {
     this.liveHandle = undefined;
     this.tree = undefined;
     this.references = [];
+    this.renderUnitCount = 0;
+    this.overallRendered = undefined;
+    this.overallError = undefined;
     this.globalError = undefined;
     if (previousHandle) void previousHandle.dispose();
+    const previousOverall = this.overallUnsub;
+    this.overallUnsub = undefined;
+    if (previousOverall) void previousOverall().catch(() => undefined);
     return generation;
   }
 
@@ -150,6 +176,27 @@ export class HaTemplateEditorCard extends LitElement {
 
     const { ast, fallback } = parseBooleanTemplate(template);
     this.parseFallback = fallback;
+    // One subscription per renderable unit, plus one for the overall template
+    // output shown in the header section.
+    this.renderUnitCount = collectLeaves(ast).length + 1;
+    const overallUnsub = await subscribeTemplate(
+      this.hass,
+      template,
+      (rendered) => {
+        if (generation !== this.setupGeneration) return; // superseded
+        this.overallRendered = rendered;
+        this.overallError = undefined;
+      },
+      (err) => {
+        if (generation !== this.setupGeneration) return; // superseded
+        this.overallError = err.message;
+      }
+    );
+    if (generation !== this.setupGeneration) {
+      void overallUnsub().catch(() => undefined);
+      return;
+    }
+    this.overallUnsub = overallUnsub;
     const handle = await createLiveTree(this.hass, ast, (tree) => {
       if (generation !== this.setupGeneration) return; // superseded
       this.tree = tree;
@@ -201,7 +248,6 @@ export class HaTemplateEditorCard extends LitElement {
       await saveTemplateForEntity(this.hass, this.config.entity, this.draft);
       this.saving = false;
       this.editing = false;
-      this.draft = this.draft; // keep the just-saved text as the new baseline
       this.templateText = this.draft;
       const generation = this.beginSetup();
       await this.setupFromTemplate(this.draft, generation);
@@ -272,6 +318,22 @@ export class HaTemplateEditorCard extends LitElement {
                 ${this.parseFallback
                   ? html`<div class="tpl-warning">${t(this.hass, 'card.parse_fallback_warning')}</div>`
                   : ''}
+                ${shouldWarnForSubscriptionCount(this.renderUnitCount, this.canEdit)
+                  ? html`<div class="tpl-warning">
+                      ${t(this.hass, 'card.too_many_subscriptions', {
+                        count: String(this.renderUnitCount),
+                        limit: String(SUBSCRIPTION_WARNING_LIMIT),
+                      })}
+                    </div>`
+                  : ''}
+                <div class="tpl-output">
+                  <span class="tpl-output__label">${t(this.hass, 'card.output_label')}</span>
+                  <span
+                    class="tpl-output__value${this.overallError ? ' tpl-output__value--error' : ''}"
+                  >
+                    ${this.overallError ?? this.overallRendered ?? t(this.hass, 'tree.loading')}
+                  </span>
+                </div>
                 ${this.tree
                   ? renderNode(this.tree, this.hass, this.config.showCode === true)
                   : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
@@ -283,7 +345,7 @@ export class HaTemplateEditorCard extends LitElement {
                       </ha-button>
                     </div>`
                   : ''}
-                ${this.config.showReferences !== false
+                ${this.showStateValues
                   ? html`<ha-expansion-panel
                       class="tpl-refs-panel"
                       .header=${t(this.hass, 'card.references_summary')}
@@ -345,20 +407,20 @@ export class HaTemplateEditorCard extends LitElement {
       flex: none;
     }
     .tpl-node--true .tpl-node__badge {
-      background: var(--success-color, #4caf50);
-      color: white;
+      background: color-mix(in srgb, var(--success-color, #4caf50) 16%, transparent);
+      color: var(--success-color, #4caf50);
     }
     .tpl-node--false .tpl-node__badge {
-      background: var(--error-color, #db4437);
-      color: white;
+      background: color-mix(in srgb, var(--error-color, #db4437) 16%, transparent);
+      color: var(--error-color, #db4437);
     }
     .tpl-node--error .tpl-node__badge {
-      background: var(--warning-color, #ff9800);
-      color: white;
+      background: color-mix(in srgb, var(--warning-color, #ff9800) 18%, transparent);
+      color: var(--warning-color, #ff9800);
     }
     .tpl-node--loading .tpl-node__badge {
-      background: var(--disabled-text-color, #9e9e9e);
-      color: white;
+      background: color-mix(in srgb, var(--disabled-text-color, #9e9e9e) 20%, transparent);
+      color: var(--secondary-text-color, #888);
     }
     .tpl-node__op {
       font-weight: 700;
@@ -389,9 +451,20 @@ export class HaTemplateEditorCard extends LitElement {
       font-weight: 400;
       color: var(--primary-text-color, #000);
     }
-    .tpl-node__value-icon {
-      flex: none;
+    .tpl-node__value {
+      color: var(--primary-text-color, inherit);
+    }
+    .tpl-node__output-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       color: var(--secondary-text-color, #888);
+      flex: none;
+    }
+    .tpl-fired-output > .tpl-node {
+      background: color-mix(in srgb, var(--success-color, #4caf50) 9%, transparent);
+      border-radius: 6px;
     }
     .tpl-node__stmt {
       font-family: var(--code-editor-font-family, monospace);
@@ -425,10 +498,10 @@ export class HaTemplateEditorCard extends LitElement {
       gap: 4px;
     }
     .tpl-branch__tag--true {
-      color: var(--success-color, #4caf50);
+      color: color-mix(in srgb, var(--success-color, #4caf50) 72%, var(--primary-text-color, #212121));
     }
     .tpl-branch__tag--false {
-      color: var(--error-color, #db4437);
+      color: color-mix(in srgb, var(--error-color, #db4437) 72%, var(--primary-text-color, #212121));
     }
     .tpl-error {
       color: var(--error-color, #db4437);
@@ -484,6 +557,32 @@ export class HaTemplateEditorCard extends LitElement {
       color: var(--warning-color, #ff9800);
       font-size: 12px;
       margin-bottom: 8px;
+    }
+    .tpl-output {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 4px 0 10px;
+      padding: 10px 12px;
+      background: color-mix(in srgb, var(--primary-text-color, #212121) 5%, transparent);
+      border-radius: 8px;
+    }
+    .tpl-output__label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--secondary-text-color, #888);
+      flex: none;
+    }
+    .tpl-output__value {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .tpl-output__value--error {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--error-color, #db4437);
     }
     .tpl-refs-panel {
       margin: 12px 0 0;

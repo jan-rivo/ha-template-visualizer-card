@@ -44,6 +44,7 @@ export function renderNode(
   if (node.kind === 'OUTPUT') {
     if (node.source === '') {
       return html`<div class="tpl-node tpl-node--empty" style="--depth: ${depth}">
+        <span class="tpl-node__output-label">${t(hass, 'tree.outputs')}:</span>
         <span class="tpl-node__meta">${t(hass, 'tree.empty_output')}</span>
       </div>`;
     }
@@ -51,6 +52,11 @@ export function renderNode(
     const isBool = rendered !== undefined && isBooleanRendered(rendered);
     const humanized = humanizeLeaf(node.source, hass);
     const stmt = showCode ? node.source : humanized ?? node.source;
+    // Static bodies render identically to their source ("Relax mode → Relax
+    // mode" says nothing twice), so show them once. Bodies with live
+    // interpolation keep the `template → result` form, which explains where
+    // the value comes from.
+    const staticBody = rendered !== undefined && rendered.trim() === node.source.trim();
     return html`<div class="tpl-node ${stateClass} tpl-node--output" style="--depth: ${depth}">
       ${loading
         ? html`<span class="tpl-node__badge">…</span>`
@@ -58,7 +64,8 @@ export function renderNode(
           ? html`<span class="tpl-node__badge">!</span>`
           : isBool
             ? html`<span class="tpl-node__badge">${value ? '✓' : '✗'}</span>`
-            : html`<ha-icon class="tpl-node__value-icon" icon="mdi:variable-box"></ha-icon>`}
+            : ''}
+      <span class="tpl-node__output-label">${t(hass, 'tree.outputs')}:</span>
       <span class="tpl-node__label tpl-node__label--output">
         ${loading
           ? t(hass, 'tree.loading')
@@ -66,7 +73,9 @@ export function renderNode(
             ? error
             : isBool
               ? rendered
-              : html`<span class="tpl-node__stmt">${stmt}</span><span class="tpl-node__arrow">→</span>${rendered}`}
+              : staticBody
+                ? html`<span class="tpl-node__value">${rendered}</span>`
+                : html`<span class="tpl-node__stmt">${stmt}</span><span class="tpl-node__arrow">→</span><span class="tpl-node__value">${rendered}</span>`}
       </span>
     </div>`;
   }
@@ -129,7 +138,9 @@ function renderBranch(
         </span>
       </div>
       ${branch.condition ? renderNode(branch.condition, hass, showCode, depth) : ''}
-      ${renderNode(branch.body, hass, showCode, depth)}
+      ${branch.body.node.kind === 'OUTPUT' && fired
+        ? html`<div class="tpl-fired-output">${renderNode(branch.body, hass, showCode, depth)}</div>`
+        : renderNode(branch.body, hass, showCode, depth)}
     </div>
   `;
 }

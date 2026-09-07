@@ -1,0 +1,23 @@
+# Dependabot: weekly update PRs for npm deps and GitHub Actions.
+# CI (typecheck + tests + fresh-dist + HACS validation) runs on every PR.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+    assignees: ["jan-rivo"]
+    commit-message:
+      prefix: "chore"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    assignees: ["jan-rivo"]
+    commit-message:
+      prefix: "chore"

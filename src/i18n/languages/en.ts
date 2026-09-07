@@ -6,10 +6,12 @@ export const en = {
   'card.default_title': 'Template logic',
   'card.parse_fallback_warning':
     "Couldn't fully parse this template's boolean structure - showing it as a single evaluated expression instead.",
+  'card.too_many_subscriptions':
+    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
   'card.setting_up': 'Setting up live subscriptions…',
   'card.references_summary': 'State values',
   'card.edit_template': 'Edit template',
-  'card.discard_changes': 'Discard',
+  'card.output_label': 'Output',  'card.discard_changes': 'Discard',
   'card.save_template': 'Save to helper',
   'card.saving_template': 'Saving…',
   'card.empty_title': "Can't load template",
@@ -28,12 +30,13 @@ export const en = {
   'tree.if': 'IF',
   'tree.else_if': 'ELSE IF',
   'tree.else': 'ELSE',
+  'tree.outputs': 'Outputs',
   'tree.empty_output': '(empty output)',
   'editor.title_label': 'Title (optional)',
   'editor.entity_label': 'Template Helper entity',
   'editor.icon_label': 'Icon (optional)',
   'editor.humanize_label': 'Plain language',
-  'editor.show_references_label': 'State values',
+  'editor.show_state_values_label': 'State values',
   'editor.show_header_label': 'Show icon & title',
   'editor.show_edit_button_label': 'Show edit button',
   'editor.hint':

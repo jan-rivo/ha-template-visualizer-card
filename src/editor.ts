@@ -25,6 +25,11 @@ export class HaTemplateEditorCardEditor extends LitElement {
     this.config = config;
   }
 
+  /** Mirrors the card's visibility resolution so legacy `showReferences` configs still toggle correctly. */
+  private get showStateValues(): boolean {
+    return this.config?.showStateValues ?? this.config?.showReferences ?? true;
+  }
+
   protected willUpdate(): void {
     if (this.hass && !this.templateEntityIds) {
       void this.loadTemplateEntities();
@@ -79,10 +84,10 @@ export class HaTemplateEditorCardEditor extends LitElement {
           @change=${(e: Event) => this.emit({ showCode: !(e.target as HTMLInputElement).checked })}
         >${t(this.hass, 'editor.humanize_label')}</ha-switch>
         <ha-switch
-          .checked=${this.config.showReferences !== false}
+          .checked=${this.showStateValues}
           @change=${(e: Event) =>
-            this.emit({ showReferences: (e.target as HTMLInputElement).checked })}
-        >${t(this.hass, 'editor.show_references_label')}</ha-switch>
+            this.emit({ showStateValues: (e.target as HTMLInputElement).checked })}
+        >${t(this.hass, 'editor.show_state_values_label')}</ha-switch>
         <ha-switch
           .checked=${this.config.showHeader !== false}
           @change=${(e: Event) => this.emit({ showHeader: (e.target as HTMLInputElement).checked })}
