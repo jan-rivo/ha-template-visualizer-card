@@ -13,7 +13,7 @@ declare global {
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: 'ha-template-visualizer-card',
-  name: 'Template Logic Visualizer',
+  name: 'Template Visualizer',
   description: 'Visualizes a template sensor\'s boolean logic tree and shows which sub-conditions are true/false.',
   preview: false,
   documentationURL: 'https://github.com/jan-rivo/ha-template-visualizer-card',
