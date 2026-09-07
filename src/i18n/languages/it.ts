@@ -5,7 +5,7 @@ export const it: Translation = {
   'card.parse_fallback_warning':
     "Impossibile analizzare completamente la struttura booleana di questo modello - visualizzato come un'unica espressione valutata.",
   'card.too_many_subscriptions':
-    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
+    'Questo modello apre {count} sottoscrizioni live (massimo consigliato {limit}). La scheda continua a funzionare, ma i modelli molto grandi possono rallentare la dashboard – valuta di semplificare il modello.',
   'card.setting_up': 'Configurazione delle sottoscrizioni live…',
   'card.references_summary': 'Valori di stato',
   'card.edit_template': 'Modifica modello',
@@ -16,7 +16,7 @@ export const it: Translation = {
   'card.empty_hint':
     "Scegli un helper Modello creato tramite Impostazioni → Dispositivi e servizi → Helper nella configurazione della scheda.",
   'card.edit_hint':
-    "Modifica di una bozza qui sotto. La visualizzazione viene ri-analizzata in tempo reale mentre digiti. Premi Fatto per tornare al modello salvato dell'helper (il salvataggio non è ancora supportato).",
+    "Modifica di una bozza qui sotto. La visualizzazione viene rianalizzata in tempo reale mentre digiti. Salva scrive le modifiche nell'helper; Annulla torna al modello salvato dell'helper.",
   'references.entity_column': 'Entità',
   'references.value_column': 'Valore attuale',
   'references.entity_not_found': 'entità non trovata',
@@ -46,7 +46,7 @@ export const it: Translation = {
   'humanize.greater_than_or_equal': 'è maggiore o uguale a',
   'humanize.is_in': 'è in',
   'humanize.is_not_in': 'non è in',
-  'humanize.now': 'l’ora corrente',
+  'humanize.now': "l'ora corrente",
   'humanize.current': 'corrente',
   'humanize.and': 'e',
   'humanize.between': 'è tra',

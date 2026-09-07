@@ -5,7 +5,7 @@ export const nl: Translation = {
   'card.parse_fallback_warning':
     'Kon de booleaanse structuur van dit sjabloon niet volledig analyseren - wordt weergegeven als één geëvalueerde expressie.',
   'card.too_many_subscriptions':
-    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
+    'Dit sjabloon opent {count} live-abonnementen (aanbevolen max. {limit}). De kaart blijft werken, maar erg grote sjablonen kunnen het dashboard vertragen – overweeg het sjabloon te vereenvoudigen.',
   'card.setting_up': 'Live-abonnementen worden ingesteld…',
   'card.references_summary': 'Statuswaarden',
   'card.edit_template': 'Sjabloon bewerken',
@@ -16,7 +16,7 @@ export const nl: Translation = {
   'card.empty_hint':
     'Kies in de kaartconfiguratie een Sjabloonhelper die is gemaakt via Instellingen → Apparaten en diensten → Hulpmiddelen.',
   'card.edit_hint':
-    "U bewerkt hieronder een concept. De visualisatie wordt live opnieuw geanalyseerd terwijl u typt. Druk op Klaar om terug te keren naar het opgeslagen sjabloon van de helper (opslaan wordt nog niet ondersteund).",
+    'U bewerkt hieronder een concept. De visualisatie wordt live opnieuw geanalyseerd terwijl u typt. Met Opslaan schrijft u de wijzigingen naar de helper; Verwerpen keert terug naar het opgeslagen sjabloon van de helper.',
   'references.entity_column': 'Entiteit',
   'references.value_column': 'Huidige waarde',
   'references.entity_not_found': 'entiteit niet gevonden',

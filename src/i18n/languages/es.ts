@@ -5,7 +5,7 @@ export const es: Translation = {
   'card.parse_fallback_warning':
     'No se pudo analizar completamente la estructura booleana de esta plantilla - se muestra como una única expresión evaluada.',
   'card.too_many_subscriptions':
-    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
+    'Esta plantilla abre {count} suscripciones en vivo (máximo recomendado {limit}). La tarjeta sigue funcionando, pero las plantillas muy grandes pueden ralentizar el panel: considera simplificar la plantilla.',
   'card.setting_up': 'Configurando suscripciones en vivo…',
   'card.references_summary': 'Valores de estado',
   'card.edit_template': 'Editar plantilla',
@@ -16,7 +16,7 @@ export const es: Translation = {
   'card.empty_hint':
     'Elige un ayudante de Plantilla creado mediante Ajustes → Dispositivos y servicios → Ayudantes en la configuración de la tarjeta.',
   'card.edit_hint':
-    "Editando un borrador a continuación. La visualización se vuelve a analizar en vivo mientras escribes. Pulsa Hecho para volver a la plantilla guardada del ayudante (guardar aún no es compatible).",
+    "Editando un borrador a continuación. La visualización se vuelve a analizar en vivo mientras escribes. Guardar escribe los cambios en el ayudante; Descartar vuelve a la plantilla guardada del ayudante.",
   'references.entity_column': 'Entidad',
   'references.value_column': 'Valor actual',
   'references.entity_not_found': 'entidad no encontrada',
@@ -26,8 +26,8 @@ export const es: Translation = {
   'tree.or': 'O',
   'tree.not': 'NO',
   'tree.if': 'SI',
-  'tree.else_if': 'SI NO',
-  'tree.else': 'SI NO',
+  'tree.else_if': 'SINO SI',
+  'tree.else': 'SINO',
   'tree.empty_output': '(salida vacía)',
   'editor.title_label': 'Título (opcional)',
   'editor.entity_label': 'Entidad de ayudante de plantilla',

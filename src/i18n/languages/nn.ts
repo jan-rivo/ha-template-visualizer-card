@@ -6,7 +6,7 @@ export const nn: Translation = {
   'card.parse_fallback_warning':
     'Klarte ikkje å analysere heile den boolske strukturen i denne malen - viser han som eitt enkelt evaluert uttrykk i staden.',
   'card.too_many_subscriptions':
-    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
+    'Denne malen opnar {count} direkteabonnement (tilrådd maks {limit}). Kortet fungerer framleis, men svært store malar kan gjere dashbordet tregt – vurder å forenkle malen.',
   'card.setting_up': 'Set opp direkteabonnement…',
   'card.references_summary': 'Tilstandsverdiar',
   'card.edit_template': 'Rediger mal',
@@ -17,7 +17,7 @@ export const nn: Translation = {
   'card.empty_hint':
     'Vel ein Malhjelpar oppretta via Innstillingar → Einingar og tenester → Hjelparar i konfigurasjonen til kortet.',
   'card.edit_hint':
-    'Redigerer eit utkast nedanfor. Visualiseringa vert analysert på nytt direkte medan du skriv. Trykk Ferdig for å gå attende til den lagra malen til hjelparen (lagring vert enno ikkje støtta).',
+    'Redigerer eit utkast nedanfor. Visualiseringa vert analysert på nytt direkte medan du skriv. Lagre skriv endringane til hjelparen; Forkast går attende til den lagra malen til hjelparen.',
   'references.entity_column': 'Eining',
   'references.value_column': 'Gjeldande verdi',
   'references.entity_not_found': 'eininga vart ikkje funnen',
@@ -29,7 +29,7 @@ export const nn: Translation = {
   'tree.if': 'VISS',
   'tree.else_if': 'ELLES VISS',
   'tree.else': 'ELLES',
-  'tree.empty_output': '(tom utdata)',
+  'tree.empty_output': '(ingen utdata)',
   'editor.title_label': 'Tittel (valfritt)',
   'editor.entity_label': 'Malhjelpar-eining',
   'editor.icon_label': 'Ikon (valfritt)',

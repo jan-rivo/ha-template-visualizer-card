@@ -6,7 +6,7 @@ export const nb: Translation = {
   'card.parse_fallback_warning':
     'Klarte ikke å analysere hele den boolske strukturen i denne malen - viser den som ett enkelt evaluert uttrykk i stedet.',
   'card.too_many_subscriptions':
-    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
+    'Denne malen åpner {count} direkteabonnementer (anbefalt maks {limit}). Kortet fungerer fortsatt, men svært store maler kan gjøre dashbordet tregt – vurder å forenkle malen.',
   'card.setting_up': 'Setter opp direkteabonnementer…',
   'card.references_summary': 'Tilstandsverdier',
   'card.edit_template': 'Rediger mal',
@@ -17,7 +17,7 @@ export const nb: Translation = {
   'card.empty_hint':
     'Velg en Malhjelper opprettet via Innstillinger → Enheter og tjenester → Hjelpere i kortets konfigurasjon.',
   'card.edit_hint':
-    'Redigerer et utkast nedenfor. Visualiseringen re-analyseres direkte mens du skriver. Trykk Ferdig for å gå tilbake til hjelperens lagrede mal (lagring støttes ennå ikke).',
+    'Redigerer et utkast nedenfor. Visualiseringen analyseres på nytt direkte mens du skriver. Lagre skriver endringene til hjelperen; Forkast går tilbake til hjelperens lagrede mal.',
   'references.entity_column': 'Enhet',
   'references.value_column': 'Nåværende verdi',
   'references.entity_not_found': 'enheten ble ikke funnet',
@@ -29,7 +29,7 @@ export const nb: Translation = {
   'tree.if': 'HVIS',
   'tree.else_if': 'ELLERS HVIS',
   'tree.else': 'ELLERS',
-  'tree.empty_output': '(tom utdata)',
+  'tree.empty_output': '(ingen utdata)',
   'editor.title_label': 'Tittel (valgfritt)',
   'editor.entity_label': 'Malhjelper-enhet',
   'editor.icon_label': 'Ikon (valgfritt)',

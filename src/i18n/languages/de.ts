@@ -5,7 +5,7 @@ export const de: Translation = {
   'card.parse_fallback_warning':
     'Die boolesche Struktur dieser Vorlage konnte nicht vollständig analysiert werden - wird als einzelner ausgewerteter Ausdruck angezeigt.',
   'card.too_many_subscriptions':
-    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
+    'Diese Vorlage öffnet {count} Live-Abonnements (empfohlen max. {limit}). Die Karte funktioniert weiterhin, doch sehr große Vorlagen können das Dashboard verlangsamen – vereinfache die Vorlage bei Bedarf.',
   'card.setting_up': 'Live-Abonnements werden eingerichtet…',
   'card.references_summary': 'Statuswerte',
   'card.edit_template': 'Vorlage bearbeiten',
@@ -16,7 +16,7 @@ export const de: Translation = {
   'card.empty_hint':
     'Wähle in der Kartenkonfiguration einen Vorlagen-Helfer, der über Einstellungen → Geräte & Dienste → Helfer erstellt wurde.',
   'card.edit_hint':
-    "Unten wird ein Entwurf bearbeitet. Die Visualisierung wird beim Tippen live neu analysiert. Mit 'Fertig' wird zur gespeicherten Vorlage des Helfers zurückgekehrt (Speichern wird noch nicht unterstützt).",
+    'Unten wird ein Entwurf bearbeitet. Die Visualisierung wird beim Tippen live neu analysiert. Speichern schreibt die Änderungen in den Helfer; Verwerfen kehrt zur gespeicherten Vorlage des Helfers zurück.',
   'references.entity_column': 'Entität',
   'references.value_column': 'Aktueller Wert',
   'references.entity_not_found': 'Entität nicht gefunden',

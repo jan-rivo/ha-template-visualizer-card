@@ -5,18 +5,18 @@ export const fr: Translation = {
   'card.parse_fallback_warning':
     "Impossible d'analyser entièrement la structure booléenne de ce modèle - affichage sous forme d'expression unique évaluée.",
   'card.too_many_subscriptions':
-    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
+    "Ce modèle ouvre {count} abonnements en direct (maximum recommandé : {limit}). La carte continue de fonctionner, mais les modèles très volumineux peuvent ralentir le tableau de bord – envisagez de simplifier le modèle.",
   'card.setting_up': 'Configuration des abonnements en direct…',
   'card.references_summary': "Valeurs d'état",
   'card.edit_template': "Modifier le modèle",
-  'card.discard_changes': 'Ignorer',
+  'card.discard_changes': 'Abandonner',
   'card.save_template': "Enregistrer dans l'assistant",
   'card.saving_template': 'Enregistrement…',
   'card.empty_title': 'Impossible de charger le modèle',
   'card.empty_hint':
     'Choisissez un assistant Modèle créé via Paramètres → Appareils et services → Assistants dans la configuration de la carte.',
   'card.edit_hint':
-    "Modification d'un brouillon ci-dessous. La visualisation est re-analysée en direct pendant la saisie. Appuyez sur Terminé pour revenir au modèle enregistré de l'assistant (l'enregistrement n'est pas encore pris en charge).",
+    "Modification d'un brouillon ci-dessous. La visualisation est réanalysée en direct pendant la saisie. Enregistrer écrit les modifications dans l'assistant ; Abandonner revient au modèle enregistré de l'assistant.",
   'references.entity_column': 'Entité',
   'references.value_column': 'Valeur actuelle',
   'references.entity_not_found': 'entité introuvable',
@@ -46,7 +46,7 @@ export const fr: Translation = {
   'humanize.greater_than_or_equal': 'est supérieur ou égal à',
   'humanize.is_in': 'est dans',
   'humanize.is_not_in': "n'est pas dans",
-  'humanize.now': 'l’heure actuelle',
+  'humanize.now': "l'heure actuelle",
   'humanize.current': 'actuel',
   'humanize.and': 'et',
   'humanize.between': 'est entre',
