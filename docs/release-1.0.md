@@ -12,6 +12,7 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 | A3 | Replace stale `docs/screenshot-1.png` with current screenshots | done | Deleted `screenshot-1.png`; README now uses `docs/screenshot-light.png` + `docs/screenshot-dark.png` (Relax-mode hero shots). No stale refs remain outside this tracker |
 | A4 | Remove no-op `this.draft = this.draft;` in `src/card.ts` (`saveDraft`) | done | Removed; `this.templateText = this.draft` already keeps the baseline. Typecheck clean, 88/88 tests pass, `dist/` rebuilt |
 | A5 | Finalize screenshots for release (verify both render in HACS on the final version; keep plain relative markdown links) | pending | HACS renderer does not handle tables/`<picture>` — see beta.1–beta.3 history |
+| A6 | Update CHANGELOG to reflect everything implemented in v1.0 | pending | Do once fully ready to release: rename `[Unreleased]` to `[1.0.0]` with date, complete the Added/Changed/Fixed entries |
 
 ## B. Quality — strongly recommended, not blocking
 
