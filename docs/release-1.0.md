@@ -13,7 +13,7 @@ Remaining work, in order. Statuses: `pending` → `in_progress` → `done`
 
 | Status | Notes |
 |--------|-------|
-| pending | Do once fully ready to release: rename `[Unreleased]` to `[1.0.0]` with date, complete Added/Changed/Fixed entries covering everything since v0.3.0. Draft sketched in chat 2026-09-07, awaiting review |
+| pending | Do once fully ready to release: rename `[Unreleased]` to `[1.0.0]` with date. Decided 2026-09-07: v1.0 entry just says "Initial release" (no per-change list) |
 
 ## 3. Release (D1–D4)
 
