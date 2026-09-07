@@ -17,7 +17,7 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 
 | # | Item | Status | Notes |
 |---|------|--------|-------|
-| B1 | Start a CHANGELOG (Added/Changed/Fixed per release, from 1.0.0) | pending | |
+| B1 | Start a CHANGELOG (Added/Changed/Fixed per release, from 1.0.0) | done | `CHANGELOG.md` created (Keep a Changelog format) with an `[Unreleased]` section; becomes `1.0.0` at release time |
 | B2 | Get native-speaker review of translations (`de/es/fr/it/nl/nb/nn` in `src/i18n/languages/`) | pending | Keys are TS-enforced; quality unverified |
 | B3 | Subscription-count guard (surface warning when leaf/output count exceeds ~20) | done | Implemented 2026-09-07 as admin-only `tpl-warning` above 30 subs (`SUBSCRIPTION_WARNING_LIMIT` + `shouldWarnForSubscriptionCount` in `src/card.ts`, `card.too_many_subscriptions` i18n key in all 8 langs — non-English values are English placeholders for B2 to review; `test/subscription-warning.test.ts` 4 tests). Cap raised 20→30 per review. Screenshot signed off (admin shows warning, viewer + small templates don't) |
 | B4 | Enable Dependabot (npm + GitHub Actions) | pending | |
@@ -30,10 +30,10 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 
 | # | Item | Status | Notes |
 |---|------|--------|-------|
-| C1 | Tap-to-inspect on State-values rows (`hass-more-info` dialog) | pending | ~10 lines in `src/components/references-panel.ts` |
-| C2 | Read-only whole-template source view for non-admin viewers | pending | Admins already see source in edit mode |
-| C3 | Collapse/expand for large trees | pending | Explicitly 1.x scope, not 1.0 |
-| C4 | Document out-of-scope items in README (YAML sensors, `{% for %}` structuring, multi-entity cards, trigger-based helpers) | pending | Could fold into A1 |
+| C1 | Tap-to-inspect on State-values rows (`hass-more-info` dialog) | pending | ~10 lines in `src/components/references-panel.ts`. Explained 2026-09-07; left pending per review |
+| C2 | Read-only whole-template source view for non-admin viewers | dropped | Won't fix per 2026-09-07 review |
+| C3 | Collapse/expand for large trees | dropped | Won't fix per 2026-09-07 review (was 1.x scope) |
+| C4 | Document out-of-scope items in README (YAML sensors, `{% for %}` structuring, multi-entity cards, trigger-based helpers) | dropped | Won't fix per 2026-09-07 review; partially covered by "Not broken down" section |
 
 ## D. Release steps (when A is done)
 
@@ -55,3 +55,4 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 | 2026-09-07 | A3 done (`screenshot-1.png` deleted, replaced by light/dark Relax-mode shots), A4 done (no-op removed, typecheck + 88/88 green, dist rebuilt). |
 | 2026-09-07 | A2 done: deleted `docs/parser-expansion-plan.md`; README gained a concise "Not broken down" section listing unstructured constructs (`for`/`macro`/`filter`/`call`/`namespace`, multi-output mixes). |
 | 2026-09-07 | B3 done: admin-only subscription warning above 30 subs implemented, tested (92/92), screenshot-signed-off. |
+| 2026-09-07 | C2/C3/C4 dropped (won't fix per review); C1 left pending. B1 done: `CHANGELOG.md` created. |
