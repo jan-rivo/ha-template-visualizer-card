@@ -370,20 +370,20 @@ export class HaTemplateEditorCard extends LitElement {
       flex: none;
     }
     .tpl-node--true .tpl-node__badge {
-      background: var(--success-color, #4caf50);
-      color: white;
+      background: color-mix(in srgb, var(--success-color, #4caf50) 16%, transparent);
+      color: var(--success-color, #4caf50);
     }
     .tpl-node--false .tpl-node__badge {
-      background: var(--error-color, #db4437);
-      color: white;
+      background: color-mix(in srgb, var(--error-color, #db4437) 16%, transparent);
+      color: var(--error-color, #db4437);
     }
     .tpl-node--error .tpl-node__badge {
-      background: var(--warning-color, #ff9800);
-      color: white;
+      background: color-mix(in srgb, var(--warning-color, #ff9800) 18%, transparent);
+      color: var(--warning-color, #ff9800);
     }
     .tpl-node--loading .tpl-node__badge {
-      background: var(--disabled-text-color, #9e9e9e);
-      color: white;
+      background: color-mix(in srgb, var(--disabled-text-color, #9e9e9e) 20%, transparent);
+      color: var(--secondary-text-color, #888);
     }
     .tpl-node__op {
       font-weight: 700;
@@ -418,6 +418,9 @@ export class HaTemplateEditorCard extends LitElement {
       flex: none;
       color: var(--secondary-text-color, #888);
     }
+    .tpl-node__value {
+      color: var(--primary-text-color, inherit);
+    }
     .tpl-node__stmt {
       font-family: var(--code-editor-font-family, monospace);
       font-size: 12px;
@@ -450,10 +453,10 @@ export class HaTemplateEditorCard extends LitElement {
       gap: 4px;
     }
     .tpl-branch__tag--true {
-      color: var(--success-color, #4caf50);
+      color: color-mix(in srgb, var(--success-color, #4caf50) 72%, var(--primary-text-color, #212121));
     }
     .tpl-branch__tag--false {
-      color: var(--error-color, #db4437);
+      color: color-mix(in srgb, var(--error-color, #db4437) 72%, var(--primary-text-color, #212121));
     }
     .tpl-error {
       color: var(--error-color, #db4437);

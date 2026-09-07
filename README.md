@@ -9,13 +9,9 @@ parses a Template Helper's Jinja logic and renders it as a live tree — every
 condition badged ✓/✗ against your real entity states, updating instantly when
 anything changes.
 
-**Light — without the Edit button:**
-
-![Relax mode card in light theme, no Edit template button](docs/screenshot-light.png)
-
-**Dark — with the Edit button:**
-
-![Relax mode card in dark theme, with Edit template button](docs/screenshot-dark.png)
+| Light — without the Edit button | Dark — with the Edit button |
+|---|---|
+| ![Relax mode card in light theme, no Edit template button](docs/screenshot-light.png) | ![Relax mode card in dark theme, with Edit template button](docs/screenshot-dark.png) |
 
 - **Live logic tree** — `{% if %}` / `{% elif %}` / `{% else %}` branches and
   `and` / `or` / `not` conditions, each with a live pass/fail badge and its
