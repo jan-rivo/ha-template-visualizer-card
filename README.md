@@ -9,10 +9,9 @@ parses a Template Helper's Jinja logic and renders it as a live tree — every
 condition badged ✓/✗ against your real entity states, updating instantly when
 anything changes.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
-  <img src="docs/screenshot-light.png" alt="Template Visualizer card showing an if / else-if / else tree with live pass/fail badges and a State values panel" width="450">
-</picture>
+| Light — without the Edit button | Dark — with the Edit button |
+|---|---|
+| ![Relax mode card in light theme, no Edit template button](https://raw.githubusercontent.com/jan-rivo/ha-template-visualizer-card/v1.0/docs/screenshot-light.png) | ![Relax mode card in dark theme, with Edit template button](https://raw.githubusercontent.com/jan-rivo/ha-template-visualizer-card/v1.0/docs/screenshot-dark.png) |
 
 - **Live logic tree** — `{% if %}` / `{% elif %}` / `{% else %}` branches and
   `and` / `or` / `not` conditions, each with a live pass/fail badge and its
@@ -29,7 +28,7 @@ anything changes.
 Works with entities created via **Settings → Devices & Services → Helpers →
 Template** (UI-based Template Helpers). YAML-defined `template:` sensors are
 not supported — Home Assistant exposes no API to read their definition, so
-there is nothing for the card to visualize. See [Limitations](#limitations).
+there is nothing for the card to visualize.
 
 ## Installation
 
@@ -57,8 +56,8 @@ Add the card (**Add Card → Template Visualizer**) and pick a Template Helper
 
 ```yaml
 type: custom:ha-template-visualizer-card
-title: Movie mode logic
-entity: binary_sensor.movie_mode
+title: Relax mode
+entity: binary_sensor.relax_mode
 ```
 
 | Option | Type | Default | Description |
@@ -67,30 +66,9 @@ entity: binary_sensor.movie_mode
 | `title` | string | `Template logic` | Card header title. |
 | `icon` | string | `mdi:ab-testing` | Card header icon. |
 | `showCode` | boolean | `false` | Show raw template code instead of human-readable conditions. |
-| `showReferences` | boolean | `true` | Show the State values panel. |
+| `showStateValues` | boolean | `true` | Show the State values panel. |
 | `showHeader` | boolean | `true` | Show the header icon + title. |
 | `showEditButton` | boolean | `true` | Show the Edit template button (admin users only). |
-
-## Supported templates
-
-- Boolean logic: `and`, `or`, `not`, parentheses
-- Comparisons and function calls (`states()`, `is_state()`, `state_attr()`,
-  `float()`, …) as conditions
-- `{% if %}` / `{% elif %}` / `{% else %}` branches, `{% set %}` variables
-
-Anything beyond that still works — it is shown as a single live-evaluated
-expression, just without the sub-condition breakdown.
-
-## Limitations
-
-- **UI helpers only** (see Requirements). The card reads the helper's
-  template through the same options flow HA's own edit dialog uses. That is a
-  semi-internal mechanism, not a documented API: it can break across Home
-  Assistant updates. If it does, the card shows a clear error instead of
-  failing silently.
-- **Saving requires an admin user.** The Edit button is hidden for non-admins
-  (HA itself rejects the write server-side).
-- Minimum Home Assistant version: see `homeassistant` in `hacs.json`.
 
 ## Contributing
 

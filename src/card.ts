@@ -4,7 +4,7 @@
 //   title: "My logic"                   # optional
 //   icon: mdi:ab-testing                # optional; defaults to mdi:ab-testing
 //   showCode: false                     # optional; when true show raw template code
-//   showReferences: true                # optional; show referenced entities panel
+//   showStateValues: true              # optional; show the State values panel
 //   showHeader: true                    # optional; show the header icon + title
 //   showEditButton: true                # optional; show the "Edit template" button (admins only)
 //
@@ -37,7 +37,9 @@ export interface CardConfig {
   icon?: string;
   /** When true, show the raw template code for leaf conditions instead of humanized text. */
   showCode?: boolean;
-  /** Show the referenced entities & attributes panel. Defaults to true. */
+  /** Show the State values panel. Defaults to true. */
+  showStateValues?: boolean;
+  /** @deprecated Renamed to showStateValues (kept so existing configs keep working). */
   showReferences?: boolean;
   /** Show the header icon + title. Defaults to true. */
   showHeader?: boolean;
@@ -71,6 +73,11 @@ export class HaTemplateEditorCard extends LitElement {
   /** Whether the logged-in user can actually edit config entries (admins). Saving uses the same options flow as Settings, which is admin-only. */
   private get canEdit(): boolean {
     return this.hass?.user?.is_admin === true;
+  }
+
+  /** State values panel visibility: `showReferences` is the pre-1.0 name, still honored as a fallback. */
+  private get showStateValues(): boolean {
+    return this.config?.showStateValues ?? this.config?.showReferences ?? true;
   }
 
   setConfig(config: CardConfig): void {
@@ -283,7 +290,7 @@ export class HaTemplateEditorCard extends LitElement {
                       </ha-button>
                     </div>`
                   : ''}
-                ${this.config.showReferences !== false
+                ${this.showStateValues
                   ? html`<ha-expansion-panel
                       class="tpl-refs-panel"
                       .header=${t(this.hass, 'card.references_summary')}

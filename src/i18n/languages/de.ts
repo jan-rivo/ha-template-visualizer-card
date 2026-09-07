@@ -31,7 +31,7 @@ export const de: Translation = {
   'editor.entity_label': 'Vorlagen-Helfer-Entität',
   'editor.icon_label': 'Symbol (optional)',
   'editor.humanize_label': 'Einfache Sprache',
-  'editor.show_references_label': 'Statuswerte',
+  'editor.show_state_values_label': 'Statuswerte',
   'editor.show_header_label': 'Symbol & Titel anzeigen',
   'editor.show_edit_button_label': 'Bearbeiten-Schaltfläche anzeigen',
   'editor.hint':

@@ -33,7 +33,7 @@ export const en = {
   'editor.entity_label': 'Template Helper entity',
   'editor.icon_label': 'Icon (optional)',
   'editor.humanize_label': 'Plain language',
-  'editor.show_references_label': 'State values',
+  'editor.show_state_values_label': 'State values',
   'editor.show_header_label': 'Show icon & title',
   'editor.show_edit_button_label': 'Show edit button',
   'editor.hint':

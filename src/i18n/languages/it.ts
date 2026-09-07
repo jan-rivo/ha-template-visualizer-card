@@ -31,7 +31,7 @@ export const it: Translation = {
   'editor.entity_label': 'Entità helper modello',
   'editor.icon_label': 'Icona (opzionale)',
   'editor.humanize_label': 'Linguaggio semplice',
-  'editor.show_references_label': 'Valori di stato',
+  'editor.show_state_values_label': 'Valori di stato',
   'editor.show_header_label': 'Mostra icona e titolo',
   'editor.show_edit_button_label': 'Mostra il pulsante di modifica',
   'editor.hint':

@@ -31,7 +31,7 @@ export const nl: Translation = {
   'editor.entity_label': 'Sjabloonhelper-entiteit',
   'editor.icon_label': 'Pictogram (optioneel)',
   'editor.humanize_label': 'Duidelijke taal',
-  'editor.show_references_label': 'Statuswaarden',
+  'editor.show_state_values_label': 'Statuswaarden',
   'editor.show_header_label': 'Pictogram & titel tonen',
   'editor.show_edit_button_label': 'Bewerkknop tonen',
   'editor.hint':

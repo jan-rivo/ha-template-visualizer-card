@@ -32,7 +32,7 @@ export const nb: Translation = {
   'editor.entity_label': 'Malhjelper-enhet',
   'editor.icon_label': 'Ikon (valgfritt)',
   'editor.humanize_label': 'Enkelt språk',
-  'editor.show_references_label': 'Tilstandsverdier',
+  'editor.show_state_values_label': 'Tilstandsverdier',
   'editor.show_header_label': 'Vis ikon og tittel',
   'editor.show_edit_button_label': 'Vis redigeringsknapp',
   'editor.hint':

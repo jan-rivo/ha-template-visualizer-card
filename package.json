@@ -1,6 +1,6 @@
 {
   "name": "ha-template-visualizer",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Home Assistant Lovelace card that parses a template sensor's Jinja logic and visualizes which sub-conditions are true/false, and why the overall result is what it is.",
   "type": "module",
   "repository": {
