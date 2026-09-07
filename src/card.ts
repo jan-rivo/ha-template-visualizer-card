@@ -22,6 +22,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { parseBooleanTemplate } from './parser/parser';
 import { extractReferences, groupReferences, type ReferencedEntity } from './parser/references';
 import { createLiveTree, collectLeaves, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
+import { subscribeTemplate, type Unsubscribe } from './ha/render';
 import type { HomeAssistant } from './ha/hass';
 import { fetchTemplateForEntity, saveTemplateForEntity } from './ha/template-source';
 import { findDefaultTemplateEntity } from './ha/template-entities';
@@ -66,6 +67,8 @@ export class HaTemplateEditorCard extends LitElement {
   @state() private references: ReferencedEntity[] = [];
   @state() private parseFallback = false;
   @state() private renderUnitCount = 0;
+  @state() private overallRendered?: string;
+  @state() private overallError?: string;
   @state() private globalError?: string;
   @state() private templateText?: string;
   @state() private editing = false;
@@ -75,6 +78,7 @@ export class HaTemplateEditorCard extends LitElement {
 
   /** Live WS subscriptions for the currently-configured entity's template (no polling: everything here is push-driven). */
   private liveHandle?: LiveTreeHandle;
+  private overallUnsub?: Unsubscribe;
   private subscribedEntity?: string;
   private setupGeneration = 0;
   private draftTimer?: number;
@@ -156,8 +160,13 @@ export class HaTemplateEditorCard extends LitElement {
     this.tree = undefined;
     this.references = [];
     this.renderUnitCount = 0;
+    this.overallRendered = undefined;
+    this.overallError = undefined;
     this.globalError = undefined;
     if (previousHandle) void previousHandle.dispose();
+    const previousOverall = this.overallUnsub;
+    this.overallUnsub = undefined;
+    if (previousOverall) void previousOverall().catch(() => undefined);
     return generation;
   }
 
@@ -167,7 +176,27 @@ export class HaTemplateEditorCard extends LitElement {
 
     const { ast, fallback } = parseBooleanTemplate(template);
     this.parseFallback = fallback;
-    this.renderUnitCount = collectLeaves(ast).length;
+    // One subscription per renderable unit, plus one for the overall template
+    // output shown in the header section.
+    this.renderUnitCount = collectLeaves(ast).length + 1;
+    const overallUnsub = await subscribeTemplate(
+      this.hass,
+      template,
+      (rendered) => {
+        if (generation !== this.setupGeneration) return; // superseded
+        this.overallRendered = rendered;
+        this.overallError = undefined;
+      },
+      (err) => {
+        if (generation !== this.setupGeneration) return; // superseded
+        this.overallError = err.message;
+      }
+    );
+    if (generation !== this.setupGeneration) {
+      void overallUnsub().catch(() => undefined);
+      return;
+    }
+    this.overallUnsub = overallUnsub;
     const handle = await createLiveTree(this.hass, ast, (tree) => {
       if (generation !== this.setupGeneration) return; // superseded
       this.tree = tree;
@@ -297,6 +326,14 @@ export class HaTemplateEditorCard extends LitElement {
                       })}
                     </div>`
                   : ''}
+                <div class="tpl-output">
+                  <span class="tpl-output__label">${t(this.hass, 'card.output_label')}</span>
+                  <span
+                    class="tpl-output__value${this.overallError ? ' tpl-output__value--error' : ''}"
+                  >
+                    ${this.overallError ?? this.overallRendered ?? t(this.hass, 'tree.loading')}
+                  </span>
+                </div>
                 ${this.tree
                   ? renderNode(this.tree, this.hass, this.config.showCode === true)
                   : html`<div>${t(this.hass, 'card.setting_up')}</div>`}
@@ -414,12 +451,20 @@ export class HaTemplateEditorCard extends LitElement {
       font-weight: 400;
       color: var(--primary-text-color, #000);
     }
-    .tpl-node__value-icon {
-      flex: none;
-      color: var(--secondary-text-color, #888);
-    }
     .tpl-node__value {
       color: var(--primary-text-color, inherit);
+    }
+    .tpl-node__output-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--secondary-text-color, #888);
+      flex: none;
+    }
+    .tpl-fired-output > .tpl-node {
+      background: color-mix(in srgb, var(--success-color, #4caf50) 9%, transparent);
+      border-radius: 6px;
     }
     .tpl-node__stmt {
       font-family: var(--code-editor-font-family, monospace);
@@ -512,6 +557,32 @@ export class HaTemplateEditorCard extends LitElement {
       color: var(--warning-color, #ff9800);
       font-size: 12px;
       margin-bottom: 8px;
+    }
+    .tpl-output {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 4px 0 10px;
+      padding: 10px 12px;
+      background: color-mix(in srgb, var(--primary-text-color, #212121) 5%, transparent);
+      border-radius: 8px;
+    }
+    .tpl-output__label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--secondary-text-color, #888);
+      flex: none;
+    }
+    .tpl-output__value {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .tpl-output__value--error {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--error-color, #db4437);
     }
     .tpl-refs-panel {
       margin: 12px 0 0;

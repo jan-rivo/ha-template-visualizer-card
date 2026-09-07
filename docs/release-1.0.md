@@ -56,3 +56,4 @@ Remaining work, in order. Statuses: `pending` → `in_progress` → `done`
 | 2026-09-07 | A2/A3/A4 done (plan + stale screenshot deleted, save no-op removed). Tree-format prototype: dampened palette approved, OUTPUT dedupe proposed. |
 | 2026-09-07 | B1–B7 done (CHANGELOG, translations, subscription warning, Dependabot + policy, issue template, branch protection, About/topics). C2/C3/C4 dropped. |
 | 2026-09-07 | C1 skipped. Tracker refactored to remaining work: screenshots + changelog + release. B8 stays post-1.0. |
+| 2026-09-07 | Visual batch signed off and committed: dampened palette, top OUTPUT section (+1 live sub, translated label), OUTPUTS: rows with static-once dedupe + faint fired highlight, dead icon CSS removed. README screenshots switched to "Should close sunshades" sun/weather template (trailing `or false` dropped). Published `v1.0.0-beta.4`. |

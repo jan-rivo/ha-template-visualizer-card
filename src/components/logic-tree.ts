@@ -44,6 +44,7 @@ export function renderNode(
   if (node.kind === 'OUTPUT') {
     if (node.source === '') {
       return html`<div class="tpl-node tpl-node--empty" style="--depth: ${depth}">
+        <span class="tpl-node__output-label">${t(hass, 'tree.outputs')}:</span>
         <span class="tpl-node__meta">${t(hass, 'tree.empty_output')}</span>
       </div>`;
     }
@@ -64,6 +65,7 @@ export function renderNode(
           : isBool
             ? html`<span class="tpl-node__badge">${value ? '✓' : '✗'}</span>`
             : ''}
+      <span class="tpl-node__output-label">${t(hass, 'tree.outputs')}:</span>
       <span class="tpl-node__label tpl-node__label--output">
         ${loading
           ? t(hass, 'tree.loading')
@@ -136,7 +138,9 @@ function renderBranch(
         </span>
       </div>
       ${branch.condition ? renderNode(branch.condition, hass, showCode, depth) : ''}
-      ${renderNode(branch.body, hass, showCode, depth)}
+      ${branch.body.node.kind === 'OUTPUT' && fired
+        ? html`<div class="tpl-fired-output">${renderNode(branch.body, hass, showCode, depth)}</div>`
+        : renderNode(branch.body, hass, showCode, depth)}
     </div>
   `;
 }
