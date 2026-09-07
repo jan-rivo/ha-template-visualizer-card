@@ -8,7 +8,7 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 | # | Item | Status | Notes |
 |---|------|--------|-------|
 | A1 | Rewrite README (current features, config-options table, corrected supported-subset incl. `{% if %}`/`{% set %}`, fresh light+dark screenshots; keep "Important limitation") | done | Shipped as `v1.0.0-beta.3`. Decisions 2026-09-06: renamed to "Template Visualizer", concise HACS-user-first rewrite, Limitations/Supported-templates sections dropped per review. Screenshots as plain relative markdown links (HACS renderer chokes on tables/`<picture>`) |
-| A2 | Reconcile `docs/parser-expansion-plan.md` with shipped v0.3 (update status or archive it) | pending | Currently claims "Phases 2-5 not yet started" |
+| A2 | Reconcile `docs/parser-expansion-plan.md` with shipped v0.3 (update status or archive it) | done | Deleted the plan per 2026-09-07 review (Phases 1–2 shipped, 3–4 unbuilt); unsupported constructs now covered by a short "Not broken down" section in the README |
 | A3 | Replace stale `docs/screenshot-1.png` with current screenshots | done | Deleted `screenshot-1.png`; README now uses `docs/screenshot-light.png` + `docs/screenshot-dark.png` (Relax-mode hero shots). No stale refs remain outside this tracker |
 | A4 | Remove no-op `this.draft = this.draft;` in `src/card.ts` (`saveDraft`) | done | Removed; `this.templateText = this.draft` already keeps the baseline. Typecheck clean, 88/88 tests pass, `dist/` rebuilt |
 | A5 | Finalize screenshots for release (verify both render in HACS on the final version; keep plain relative markdown links) | pending | HACS renderer does not handle tables/`<picture>` — see beta.1–beta.3 history |
@@ -53,3 +53,4 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 | 2026-09-07 | Review feedback applied: dropped Limitations/Supported-templates sections; renamed `showReferences` → `showStateValues` (code + editor + i18n keys, deprecated fallback kept); new Relax-mode screenshots side-by-side with absolute raw URLs (superseded: HACS needs plain relative links, fixed in beta.3). Publishing `v1.0.0-beta.2`. |
 | 2026-09-07 | A1 marked done after `v1.0.0-beta.3` (plain relative screenshot links like v0.3 restored — tables were what broke HACS rendering). Added A5 to finalize screenshots at release time. |
 | 2026-09-07 | A3 done (`screenshot-1.png` deleted, replaced by light/dark Relax-mode shots), A4 done (no-op removed, typecheck + 88/88 green, dist rebuilt). |
+| 2026-09-07 | A2 done: deleted `docs/parser-expansion-plan.md`; README gained a concise "Not broken down" section listing unstructured constructs (`for`/`macro`/`filter`/`call`/`namespace`, multi-output mixes). |

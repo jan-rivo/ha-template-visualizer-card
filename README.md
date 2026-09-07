@@ -74,6 +74,14 @@ entity: binary_sensor.relax_mode
 | `showHeader` | boolean | `true` | Show the header icon + title. |
 | `showEditButton` | boolean | `true` | Show the Edit template button (admin users only). |
 
+## Not broken down
+
+`{% for %}` loops, `{% macro %}`, `{% filter %}`, `{% call %}`,
+`{% namespace %}` and similar are not visualized branch-by-branch — nor are
+templates that mix several `{{ ... }}` outputs with literal text outside an
+`{% if %}` structure. Those still work: the card shows them as a single
+live-evaluated result instead of a sub-condition tree.
+
 ## Contributing
 
 Issues and pull requests are welcome — please include your Home Assistant
