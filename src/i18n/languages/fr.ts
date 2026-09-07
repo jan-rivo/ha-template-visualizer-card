@@ -4,6 +4,8 @@ export const fr: Translation = {
   'card.default_title': 'Logique du modèle',
   'card.parse_fallback_warning':
     "Impossible d'analyser entièrement la structure booléenne de ce modèle - affichage sous forme d'expression unique évaluée.",
+  'card.too_many_subscriptions':
+    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
   'card.setting_up': 'Configuration des abonnements en direct…',
   'card.references_summary': "Valeurs d'état",
   'card.edit_template': "Modifier le modèle",

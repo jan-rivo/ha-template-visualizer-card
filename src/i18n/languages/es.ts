@@ -4,6 +4,8 @@ export const es: Translation = {
   'card.default_title': 'Lógica de la plantilla',
   'card.parse_fallback_warning':
     'No se pudo analizar completamente la estructura booleana de esta plantilla - se muestra como una única expresión evaluada.',
+  'card.too_many_subscriptions':
+    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
   'card.setting_up': 'Configurando suscripciones en vivo…',
   'card.references_summary': 'Valores de estado',
   'card.edit_template': 'Editar plantilla',

@@ -21,7 +21,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { parseBooleanTemplate } from './parser/parser';
 import { extractReferences, groupReferences, type ReferencedEntity } from './parser/references';
-import { createLiveTree, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
+import { createLiveTree, collectLeaves, type EvaluatedNode, type LiveTreeHandle } from './tree/evaluate';
 import type { HomeAssistant } from './ha/hass';
 import { fetchTemplateForEntity, saveTemplateForEntity } from './ha/template-source';
 import { findDefaultTemplateEntity } from './ha/template-entities';
@@ -49,6 +49,14 @@ export interface CardConfig {
 
 export const DEFAULT_ICON = 'mdi:ab-testing';
 
+/** Above this many live render_template subscriptions, admins see a notice (the card keeps working). */
+export const SUBSCRIPTION_WARNING_LIMIT = 30;
+
+/** Admin-only notice when a template opens unusually many live subscriptions. Below or at the limit: never warns. */
+export function shouldWarnForSubscriptionCount(count: number, canEdit: boolean, limit = SUBSCRIPTION_WARNING_LIMIT): boolean {
+  return canEdit && count > limit;
+}
+
 @customElement('ha-template-visualizer-card')
 export class HaTemplateEditorCard extends LitElement {
   @property({ attribute: false }) hass!: HomeAssistant;
@@ -57,6 +65,7 @@ export class HaTemplateEditorCard extends LitElement {
   @state() private tree?: EvaluatedNode;
   @state() private references: ReferencedEntity[] = [];
   @state() private parseFallback = false;
+  @state() private renderUnitCount = 0;
   @state() private globalError?: string;
   @state() private templateText?: string;
   @state() private editing = false;
@@ -146,6 +155,7 @@ export class HaTemplateEditorCard extends LitElement {
     this.liveHandle = undefined;
     this.tree = undefined;
     this.references = [];
+    this.renderUnitCount = 0;
     this.globalError = undefined;
     if (previousHandle) void previousHandle.dispose();
     return generation;
@@ -157,6 +167,7 @@ export class HaTemplateEditorCard extends LitElement {
 
     const { ast, fallback } = parseBooleanTemplate(template);
     this.parseFallback = fallback;
+    this.renderUnitCount = collectLeaves(ast).length;
     const handle = await createLiveTree(this.hass, ast, (tree) => {
       if (generation !== this.setupGeneration) return; // superseded
       this.tree = tree;
@@ -277,6 +288,14 @@ export class HaTemplateEditorCard extends LitElement {
                   : ''}
                 ${this.parseFallback
                   ? html`<div class="tpl-warning">${t(this.hass, 'card.parse_fallback_warning')}</div>`
+                  : ''}
+                ${shouldWarnForSubscriptionCount(this.renderUnitCount, this.canEdit)
+                  ? html`<div class="tpl-warning">
+                      ${t(this.hass, 'card.too_many_subscriptions', {
+                        count: String(this.renderUnitCount),
+                        limit: String(SUBSCRIPTION_WARNING_LIMIT),
+                      })}
+                    </div>`
                   : ''}
                 ${this.tree
                   ? renderNode(this.tree, this.hass, this.config.showCode === true)

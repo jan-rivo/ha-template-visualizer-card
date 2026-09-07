@@ -5,6 +5,8 @@ export const nn: Translation = {
   'card.default_title': 'Malogikk',
   'card.parse_fallback_warning':
     'Klarte ikkje å analysere heile den boolske strukturen i denne malen - viser han som eitt enkelt evaluert uttrykk i staden.',
+  'card.too_many_subscriptions':
+    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
   'card.setting_up': 'Set opp direkteabonnement…',
   'card.references_summary': 'Tilstandsverdiar',
   'card.edit_template': 'Rediger mal',

@@ -19,7 +19,7 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 |---|------|--------|-------|
 | B1 | Start a CHANGELOG (Added/Changed/Fixed per release, from 1.0.0) | pending | |
 | B2 | Get native-speaker review of translations (`de/es/fr/it/nl/nb/nn` in `src/i18n/languages/`) | pending | Keys are TS-enforced; quality unverified |
-| B3 | Subscription-count guard (surface warning when leaf/output count exceeds ~20) | pending | `src/tree/evaluate.ts` — one sub per leaf, no cap today |
+| B3 | Subscription-count guard (surface warning when leaf/output count exceeds ~20) | in_progress | Implemented 2026-09-07 as admin-only `tpl-warning` above 30 subs (`SUBSCRIPTION_WARNING_LIMIT` + `shouldWarnForSubscriptionCount` in `src/card.ts`, `card.too_many_subscriptions` i18n key in all 8 langs — non-English values are English placeholders for B2 to review; `test/subscription-warning.test.ts` 4 tests). Cap raised 20→30 per review. Awaiting screenshot sign-off before marking done |
 | B4 | Enable Dependabot (npm + GitHub Actions) | pending | |
 | B5 | Add bug-report issue template (HA version + template text) | pending | |
 | B6 | Branch protection on `main` (require CI) | pending | |

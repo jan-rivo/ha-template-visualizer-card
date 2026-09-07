@@ -4,6 +4,8 @@ export const de: Translation = {
   'card.default_title': 'Vorlagenlogik',
   'card.parse_fallback_warning':
     'Die boolesche Struktur dieser Vorlage konnte nicht vollständig analysiert werden - wird als einzelner ausgewerteter Ausdruck angezeigt.',
+  'card.too_many_subscriptions':
+    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
   'card.setting_up': 'Live-Abonnements werden eingerichtet…',
   'card.references_summary': 'Statuswerte',
   'card.edit_template': 'Vorlage bearbeiten',

@@ -6,6 +6,8 @@ export const en = {
   'card.default_title': 'Template logic',
   'card.parse_fallback_warning':
     "Couldn't fully parse this template's boolean structure - showing it as a single evaluated expression instead.",
+  'card.too_many_subscriptions':
+    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
   'card.setting_up': 'Setting up live subscriptions…',
   'card.references_summary': 'State values',
   'card.edit_template': 'Edit template',

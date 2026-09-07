@@ -4,6 +4,8 @@ export const nl: Translation = {
   'card.default_title': 'Sjabloonlogica',
   'card.parse_fallback_warning':
     'Kon de booleaanse structuur van dit sjabloon niet volledig analyseren - wordt weergegeven als één geëvalueerde expressie.',
+  'card.too_many_subscriptions':
+    'This template opens {count} live subscriptions (recommended max {limit}). The card keeps working, but very large templates can slow down the dashboard - consider simplifying the template.',
   'card.setting_up': 'Live-abonnementen worden ingesteld…',
   'card.references_summary': 'Statuswaarden',
   'card.edit_template': 'Sjabloon bewerken',
