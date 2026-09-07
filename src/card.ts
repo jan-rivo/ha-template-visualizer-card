@@ -208,7 +208,6 @@ export class HaTemplateEditorCard extends LitElement {
       await saveTemplateForEntity(this.hass, this.config.entity, this.draft);
       this.saving = false;
       this.editing = false;
-      this.draft = this.draft; // keep the just-saved text as the new baseline
       this.templateText = this.draft;
       const generation = this.beginSetup();
       await this.setupFromTemplate(this.draft, generation);
