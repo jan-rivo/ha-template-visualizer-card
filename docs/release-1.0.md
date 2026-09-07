@@ -19,7 +19,7 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 | # | Item | Status | Notes |
 |---|------|--------|-------|
 | B1 | Start a CHANGELOG (Added/Changed/Fixed per release, from 1.0.0) | done | `CHANGELOG.md` created (Keep a Changelog format) with an `[Unreleased]` section; becomes `1.0.0` at release time |
-| B2 | Get native-speaker review of translations (`de/es/fr/it/nl/nb/nn` in `src/i18n/languages/`) | pending | Keys are TS-enforced; quality unverified |
+| B2 | Get native-speaker review of translations (`de/es/fr/it/nl/nb/nn` in `src/i18n/languages/`) | done | Reviewed 2026-09-07 (AI pass, no native speaker). Fixed: es `else_if`/`else` both read "SI NO" → `SINO SI`/`SINO`; all 7 non-English `edit_hint`s still claimed saving is unsupported → rewritten; translated `card.too_many_subscriptions` (was English placeholder); fr Discard `Ignorer` → `Abandonner`; normalized curly quotes; nb/nn `(tom utdata)` → `(ingen utdata)` |
 | B3 | Subscription-count guard (surface warning when leaf/output count exceeds ~20) | done | Implemented 2026-09-07 as admin-only `tpl-warning` above 30 subs (`SUBSCRIPTION_WARNING_LIMIT` + `shouldWarnForSubscriptionCount` in `src/card.ts`, `card.too_many_subscriptions` i18n key in all 8 langs — non-English values are English placeholders for B2 to review; `test/subscription-warning.test.ts` 4 tests). Cap raised 20→30 per review. Screenshot signed off (admin shows warning, viewer + small templates don't) |
 | B4 | Enable Dependabot (npm + GitHub Actions) | pending | |
 | B5 | Add bug-report issue template (HA version + template text) | pending | |
@@ -57,3 +57,4 @@ Statuses: `pending` → `in_progress` → `done` (or `dropped` with a reason).
 | 2026-09-07 | A2 done: deleted `docs/parser-expansion-plan.md`; README gained a concise "Not broken down" section listing unstructured constructs (`for`/`macro`/`filter`/`call`/`namespace`, multi-output mixes). |
 | 2026-09-07 | B3 done: admin-only subscription warning above 30 subs implemented, tested (92/92), screenshot-signed-off. |
 | 2026-09-07 | C2/C3/C4 dropped (won't fix per review); C1 left pending. B1 done: `CHANGELOG.md` created. |
+| 2026-09-07 | B2 done: translation review pass over all 7 non-English files (es tag bug, 7 stale hints, warning translations, fr/nb/nn fixes). Typecheck clean, 92/92 green, dist rebuilt. |
