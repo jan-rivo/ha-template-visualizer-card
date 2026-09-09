@@ -262,6 +262,20 @@ export class HaTemplateEditorCard extends LitElement {
     this.setupGeneration++; // invalidates any in-flight setupLiveTree call
     void this.liveHandle?.dispose();
     this.liveHandle = undefined;
+    const previousOverall = this.overallUnsub;
+    this.overallUnsub = undefined;
+    if (previousOverall) void previousOverall().catch(() => undefined);
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    // hui-masonry-view detaches/re-attaches cards while re-flowing columns.
+    // A disconnect aborts in-flight setup via setupGeneration, but
+    // subscribedEntity was already set, so willUpdate() would never retry
+    // and the card stayed on "Setting up live subscriptions…" forever.
+    // Force a fresh setup on every reconnect.
+    this.subscribedEntity = undefined;
+    this.requestUpdate();
   }
 
   render() {
